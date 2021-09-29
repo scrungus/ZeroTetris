@@ -7,7 +7,7 @@
 ## Table of Contents <!-- omit in toc -->
 
 - [1. Introduction](#1-introduction)
-- [2. Setup](#2-setup)
+- [2. Installation](#2-installation)
 - [3. Environments](#3-environments)
   - [3.1. Available environments](#31-available-environments)
   - [3.2. Building more environments](#32-building-more-environments)
@@ -18,10 +18,10 @@
   - [3.4. Variable dimensions and piece size](#34-variable-dimensions-and-piece-size)
   - [3.5. Action and observation spaces](#35-action-and-observation-spaces)
   - [3.6. Game ending](#36-game-ending)
-  - [3.7. Examples](#37-examples)
+  - [3.7. Usage](#37-usage)
 - [4. Coming soon](#4-coming-soon)
-- [5. Suggestions](#5-suggestions)
-- [6. Inspiration](#6-inspiration)
+- [5. Contributing](#5-contributing)
+- [6. Credits](#6-credits)
 - [7. License](#7-license)
 
 ## 1. Introduction
@@ -35,13 +35,11 @@
   </a>
 </p>
 
-Gym-SimplifiedTetris is a Python package that can create ***simplified*** reinforcement learning (RL) environments for Tetris that conform to the [OpenAI Gym](https://github.com/openai/gym) API.
+Gym-SimplifiedTetris is a Python package that can create ***simplified*** reinforcement learning (RL) environments for Tetris that conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. To the best of the author's knowledge, this is the first open-source package to create RL Gym environments that use the simplified setting, used by most of the previous approaches to the game of Tetris.
 
-This README summarises the package's functionality, describes how to build more custom Gym environments, and provides a couple of examples showing how to use an environment.
+The remainder of the README provides some help with the setup, gives an overview of the environments and how to use them, and describes how to build more environments.
 
-The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. To the best of the author's knowledge, this is the first open-source package to create RL Gym environments that use the simplified setting, commonly used by previous approaches to the game of Tetris.
-
-## 2. Setup
+## 2. Installation
 
 To clone the repository:
 ```bash
@@ -132,7 +130,7 @@ where $w$ is the grid width.
 
 Each game of Tetris terminates if the following condition is satisfied: any of the dropped piece's square blocks enter into the top `piece_size` rows before any full rows are cleared. This definition ensures that scores achieved are lower bounds on the score that could have been achieved on a standard game of Tetris, as laid out in Colin Fahey's ['Standard Tetris' specification](https://www.colinfahey.com/tetris/tetris.html#:~:text=5.%20%22Standard%20Tetris%22%20specification).
 
-### 3.7. Examples
+### 3.7. Usage
 
 Here is an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
 
@@ -173,14 +171,14 @@ env = Tetris(
 
 - Unit tests
 
-## 5. Suggestions
+## 5. Contributing
 
 Please feel free to provide any suggestions or file any issues [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new).
 
-## 6. Inspiration
+## 6. Credits
 
 This package utilises several methods from the [codebase](https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning) developed by Lay (2020). The class hierarchy design was inspired by a [codebase](https://github.com/Hewiiitt/Gym-Circuitboard) developed by Matt Hewitt.
 
 ## 7. License
 
-This project is licensed under the terms of the [MIT license](https://github.com/OliverOverend/gym-simplifiedtetristemp/blob/master/LICENSE.md).
+This project is licensed under the terms of the [MIT license](/LICENSE.md).
