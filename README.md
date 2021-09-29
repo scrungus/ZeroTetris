@@ -1,25 +1,56 @@
-# Gym-SimplifiedTetris ![GitHub](https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetristemp)
+<h1 align="center"> Gym-SimplifiedTetris </h1> <br>
+<p align="center">
+    <img alt="Tetris" title="Tetris" src="assets/20x10_4_video.gif" width="450">
+  </a>
+</p>
 
-Gym-SimplifiedTetris is a Python package for creating simplified reinforcement learning (RL) environments for Tetris that conform to the [OpenAI Gym](https://github.com/openai/gym) API.
+## Table of Contents <!-- omit in toc -->
+
+- [1. Introduction](#1-introduction)
+- [2. Setup](#2-setup)
+  - [2.1. Cloning](#21-cloning)
+  - [2.2. Versions](#22-versions)
+- [3. Features](#3-features)
+  - [3.1. Environments](#31-environments)
+    - [3.1.1. Available environments](#311-available-environments)
+    - [3.1.2. Building more environments](#312-building-more-environments)
+  - [3.2. Step method](#32-step-method)
+  - [3.3. Variable dimensions and piece size](#33-variable-dimensions-and-piece-size)
+  - [3.4. Action and observation spaces](#34-action-and-observation-spaces)
+  - [3.5. Game ending](#35-game-ending)
+- [4. Example](#4-example)
+- [5. Coming soon](#5-coming-soon)
+- [6. Suggestions](#6-suggestions)
+- [7. Inspiration](#7-inspiration)
+- [8. License](#8-license)
+
+## 1. Introduction
+
+<p align="left">
+  <a href="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetristemp">
+    <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetristemp?style=flat-square">
+  </a>
+  <a href="http://makeapullrequest.com">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square">
+  </a>
+</p>
+
+Gym-SimplifiedTetris is a Python package that can create simplified reinforcement learning (RL) environments for Tetris that conform to the [OpenAI Gym](https://github.com/openai/gym) API.
 
 This README summarises the package's functionality, describes how to build more custom environments, and provides an example showing how to use an environment.
 
-<p align="center">
-    <img src="assets/20x10_4_video.gif" width="400">
-</p>
-
 The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. To the best of the author's knowledge, this is the first open-source package to create RL Gym environments that use the simplified setting, commonly used by previous approaches.
 
-# Getting started
+## 2. Setup
 
-## Cloning
+### 2.1. Cloning
 
 To clone the repository:
 ```bash
 git clone https://github.com/OliverOverend/gym-simplifiedtetristemp
 ```
 
-## Versions
+### 2.2. Versions
 
 - Python 3.7.4
 - NumPy 1.16.5
@@ -29,31 +60,35 @@ git clone https://github.com/OliverOverend/gym-simplifiedtetristemp
 - Pillow 6.2.0
 - Stable-Baselines3 1.1.0
 
-# Functionality
+## 3. Features
 
-## Available environments
+Here are some of the package's features:
+
+- Two available Gym environments
+- Variable grid dimensions and piece sizes
+- Discrete action space
+- Box observation space
+- Carefully crafted definition of 'game over'
+
+### 3.1. Environments
+
+#### 3.1.1. Available environments
 
 There are currently two environments provided:
 - `simplifiedtetris-binary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID.
 - `simplifiedtetris-partbinary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID.
 
-## Variable dimensions and piece size
+#### 3.1.2. Building more environments
 
-The user can easily specify the grid dimensions and choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. Below is a GIF showing games being played on a 8 x 6 grid with trominoes as the pieces.
+More custom Gym environments with different observation spaces and reward functions can be implemented easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBinaryEnv` and are registered using:
+```python
+register(
+    idx='INSERT_ENV_NAME_HERE',
+    entry_point='gym_simplifiedtetris.envs:INSERT_ENV_CLASS_NAME_HERE',
+)
+```
 
-<p align="center">
-    <img src="assets/8x6_3_video.gif" width="400">
-</p>
-
-## Action and observation spaces
-
-Each environment comes with an `observation_space` that is a `Box` space and an `action_space` that is a `Discrete` space. At each time step, the artificial agent must choose an action (an integer from a particular range). Each action maps to a translation/rotation tuple that specifies the column to drop the piece and its rotation. The ranges for the four different piece sizes are:
-- Monominos: [0, w - 1]
-- Dominos: [0, 2w - 2]
-- Trominoes: [0, 4w - 5]
-- Tetriminos: [0, 4w  - 7]
-
-## Step method
+### 3.2. Step method
 
 Each environment's step method returns four values:
 - `observation` (**NumPy array**): a 1D array that contains some binary representation of the grid, plus the current piece's ID.
@@ -61,11 +96,27 @@ Each environment's step method returns four values:
 - `done` (**bool**): a game termination flag.
 - `info` (**dict**): only contains the `num_rows_cleared` due to taking the previous action.
 
-## Game ending
+### 3.3. Variable dimensions and piece size
 
-As per Colin Fahey's specification, each standard game of Tetris terminates if the following condition is satisfied: any of the dropped piece's square blocks enters into the top `piece_size` rows before any full rows are cleared.
+The user can easily specify the grid dimensions and choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. Below is a GIF showing games being played on a 8 x 6 grid with trominoes as the pieces.
 
-## Example
+<p align="center">
+    <img src="assets/8x6_3_video.gif" width="400">
+</p>
+
+### 3.4. Action and observation spaces
+
+Each environment comes with an `observation_space` that is a `Box` space and an `action_space` that is a `Discrete` space. At each time step, the artificial agent must choose an action (an integer from a particular range). Each action maps to a translation/rotation tuple that specifies the column to drop the piece and its rotation. The ranges for the four different piece sizes are:
+- Monominos: [0, w - 1]
+- Dominos: [0, 2w - 2]
+- Trominoes: [0, 4w - 5]
+- Tetriminos: [0, 4w  - 7]
+
+### 3.5. Game ending
+
+Each game of Tetris terminates if the following condition is satisfied: any of the dropped piece's square blocks enter into the top `piece_size` rows before any full rows are cleared. This definition ensures that scores achieved are lower bounds on the score that could have been achieved on a standard game of Tetris, as laid out in Colin Fahey's ['Standard Tetris' specification](https://www.colinfahey.com/tetris/tetris.html).
+
+## 4. Example
 
 Here is an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
 
@@ -92,24 +143,18 @@ while num_episodes < 10:
 env.close()
 ```
 
-# Building more environments
-
-More custom Gym environments with different observation spaces and reward functions can be implemented easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBinaryEnv` and are registered using:
-```python
-register(
-    idx='INSERT_ENV_NAME_HERE',
-    entry_point='gym_simplifiedtetris.envs:INSERT_ENV_CLASS_NAME_HERE',
-)
-```
-
-# Coming soon
+## 5. Coming soon
 
 - Unit tests
 
-# Suggestions
+## 6. Suggestions
 
-Please feel free to provide any suggestions or raise any issues you encounter.
+Please feel free to provide any suggestions or file any issues [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new).
 
-# Credits
+## 7. Inspiration
 
-This package utilises several methods from the [codebase](https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning) developed by Lay (2020). 
+This package utilises several methods from the [codebase](https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning) developed by Lay (2020). The class hierarchy design was inspired by a [codebase](https://github.com/Hewiiitt/Gym-Circuitboard) developed by Matt Hewitt.
+
+## 8. License
+
+This project is licensed under the terms of the [MIT license](https://github.com/OliverOverend/gym-simplifiedtetristemp/blob/master/LICENSE.md).
