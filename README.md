@@ -1,6 +1,6 @@
 <h1 align="center"> Gym-SimplifiedTetris </h1> <br>
 <p align="center">
-    <img alt="Tetris" title="Tetris" src="assets/20x10_4_video.gif" width="450">
+    <img alt="Tetris" title="Tetris" src="assets/20x10_4.gif" width="450">
   </a>
 </p>
 
@@ -110,7 +110,7 @@ Controls:
 The user can easily specify the grid dimensions and choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. Below is a GIF showing games being played on a 8 x 6 grid with trominoes as the pieces.
 
 <p align="center">
-    <img src="assets/8x6_3_video.gif" width="400">
+    <img src="assets/8x6_3.gif" width="400">
 </p>
 
 ### 3.4. Action and observation spaces

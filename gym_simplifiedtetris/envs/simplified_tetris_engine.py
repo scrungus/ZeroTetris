@@ -240,7 +240,7 @@ class SimplifiedTetrisEngine:
                     self.image_lst.append(frame_rgb)
 
                 if len(self.final_scores) == 5 and self.save_frame:
-                    imageio.mimsave(f'assets/{self.height}x{self.width}_{self.piece_size}_video.gif',
+                    imageio.mimsave(f'assets/{self.height}x{self.width}_{self.piece_size}.gif',
                                     self.image_lst, fps=60, duration=0.5)
                     self.save_frame = False
 
