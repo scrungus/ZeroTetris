@@ -1,4 +1,4 @@
-# Gym-SimplifiedTetris ![GitHub](https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetristemp)
+# Gym-SimplifiedTetris ![GitHub](https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetristemp)
 
 Gym-SimplifiedTetris is a Python package for creating simplified reinforcement learning (RL) environments for Tetris that conform to the [OpenAI Gym](https://github.com/openai/gym) API.
 
