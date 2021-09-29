@@ -173,7 +173,7 @@ env = Tetris(
 
 ## 5. Contributing
 
-Please feel free to provide any suggestions [here](/discussions/new) or file any issues [here](/issues/new).
+Please feel free to provide any suggestions [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/discussions/new) or file any issues [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new).
 
 ## 6. Credits
 
