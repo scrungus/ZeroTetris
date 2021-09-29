@@ -8,19 +8,21 @@
 
 - [1. Introduction](#1-introduction)
 - [2. Setup](#2-setup)
-- [3. Features](#3-features)
-  - [3.1. Environments](#31-environments)
-  - [3.2. `reset()` method](#32-reset-method)
-  - [3.3. `step(action: int)` method](#33-stepaction-int-method)
-  - [3.4. `render()` method](#34-render-method)
-  - [3.5. Variable dimensions and piece size](#35-variable-dimensions-and-piece-size)
-  - [3.6. Action and observation spaces](#36-action-and-observation-spaces)
-  - [3.7. Game ending](#37-game-ending)
-- [4. Examples](#4-examples)
-- [6. Coming soon](#6-coming-soon)
-- [7. Suggestions](#7-suggestions)
-- [8. Inspiration](#8-inspiration)
-- [9. License](#9-license)
+- [3. Environments](#3-environments)
+  - [3.1. Available environments](#31-available-environments)
+  - [3.2. Building more environments](#32-building-more-environments)
+  - [3.3. Methods](#33-methods)
+    - [3.3.1. `reset()` method](#331-reset-method)
+    - [3.3.2. `step(action: int)` method](#332-stepaction-int-method)
+    - [3.3.3. `render()` method](#333-render-method)
+  - [3.4. Variable dimensions and piece size](#34-variable-dimensions-and-piece-size)
+  - [3.5. Action and observation spaces](#35-action-and-observation-spaces)
+  - [3.6. Game ending](#36-game-ending)
+  - [3.7. Examples](#37-examples)
+- [4. Coming soon](#4-coming-soon)
+- [5. Suggestions](#5-suggestions)
+- [6. Inspiration](#6-inspiration)
+- [7. License](#7-license)
 
 ## 1. Introduction
 
@@ -56,13 +58,15 @@ Here is a list of the versions used during development:
 - Pillow 6.2.0
 - Stable-Baselines3 1.1.0
 
-## 3. Features
+## 3. Environments
 
-### 3.1. Environments
+### 3.1. Available environments
 
 There are currently two environments provided:
 - `simplifiedtetris-binary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID
 - `simplifiedtetris-partbinary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID
+
+### 3.2. Building more environments
 
 More custom Gym environments with different observation spaces and reward functions can be implemented easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBinaryEnv` and are registered using:
 ```python
@@ -72,7 +76,9 @@ register(
 )
 ```
 
-### 3.2. `reset()` method
+### 3.3. Methods
+
+#### 3.3.1. `reset()` method
 
 The `reset()` method returns a 1D array that contains some binary representation of the grid, plus the current piece's ID.
 
@@ -80,7 +86,7 @@ The `reset()` method returns a 1D array that contains some binary representation
 obs = env.reset()
 ```
 
-### 3.3. `step(action: int)` method
+#### 3.3.2. `step(action: int)` method
 
 Each environment's step method returns four values:
 - `observation` (**NumPy array**): a 1D array that contains some binary representation of the grid, plus the current piece's ID
@@ -92,7 +98,7 @@ Each environment's step method returns four values:
 obs, rwd, done, info = env.step(action)
 ```
 
-### 3.4. `render()` method
+#### 3.3.3. `render()` method
 
 The user has access to the following controls during rendering:
 - Pause (**SPACEBAR**)
@@ -104,7 +110,7 @@ The user has access to the following controls during rendering:
 env.render()
 ```
 
-### 3.5. Variable dimensions and piece size
+### 3.4. Variable dimensions and piece size
 
 The user can choose to deviate from the standard grid dimensions and Tetriminos by editing the `gym_register` kwargs. The user can choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. The user can select a height in the interval $[$`piece_size`$+1, 20]$ and a width in the interval $[$`piece_size`$, 10]$. Below is a GIF showing games being played on a $8 \times 6$ grid with trominoes as the pieces.
 
@@ -112,7 +118,7 @@ The user can choose to deviate from the standard grid dimensions and Tetriminos 
     <img src="assets/8x6_3.gif" width="400">
 </p>
 
-### 3.6. Action and observation spaces
+### 3.5. Action and observation spaces
 
 Each environment comes with an `observation_space` that is a `Box` space and an `action_space` that is a `Discrete` space. At each time step, the artificial agent must choose an action (an integer from a particular range). Each action maps to a translation/rotation tuple that specifies the column to drop the piece and its rotation. The ranges for the four different piece sizes are:
 - Monominos: $[0, w - 1]$
@@ -122,11 +128,11 @@ Each environment comes with an `observation_space` that is a `Box` space and an 
 
 where $w$ is the grid width.
 
-### 3.7. Game ending
+### 3.6. Game ending
 
 Each game of Tetris terminates if the following condition is satisfied: any of the dropped piece's square blocks enter into the top `piece_size` rows before any full rows are cleared. This definition ensures that scores achieved are lower bounds on the score that could have been achieved on a standard game of Tetris, as laid out in Colin Fahey's ['Standard Tetris' specification](https://www.colinfahey.com/tetris/tetris.html#:~:text=5.%20%22Standard%20Tetris%22%20specification).
 
-## 4. Examples
+### 3.7. Examples
 
 Here is an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
 
@@ -163,18 +169,18 @@ env = Tetris(
 )
 ```
 
-## 6. Coming soon
+## 4. Coming soon
 
 - Unit tests
 
-## 7. Suggestions
+## 5. Suggestions
 
 Please feel free to provide any suggestions or file any issues [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new).
 
-## 8. Inspiration
+## 6. Inspiration
 
 This package utilises several methods from the [codebase](https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning) developed by Lay (2020). The class hierarchy design was inspired by a [codebase](https://github.com/Hewiiitt/Gym-Circuitboard) developed by Matt Hewitt.
 
-## 9. License
+## 7. License
 
 This project is licensed under the terms of the [MIT license](https://github.com/OliverOverend/gym-simplifiedtetristemp/blob/master/LICENSE.md).
