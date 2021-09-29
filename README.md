@@ -1,5 +1,7 @@
 # `gym-simplifiedtetris`
 
+![GitHub](https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetristemp)
+
 ## Overview
 
 Gym-SimplifiedTetris can create two simplified reinforcement learning (RL) environments for Tetris that conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards.
@@ -53,7 +55,7 @@ As per Colin Fahey's specification, each standard game of Tetris terminates if t
 
 ## Building more environments
 
-The user can easily implement more custom Gym environments with different observation spaces and reward functions. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBinaryEnv` and are registered using:
+More custom Gym environments with different observation spaces and reward functions can be implemented easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBinaryEnv` and are registered using:
 ```python
 register(
     idx='INSERT_ENV_NAME_HERE',
@@ -87,6 +89,10 @@ while num_episodes < 10:
 
 env.close()
 ```
+
+## Coming soon
+
+- Unit tests
 
 ## Suggestions
 
