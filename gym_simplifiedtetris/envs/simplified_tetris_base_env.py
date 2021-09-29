@@ -26,9 +26,9 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         assert piece_size in [
             1, 2, 3, 4], 'Size of piece should be either 1, 2, 3, or 4.'
         assert grid_dims[0] in list(range(
-            piece_size + 1, 21)), 'Height must be an integer in the interval [piece_size, 21]'
+            piece_size + 1, 21)), 'Height must be an integer in the interval [piece_size + 1, 20]'
         assert grid_dims[1] in list(range(
-            piece_size, 11)), 'Width must be an integer in the interval [piece_size, 11].'
+            piece_size, 11)), 'Width must be an integer in the interval [piece_size, 10].'
 
         self.height, self.width = grid_dims
         self.piece_size = piece_size

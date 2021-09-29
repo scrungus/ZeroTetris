@@ -24,8 +24,8 @@ def register(
         id=idx,
         entry_point=entry_point,
         kwargs={
-            'grid_dims': (8, 6),
-            'piece_size': 3,
+            'grid_dims': (20, 10),
+            'piece_size': 4,
         },
     )
     env_list.append(idx)

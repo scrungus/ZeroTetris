@@ -14,11 +14,12 @@
   - [3.1. Environments](#31-environments)
     - [3.1.1. Available environments](#311-available-environments)
     - [3.1.2. Building more environments](#312-building-more-environments)
-  - [3.2. `step(action)` method](#32-stepaction-method)
-  - [`render()` method](#render-method)
-  - [3.3. Variable dimensions and piece size](#33-variable-dimensions-and-piece-size)
-  - [3.4. Action and observation spaces](#34-action-and-observation-spaces)
-  - [3.5. Game ending](#35-game-ending)
+  - [3.2. `reset()` method](#32-reset-method)
+  - [3.3. `step(action)` method](#33-stepaction-method)
+  - [3.4. `render()` method](#34-render-method)
+  - [3.5. Variable dimensions and piece size](#35-variable-dimensions-and-piece-size)
+  - [3.6. Action and observation spaces](#36-action-and-observation-spaces)
+  - [3.7. Game ending](#37-game-ending)
 - [4. Example](#4-example)
 - [5. Coming soon](#5-coming-soon)
 - [6. Suggestions](#6-suggestions)
@@ -76,8 +77,8 @@ Here are some of the package's features:
 #### 3.1.1. Available environments
 
 There are currently two environments provided:
-- `simplifiedtetris-binary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID.
-- `simplifiedtetris-partbinary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID.
+- `simplifiedtetris-binary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID
+- `simplifiedtetris-partbinary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID
 
 #### 3.1.2. Building more environments
 
@@ -89,41 +90,62 @@ register(
 )
 ```
 
-### 3.2. `step(action)` method
+### 3.2. `reset()` method
+
+```python
+import gym
+
+import gym_simplifiedtetris
+
+env = gym.make('simplifiedtetris-binary-v0')
+obs = env.reset()
+```
+
+### 3.3. `step(action)` method
+
+```python
+obs, rwd, done, info = env.step(action)
+```
 
 Each environment's step method returns four values:
-- `observation` (**NumPy array**): a 1D array that contains some binary representation of the grid, plus the current piece's ID.
-- `reward` (**float**): the amount of reward received from the previous action.
-- `done` (**bool**): a game termination flag.
-- `info` (**dict**): only contains the `num_rows_cleared` due to taking the previous action.
+- `observation` (**NumPy array**): a 1D array that contains some binary representation of the grid, plus the current piece's ID
+- `reward` (**float**): the amount of reward received from the previous action
+- `done` (**bool**): a game termination flag
+- `info` (**dict**): only contains the `num_rows_cleared` due to taking the previous action
 
-### `render()` method
+### 3.4. `render()` method
 
-Controls:
+```python
+env.render()
+```
+
+The user has access to the following controls during rendering:
 - Pause (**SPACEBAR**)
 - Speed up (**RIGHT key**)
 - Slow down (**LEFT key**)
 - Quit (**ESC**)
 
-### 3.3. Variable dimensions and piece size
+### 3.5. Variable dimensions and piece size
 
-The user can easily specify the grid dimensions and choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. Below is a GIF showing games being played on a 8 x 6 grid with trominoes as the pieces.
+The user can choose to deviate from the standard grid dimensions and Tetriminos by editing the `gym_register` kwargs. The user can choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. The user can select a height in the interval $[$`piece_size`$+1, 20]$ and a width in the interval $[$`piece_size`$, 10]$  Below is a GIF showing games being played on a 8 x 6 grid with trominoes as the pieces.
 
 <p align="center">
     <img src="assets/8x6_3.gif" width="400">
 </p>
 
-### 3.4. Action and observation spaces
+### 3.6. Action and observation spaces
 
 Each environment comes with an `observation_space` that is a `Box` space and an `action_space` that is a `Discrete` space. At each time step, the artificial agent must choose an action (an integer from a particular range). Each action maps to a translation/rotation tuple that specifies the column to drop the piece and its rotation. The ranges for the four different piece sizes are:
-- Monominos: [0, w - 1]
-- Dominos: [0, 2w - 2]
-- Trominoes: [0, 4w - 5]
-- Tetriminos: [0, 4w  - 7]
+- Monominos: $[0, w - 1]$
+- Dominos: $[0, 2w - 2]$
+- Trominoes: $[0, 4w - 5]$
+- Tetriminos: $[0, 4w  - 7]$
 
-### 3.5. Game ending
+where $w$ is the grid width.
 
-Each game of Tetris terminates if the following condition is satisfied: any of the dropped piece's square blocks enter into the top `piece_size` rows before any full rows are cleared. This definition ensures that scores achieved are lower bounds on the score that could have been achieved on a standard game of Tetris, as laid out in Colin Fahey's ['Standard Tetris' specification](https://www.colinfahey.com/tetris/tetris.html).
+### 3.7. Game ending
+
+Each game of Tetris terminates if the following condition is satisfied: any of the dropped piece's square blocks enter into the top `piece_size` rows before any full rows are cleared. This definition ensures that scores achieved are lower bounds on the score that could have been achieved on a standard game of Tetris, as laid out in Colin Fahey's ['Standard Tetris' specification](https://www.colinfahey.com/tetris/tetris.html#:~:text=5.%20%22Standard%20Tetris%22%20specification).
 
 ## 4. Example
 
@@ -155,6 +177,7 @@ env.close()
 ## 5. Coming soon
 
 - Unit tests
+- Allows users to more easily change the grid dimensions and piece size
 
 ## 6. Suggestions
 
