@@ -14,7 +14,8 @@
   - [3.1. Environments](#31-environments)
     - [3.1.1. Available environments](#311-available-environments)
     - [3.1.2. Building more environments](#312-building-more-environments)
-  - [3.2. Step method](#32-step-method)
+  - [3.2. `step(action)` method](#32-stepaction-method)
+  - [`render()` method](#render-method)
   - [3.3. Variable dimensions and piece size](#33-variable-dimensions-and-piece-size)
   - [3.4. Action and observation spaces](#34-action-and-observation-spaces)
   - [3.5. Game ending](#35-game-ending)
@@ -35,7 +36,7 @@
   </a>
 </p>
 
-Gym-SimplifiedTetris is a Python package that can create simplified reinforcement learning (RL) environments for Tetris that conform to the [OpenAI Gym](https://github.com/openai/gym) API.
+Gym-SimplifiedTetris is a Python package that can create ***simplified*** reinforcement learning (RL) environments for Tetris that conform to the [OpenAI Gym](https://github.com/openai/gym) API.
 
 This README summarises the package's functionality, describes how to build more custom environments, and provides an example showing how to use an environment.
 
@@ -88,13 +89,21 @@ register(
 )
 ```
 
-### 3.2. Step method
+### 3.2. `step(action)` method
 
 Each environment's step method returns four values:
 - `observation` (**NumPy array**): a 1D array that contains some binary representation of the grid, plus the current piece's ID.
 - `reward` (**float**): the amount of reward received from the previous action.
 - `done` (**bool**): a game termination flag.
 - `info` (**dict**): only contains the `num_rows_cleared` due to taking the previous action.
+
+### `render()` method
+
+Controls:
+- Pause (**SPACEBAR**)
+- Speed up (**RIGHT key**)
+- Slow down (**LEFT key**)
+- Quit (**ESC**)
 
 ### 3.3. Variable dimensions and piece size
 

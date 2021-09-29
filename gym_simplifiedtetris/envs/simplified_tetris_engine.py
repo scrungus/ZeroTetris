@@ -333,12 +333,12 @@ class SimplifiedTetrisEngine:
             items=[
                 [
                     "Height",
-                    "width",
+                    "Width",
                     "",
                     "Current score",
-                    "Mean Score",
+                    "Mean score",
                     "",
-                    "Current Piece"
+                    "Current piece"
                 ],
                 [
                     f"{self.height}",
