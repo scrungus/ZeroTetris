@@ -44,12 +44,6 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         self.engine.anchor = [0, 0]  # Top left.
         self.engine.grid = np.zeros(
             (self.grid_width, self.grid_height), dtype=int)
-        """print(self.engine.grid.T)
-        self.engine.hard_drop()
-        print(self.engine.anchor)
-        self.engine.update_grid(True)
-        print(self.engine.grid.T)
-        self.engine.update_grid(False)"""
         self.assertEqual(self.engine.is_illegal(), False)
 
         # Piece off the bottom.
@@ -225,8 +219,6 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         available_actions = self.engine.compute_available_actions()
         values = [(j, i) for i in range(4) for j in range(1, self.engine.width)]
         dict_to_compare = {i: values[i] for i in range(self.num_actions)}
-        print(values, dict_to_compare)
-        print(available_actions)
         self.assertDictEqual(available_actions, dict_to_compare)
 
     def test_get_all_available_actions(self):
