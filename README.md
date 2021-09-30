@@ -15,6 +15,7 @@
     - [3.3.1. `reset()` method](#331-reset-method)
     - [3.3.2. `step(action: int)` method](#332-stepaction-int-method)
     - [3.3.3. `render()` method](#333-render-method)
+    - [3.3.3. `close()` method](#333-close-method)
   - [3.4. Variable dimensions and piece size](#34-variable-dimensions-and-piece-size)
   - [3.5. Action and observation spaces](#35-action-and-observation-spaces)
   - [3.6. Game ending](#36-game-ending)
@@ -106,6 +107,14 @@ The user has access to the following controls during rendering:
 
 ```python
 env.render()
+```
+
+#### 3.3.3. `close()` method
+
+The user can close all open windows using:
+
+```python
+env.close()
 ```
 
 ### 3.4. Variable dimensions and piece size
