@@ -148,7 +148,7 @@ class SimplifiedTetrisEngine:
         self._sleep_time = 500
         self._show_agent_playing = True
         self._cell_size = int(min(0.8 * 1000 / grid_dims[0],
-                                 0.8 * 2000 / grid_dims[1]))
+                                  0.8 * 2000 / grid_dims[1]))
         self._LEFT_SPACE = 400
         self._BLACK: tuple = self._get_bgr_code('black')
         self._WHITE: tuple = self._get_bgr_code('white')
@@ -276,7 +276,7 @@ class SimplifiedTetrisEngine:
         """Draws a horizontal red line to indicate the cut off point."""
         vertical_position = self._piece_size * self._cell_size
         self._img[vertical_position - int(self._cell_size/40): vertical_position
-                 + int(self._cell_size/40) + 1, self._LEFT_SPACE:, :] = self._RED
+                  + int(self._cell_size/40) + 1, self._LEFT_SPACE:, :] = self._RED
 
     def _get_grid(self) -> np.ndarray:
         """
@@ -299,16 +299,16 @@ class SimplifiedTetrisEngine:
             (self._height, self._width, 3)).astype(np.uint8)
         self._img = Image.fromarray(self._img, 'RGB')
         self._img = self._img.resize((self._width * self._cell_size,
-                                    self._height * self._cell_size))
+                                      self._height * self._cell_size))
         self._img = np.array(self._img)
 
     def _draw_separating_lines(self):
         """Draws the horizontal and vertical _BLACK lines to separate the grid's cells."""
         for j in range(-int(self._cell_size / 40), int(self._cell_size / 40) + 1):
             self._img[[i * self._cell_size +
-                      j for i in range(self._height)], :, :] = self._BLACK
+                       j for i in range(self._height)], :, :] = self._BLACK
             self._img[:, [i * self._cell_size +
-                         j for i in range(self._width)], :] = self._BLACK
+                          j for i in range(self._width)], :] = self._BLACK
 
     def _add_img_left(self):
         """
@@ -469,7 +469,7 @@ class SimplifiedTetrisEngine:
         # Loop over each block.
         for i, j in self._piece:
             self._grid[int(i + self._anchor[0]), int(j + self._anchor[1])
-                      ] = self._current_piece_id if set_piece else 0
+                       ] = self._current_piece_id if set_piece else 0
 
     def _get_reward(self) -> Tuple[float, int]:
         """
@@ -484,7 +484,8 @@ class SimplifiedTetrisEngine:
         """Gets the actions available for each of the pieces in use."""
         self._all_available_actions = {}
         for k in range(1, self._num_pieces + 1):
-            self._current_piece_coords = self._all_piece_coords._select_piece(k)
+            self._current_piece_coords = self._all_piece_coords._select_piece(
+                k)
             self._current_piece_id = k
             self._all_available_actions[k] = self._compute_available_actions()
 

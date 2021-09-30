@@ -50,7 +50,8 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         # 'L' piece rotated 90 CW.
         self._engine._piece = [(0, 0), (0, 1), (1, 0), (2, 0)]
         # Bottom right.
-        self._engine._anchor = [self._engine._width - 1, self._engine._height - 1]
+        self._engine._anchor = [
+            self._engine._width - 1, self._engine._height - 1]
         self._engine._grid = np.zeros(
             (self._engine._width, self._engine._height), dtype=int)
         self.assertEqual(self._engine._is_illegal(), True)
@@ -65,7 +66,7 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
 
         # Piece off the left.
         self._engine._piece = [(0, 0), (-1, 0), (0, 1),
-                             (0, 2)]  # 'L' piece rotated 180
+                               (0, 2)]  # 'L' piece rotated 180
         self._engine._anchor = [0, self._engine._height - 1]  # Bottom left.
         self._engine._grid = np.zeros(
             (self._engine._width, self._engine._height), dtype=int)
@@ -86,7 +87,8 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         self._engine._anchor = [0, self._engine._height - 1]  # Bottom left.
         self._engine._grid = np.zeros(
             (self._engine._width, self._engine._height), dtype=int)
-        self._engine._grid[1, :self._engine._height - 1] = 1  # Second col from left
+        # Second col from left
+        self._engine._grid[1, :self._engine._height - 1] = 1
         self.assertEqual(self._engine._is_illegal(), False)
 
     def test__hard_drop(self):
@@ -217,8 +219,10 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
             [(0, 0), (0, -1), (-1, 0), (-1, -1)],
         ]  # 'O'.
         available_actions = self._engine._compute_available_actions()
-        values = [(j, i) for i in range(4) for j in range(1, self._engine._width)]
-        dict_to_compare = {i: values[i] for i in range(self._engine._num_actions)}
+        values = [(j, i) for i in range(4)
+                  for j in range(1, self._engine._width)]
+        dict_to_compare = {i: values[i]
+                           for i in range(self._engine._num_actions)}
         self.assertDictEqual(available_actions, dict_to_compare)
 
     def test__get_all_available_actions(self):
