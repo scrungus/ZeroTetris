@@ -1,2 +1,2 @@
-from .utils import *
-from .envs import *
+from .utils import PieceCoords
+from .envs import SimplifiedTetrisBinaryEnv, SimplifiedTetrisPartBinaryEnv

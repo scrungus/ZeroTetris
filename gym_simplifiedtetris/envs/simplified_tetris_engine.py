@@ -123,7 +123,7 @@ class SimplifiedTetrisEngine:
 
     :param grid_dims: the grid dimensions; height, width.
     :param piece_size: the size of the pieces in use.
-    :param n_pieces: the number of pieces in use.
+    :param num_pieces: the number of pieces in use.
     :param num_actions: the number of available actions in each state.
     """
 
