@@ -34,7 +34,7 @@ def main():
             obs, reward, done, _ = env.step(env.action_space.sample())
 
             # Checks the reward is valid.
-            assert env.REWARD_RANGE[0] <= reward <= env.REWARD_RANGE[
+            assert env._REWARD_RANGE[0] <= reward <= env._REWARD_RANGE[
                 1], f"Reward seen: {reward}"
 
             if done:

@@ -30,16 +30,16 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         assert grid_dims[1] in list(range(
             piece_size, 11)), 'Width must be an integer in the interval [piece_size, 10].'
 
-        self.height, self.width = grid_dims
-        self.piece_size = piece_size
+        self._height_, self._width_ = grid_dims
+        self._piece_size_ = piece_size
 
-        self.num_actions, self.num_pieces = {
+        self.num_actions, self._num_pieces_ = {
             1: (grid_dims[1], 1),
             2: (2 * grid_dims[1] - 1, 1),
             3: (4 * grid_dims[1] - 4, 2),
             4: (4 * grid_dims[1] - 6, 7)
         }[piece_size]
-        self.REWARD_RANGE = (0, 4)
+        self._REWARD_RANGE = (0, 4)
 
         # Seed the rng.
         self._seed(seed=seed)

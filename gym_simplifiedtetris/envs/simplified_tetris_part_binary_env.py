@@ -17,9 +17,9 @@ class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBinaryEnv):
     def observation_space(self):
         return spaces.Box(
             low=np.append(
-                np.zeros(self.width * (self.height - self.piece_size)), 1),
+                np.zeros(self._width_ * (self._height_ - self._piece_size_)), 1),
             high=np.append(
-                np.ones(self.width * (self.height - self.piece_size)), self.num_pieces),
+                np.ones(self._width_ * (self._height_ - self._piece_size_)), self._num_pieces_),
             dtype=np.int
         )
 
@@ -31,8 +31,8 @@ class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBinaryEnv):
         :return: the current observation.
         """
         current_grid = np.clip(
-            self.engine.grid[:, self.piece_size:].flatten(), 0, 1)
-        return np.append(current_grid, self.engine.current_piece_id)
+            self._engine._grid[:, self._piece_size_:].flatten(), 0, 1)
+        return np.append(current_grid, self._engine._current_piece_id)
 
 
 register(
