@@ -29,7 +29,7 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
     def tearDown(self) -> None:
         del self._engine
 
-    def test__get_bgr_code(self):
+    def test__get_bgr_code(self) -> None:
         bgr_code_orange = self._engine._get_bgr_code('orange')
         self.assertEqual(bgr_code_orange, (0.0, 165.0, 255.0))
         bgr_code_coral = self._engine._get_bgr_code('coral')
@@ -37,7 +37,7 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         bgr_code_orangered = self._engine._get_bgr_code('orangered')
         self.assertEqual(bgr_code_orangered, (0.0, 69.0, 255.0))
 
-    def test__is_illegal(self):
+    def test__is_illegal(self) -> None:
         # Piece off the top.
         # 'I' piece vertical.
         self._engine._piece = [(0, 0), (0, -1), (0, -2), (0, -3)]
@@ -91,7 +91,7 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         self._engine._grid[1, :self._engine._height - 1] = 1
         self.assertEqual(self._engine._is_illegal(), False)
 
-    def test__hard_drop(self):
+    def test__hard_drop(self) -> None:
         # Empty grid.
         # 'I' piece vertical.
         self._engine._piece = [(0, 0), (0, -1), (0, -2), (0, -3)]
@@ -111,7 +111,7 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         self._engine._hard_drop()
         self.assertEqual(self._engine._anchor, [0, self._engine._height - 2])
 
-    def test__clear_rows(self):
+    def test__clear_rows(self) -> None:
         # Full grid.
         self._engine._grid = np.ones(
             (self._engine._width, self._engine._height), dtype=int)
@@ -172,7 +172,7 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         grid_after[4, self._engine._height - 2] = 1
         np.testing.assert_array_equal(self._engine._grid, grid_after)
 
-    def test__update_grid(self):
+    def test__update_grid(self) -> None:
         # Set piece
         # 'I' piece vertical.
         self._engine._piece = [(0, 0), (0, -1), (0, -2), (0, -3)]
@@ -211,7 +211,7 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         self._engine._update_grid(False)
         np.testing.assert_array_equal(self._engine._grid, grid_to_compare)
 
-    def test__compute_available_actions(self):
+    def test__compute_available_actions(self) -> None:
         self._engine._current_piece_coords = [
             [(0, 0), (0, -1), (-1, 0), (-1, -1)],
             [(0, 0), (0, -1), (-1, 0), (-1, -1)],
@@ -225,7 +225,7 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
                            for i in range(self._engine._num_actions)}
         self.assertDictEqual(available_actions, dict_to_compare)
 
-    def test__get_all_available_actions(self):
+    def test__get_all_available_actions(self) -> None:
         self._engine._get_all_available_actions()
         for _, value in self._engine._all_available_actions.items():
             self.assertEqual(self._engine._num_actions, len(value))

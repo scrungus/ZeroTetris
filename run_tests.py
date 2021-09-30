@@ -4,7 +4,7 @@ from stable_baselines3.common.env_checker import check_env
 import gym_simplifiedtetris
 
 
-def main():
+def main() -> None:
     """
     This function checks if each env created conforms to the OpenAI Gym API. 
     The first observation is printed out for visual inspection. Ten games are

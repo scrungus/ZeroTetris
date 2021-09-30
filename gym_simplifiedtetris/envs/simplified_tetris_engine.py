@@ -1,5 +1,5 @@
 import time
-from typing import Dict, Tuple
+from typing import Dict, List, Sequence, Tuple, Union
 
 import cv2.cv2 as cv
 import imageio
@@ -8,7 +8,10 @@ from gym_simplifiedtetris.utils.pieces import PieceCoords
 from matplotlib import colors
 from PIL import Image
 
-PIECES_DICT = {
+Coords = List[List[Tuple[int, int]]]
+Piece_info = Dict[str, Union[Coords, str]]
+
+PIECES_DICT: Dict[int, Dict[int, Piece_info]] = {
     1: {
         1: {
             'coords': [
@@ -129,7 +132,7 @@ class SimplifiedTetrisEngine:
 
     def __init__(
             self,
-            grid_dims: Tuple[int, int],
+            grid_dims: Sequence[int, int],
             piece_size: int,
             num_pieces: int,
             num_actions: int,
@@ -190,19 +193,19 @@ class SimplifiedTetrisEngine:
         return tuple(np.array([255, 255, 255]) * colors.to_rgb(colour_name))[::-1]
 
     @staticmethod
-    def _close():
+    def _close() -> None:
         """Closes the open windows."""
         cv.waitKey(1)
         cv.destroyAllWindows()
         cv.waitKey(1)
 
-    def _reset(self):
+    def _reset(self) -> None:
         """Resets the score, grid, piece coords, piece id and anchor."""
         self._score = 0
         self._grid = np.zeros_like(self._grid)
         self._update_coords_and_anchor()
 
-    def _render(self, mode: str = 'human') -> np.ndarray:
+    def _render(self, mode: Optional[str] = 'human') -> np.ndarray:
         """
         Shows an image of the current grid, having dropped the current piece.
         The human has the option to pause (SPACEBAR), speed up (RIGHT key),
@@ -272,7 +275,7 @@ class SimplifiedTetrisEngine:
 
         raise ValueError('Mode should be "human".')
 
-    def _draw_boundary(self):
+    def _draw_boundary(self) -> None:
         """Draws a horizontal red line to indicate the cut off point."""
         vertical_position = self._piece_size * self._cell_size
         self._img[vertical_position - int(self._cell_size/40): vertical_position
@@ -288,7 +291,7 @@ class SimplifiedTetrisEngine:
             self._width)] for i in range(self._height)]
         return np.array(grid)
 
-    def _resize_grid(self, grid: np.ndarray):
+    def _resize_grid(self, grid: np.ndarray) -> None:
         """
         Reshape the grid, convert it to an Image and resize it, then convert it
         to an array.
@@ -302,7 +305,7 @@ class SimplifiedTetrisEngine:
                                       self._height * self._cell_size))
         self._img = np.array(self._img)
 
-    def _draw_separating_lines(self):
+    def _draw_separating_lines(self) -> None:
         """Draws the horizontal and vertical _BLACK lines to separate the grid's cells."""
         for j in range(-int(self._cell_size / 40), int(self._cell_size / 40) + 1):
             self._img[[i * self._cell_size +
@@ -310,7 +313,7 @@ class SimplifiedTetrisEngine:
             self._img[:, [i * self._cell_size +
                           j for i in range(self._width)], :] = self._BLACK
 
-    def _add_img_left(self):
+    def _add_img_left(self) -> None:
         """
         Adds the image that will appear to the left of the grid.
         """
@@ -351,9 +354,9 @@ class SimplifiedTetrisEngine:
     def _add_statistics(
             self,
             img_array: np.ndarray,
-            items: list,
-            x_offsets: list,
-    ):
+            items: List[List[str]],
+            x_offsets: List[int],
+    ) -> None:
         """
         Adds statistics to the array provided.
 
@@ -374,7 +377,7 @@ class SimplifiedTetrisEngine:
                     cv.LINE_AA
                 )
 
-    def _update_coords_and_anchor(self):
+    def _update_coords_and_anchor(self) -> None:
         """Updates the current piece's coords and ID, and resets the anchor."""
         self._current_piece_coords, self._current_piece_id = \
             self._all_piece_coords._get_piece_at_random()
@@ -408,7 +411,7 @@ class SimplifiedTetrisEngine:
 
         return False
 
-    def _hard_drop(self):
+    def _hard_drop(self) -> None:
         """
         Finds the position to place the piece (the anchor) by hard dropping the current piece.
 
@@ -454,7 +457,7 @@ class SimplifiedTetrisEngine:
         self._grid = new_grid
         return sum(can_clear)
 
-    def _update_grid(self, set_piece: bool):
+    def _update_grid(self, set_piece: bool) -> None:
         """
         Sets the current piece using the anchor.
 
@@ -480,7 +483,7 @@ class SimplifiedTetrisEngine:
         num_rows_cleared = self._clear_rows()
         return float(num_rows_cleared), num_rows_cleared
 
-    def _get_all_available_actions(self):
+    def _get_all_available_actions(self) -> None:
         """Gets the actions available for each of the pieces in use."""
         self._all_available_actions = {}
         for k in range(1, self._num_pieces + 1):
@@ -489,7 +492,7 @@ class SimplifiedTetrisEngine:
             self._current_piece_id = k
             self._all_available_actions[k] = self._compute_available_actions()
 
-    def _compute_available_actions(self) -> Dict:
+    def _compute_available_actions(self) -> Dict[int, Tuple[int, int]]:
         """
         Computes the actions that are available with the current piece.
 

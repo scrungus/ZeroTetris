@@ -1,13 +1,16 @@
 import random
 from dataclasses import dataclass
-from typing import Tuple
+from typing import Dict, List, Tuple, Union
+
+Coords = List[List[Tuple[int, int]]]
+Piece_info = Dict[str, Union[Coords, str]]
 
 
 @dataclass
 class PieceCoords:
-    coords: dict
+    coords: Dict[int, Piece_info]
 
-    def _get_piece_at_random(self) -> Tuple[list, int]:
+    def _get_piece_at_random(self) -> Tuple[Coords, int]:
         """
         Gets the coords of a piece selected uniformly at random.
 
@@ -16,7 +19,7 @@ class PieceCoords:
         random_id = random.randint(1, len(self.coords.keys()))
         return self.coords[random_id]['coords'], random_id
 
-    def _select_piece(self, idx: int):
+    def _select_piece(self, idx: int) -> Coords:
         """
         Selects a piece using the ID provided.
 

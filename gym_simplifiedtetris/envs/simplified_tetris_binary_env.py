@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Any, Dict, Sequence, Tuple
 
 import numpy as np
 from gym import spaces
@@ -20,7 +20,7 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
 
     def __init__(
             self,
-            grid_dims: tuple,
+            grid_dims: Sequence[int, int],
             piece_size: int,
     ):
         super(SimplifiedTetrisBinaryEnv, self).__init__(
@@ -36,7 +36,7 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
         )
 
     @property
-    def observation_space(self):
+    def observation_space(self) -> spaces.Box:
         return spaces.Box(
             low=np.append(np.zeros(self._width_ * self._height_), 1),
             high=np.append(np.ones(self._width_ * self._height_),
@@ -45,14 +45,14 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
         )
 
     @property
-    def action_space(self):
+    def action_space(self) -> spaces.Discrete:
         return spaces.Discrete(self.num_actions)
 
     def _reset_(self) -> np.array:
         self._engine._reset()
         return self._get_obs_()
 
-    def _step_(self, action: int) -> Tuple[np.array, float, bool, dict]:
+    def _step_(self, action: int) -> Tuple[np.array, float, bool, Dict[Any, Any]]:
         """
         Hard drops the current piece according to the argument provided. Terminates
         the game if a condition is met. Otherwise, a new piece is selected, and the 
@@ -98,7 +98,7 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
     def _render_(self, mode: str) -> np.ndarray:
         return self._engine._render(mode)
 
-    def _close_(self):
+    def _close_(self) -> None:
         return self._engine._close()
 
     def _get_obs_(self) -> np.array:

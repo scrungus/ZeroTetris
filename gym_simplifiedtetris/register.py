@@ -6,7 +6,7 @@ env_list: list = []
 def register(
         idx: str,
         entry_point: str,
-):
+) -> None:
     """
     This function performs some checks on the arguments provided, and then
     registers the custom environments in Gym.
