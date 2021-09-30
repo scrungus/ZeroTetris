@@ -123,7 +123,7 @@ class SimplifiedTetrisEngine:
 
     :param grid_dims: the grid dimensions; height, width.
     :param piece_size: the size of the pieces in use.
-    :param n_pieces: the number of pieces in use.
+    :param num_pieces: the number of pieces in use.
     :param num_actions: the number of available actions in each state.
     """
 
@@ -143,9 +143,8 @@ class SimplifiedTetrisEngine:
         self.grid = np.zeros((grid_dims[1], grid_dims[0]), dtype=int)
         self.old_grid = np.zeros((grid_dims[1], grid_dims[0]), dtype=int)
 
-        # Initialise two anchors.
+        # Create an anchor.
         self.anchor = [grid_dims[1] / 2 - 1, piece_size - 1]
-        self.old_anchor = [grid_dims[1] / 2 - 1, piece_size - 1]
 
         # Initialise render attributes.
         self.final_scores = np.array([], dtype=int)
@@ -181,7 +180,7 @@ class SimplifiedTetrisEngine:
 
         # Initialise attributes for saving GIFs.
         self.image_lst = []
-        self.save_frame = True
+        self.save_frame = False
 
     @staticmethod
     def get_bgr_code(colour_name: str) -> Tuple[float, float, float]:
@@ -225,9 +224,8 @@ class SimplifiedTetrisEngine:
         # Draw horizontal and vertical lines between the cells.
         self.draw_separating_lines()
 
-        # Add extra space to the left.
-        img_left = self.get_img_left()
-        self.img = np.concatenate((img_left, self.img), axis=1)
+        # Add image to the left.
+        self.add_img_left()
 
         # Draws a horizontal red line to indicate the top of the playfield.
         self.draw_boundary()
@@ -239,10 +237,10 @@ class SimplifiedTetrisEngine:
                     frame_rgb = cv.cvtColor(self.img, cv.COLOR_BGR2RGB)
                     self.image_lst.append(frame_rgb)
 
-                if len(self.final_scores) == 5 and self.save_frame:
-                    imageio.mimsave(f'assets/{self.height}x{self.width}_{self.piece_size}.gif',
-                                    self.image_lst, fps=60, duration=0.5)
-                    self.save_frame = False
+                    if len(self.final_scores) == 5:
+                        imageio.mimsave(f'assets/{self.height}x{self.width}_{self.piece_size}.gif',
+                                        self.image_lst, fps=60, duration=0.5)
+                        self.save_frame = False
 
                 cv.imshow('Simplified Tetris', self.img)
                 k = cv.waitKey(self.sleep_time)
@@ -315,11 +313,9 @@ class SimplifiedTetrisEngine:
             self.img[:, [i * self.cell_size +
                          j for i in range(self.width)], :] = self.BLACK
 
-    def get_img_left(self) -> np.ndarray:
+    def add_img_left(self):
         """
-        Gets the image that will appear to the left of the grid.
-
-        :return: the image that will appear to the left of the grid.
+        Adds the image that will appear to the left of the grid.
         """
         img_array = np.zeros((self.height * self.cell_size,
                               self.LEFT_SPACE, 3)).astype(np.uint8)
@@ -353,7 +349,7 @@ class SimplifiedTetrisEngine:
             ],
             x_offsets=[50, 300],
         )
-        return img_array
+        self.img = np.concatenate((img_array, self.img), axis=1)
 
     def add_statistics(
             self,
@@ -387,9 +383,9 @@ class SimplifiedTetrisEngine:
             self.all_piece_coords.get_piece_at_random()
         self.anchor = [self.width / 2 - 1, self.piece_size - 1]
 
-    def is_legal(self) -> bool:
+    def is_illegal(self) -> bool:
         """
-        Checks if the piece's current position is legal by looping over each
+        Checks if the piece's current position is illegal by looping over each
         of its square blocks.
 
         Author:
@@ -403,18 +399,14 @@ class SimplifiedTetrisEngine:
 
         # Loop over each of the piece's blocks.
         for i, j in self.piece:
-            x_pos, y_pos = self.anchor[0] + i, self.anchor[1] + j
+            x_pos, y_pos = int(self.anchor[0] + i), int(self.anchor[1] + j)
 
-            # Doesn't matter if a block is too high.
+            # Don't check if illegal move if block is too high.
             if y_pos < 0:
                 continue
 
-            cond1 = x_pos < 0
-            cond2 = x_pos >= self.width
-            cond3 = y_pos >= self.height
-
-            # Check if legal move.
-            if cond1 or cond2 or cond3 or self.grid[x_pos, y_pos] > 0:
+            # Check if illegal move. Last condition must come after previous conditions.
+            if x_pos < 0 or x_pos >= self.width or y_pos >= self.height or self.grid[x_pos, y_pos] > 0:
                 return True
 
         return False
@@ -431,7 +423,7 @@ class SimplifiedTetrisEngine:
         """
         while True:
             # Keep going until current piece occupies a full cell, then backtrack once.
-            if not self.is_legal():
+            if not self.is_illegal():
                 self.anchor[1] += 1
             else:
                 self.anchor[1] -= 1

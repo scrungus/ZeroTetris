@@ -11,14 +11,13 @@ def register(
     This function performs some checks on the arguments provided, and then
     registers the custom environments in Gym.
     """
-
     assert idx.startswith(
         "simplifiedtetris-"), 'Env ID should start with "simplifiedtetris-".'
     assert entry_point.startswith(
         "gym_simplifiedtetris.envs:SimplifiedTetris"), 'Entry point should\
             start with "gym_simplifiedtetris.envs:SimplifiedTetris".'
     assert entry_point.endswith("Env"), 'Entry point should end with "Env".'
-    assert idx not in env_list, 'Incorrect env ID provided.'
+    assert idx not in env_list, f'Already registered env id: {idx}'
 
     gym_register(
         id=idx,
