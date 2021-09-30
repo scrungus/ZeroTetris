@@ -20,7 +20,7 @@
   - [3.5. Action and observation spaces](#35-action-and-observation-spaces)
   - [3.6. Game ending](#36-game-ending)
   - [3.7. Usage](#37-usage)
-- [4. Coming soon :soon:](#4-coming-soon-soon)
+- [4. Checklist :white_check_mark:](#4-checklist-white_check_mark)
 - [5. Contributing :bulb:](#5-contributing-bulb)
 - [6. Credits :raised_hands:](#6-credits-raised_hands)
 - [7. License :memo:](#7-license-memo)
@@ -179,17 +179,18 @@ env = Tetris(
 )
 ```
 
-## 4. Coming soon :soon:
+## 4. Checklist :white_check_mark:
 
 - [X] Unit tests
-- [ ] Heuristic agent
-- [ ] Q-learning agent
-- [ ] Uniform agent
-- [ ] More environments with:
+- [ ] Agents:
+  - [ ] Heuristic
+  - [ ] Q-learning
+  - [ ] Uniform
+- [ ] Environments with:
   - [ ] Different observation spaces
   - [ ] Different reward functions
-- [ ] Alternative action space representation
-- [ ] Normalised observation spaces
+  - [ ] Alternative action space representation
+  - [ ] Normalised observation spaces
 
 ## 5. Contributing :bulb:
 
