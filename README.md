@@ -27,7 +27,7 @@
 ## 1. Introduction
 
 <p align="left">
-  <a href="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetristemp">
+  <a href="/LICENSE.md">
     <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetristemp?style=flat-square">
   </a>
   <a href="http://makeapullrequest.com">
@@ -157,7 +157,7 @@ while num_episodes < 10:
 env.close()
 ```
 
-The env can instead be imported directly:
+Alternatively, the env can be imported directly:
 ```python
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
@@ -177,7 +177,7 @@ Please feel free to provide any suggestions [here](https://github.com/OliverOver
 
 ## 6. Credits
 
-This package utilises several methods from the [codebase](https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning) developed by Lay (2020). The class hierarchy design was inspired by a [codebase](https://github.com/Hewiiitt/Gym-Circuitboard) developed by Matt Hewitt.
+This package utilises several methods from the [codebase](https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning) developed by andreanlay (2020). The class hierarchy design was inspired by a [codebase](https://github.com/Hewiiitt/Gym-Circuitboard) developed by Hewiiitt.
 
 ## 7. License
 
