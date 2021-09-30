@@ -29,10 +29,13 @@
 
 <p align="left">
   <a href="/LICENSE.md">
-    <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetristemp?style=flat-square">
+    <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetristemp?color=red">
   </a>
   <a href="http://makeapullrequest.com">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square">
+    <img src="https://img.shields.io/badge/PRs-welcome-success.svg?style=flat">
+  </a>
+  <a href="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetristemp">
+    <img src="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetristemp/badge">
   </a>
 </p>
 
@@ -49,13 +52,13 @@ git clone https://github.com/OliverOverend/gym-simplifiedtetristemp
 
 Here is a list of the versions used during development:
 
-- Python 3.7.4
-- NumPy 1.16.5
-- Gym 0.18.0
-- OpenCV-Python 4.5.1
-- Matplotlib 3.4.2
-- Pillow 6.2.0
-- Stable-Baselines3 1.1.0
+- Python==3.7.4
+- NumPy==1.16.5
+- Gym==0.18.0
+- OpenCV-Python==4.5.1
+- Matplotlib==3.4.2
+- Pillow==6.2.0
+- Stable-Baselines3==1.1.0
 
 ## 3. Environments
 
