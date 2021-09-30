@@ -383,7 +383,7 @@ class SimplifiedTetrisEngine:
             self.all_piece_coords.get_piece_at_random()
         self.anchor = [self.width / 2 - 1, self.piece_size - 1]
 
-    def is_legal(self) -> bool:
+    def is_illegal(self) -> bool:
         """
         Checks if the piece's current position is legal by looping over each
         of its square blocks.
@@ -410,7 +410,7 @@ class SimplifiedTetrisEngine:
             cond3 = y_pos >= self.height
 
             # Check if legal move.
-            if cond1 or cond2 or cond3 or self.grid[x_pos, y_pos] > 0:
+            if self.grid[x_pos, y_pos] > 0 or cond1 or cond2 or cond3:
                 return True
 
         return False
@@ -427,7 +427,7 @@ class SimplifiedTetrisEngine:
         """
         while True:
             # Keep going until current piece occupies a full cell, then backtrack once.
-            if not self.is_legal():
+            if not self.is_illegal():
                 self.anchor[1] += 1
             else:
                 self.anchor[1] -= 1
