@@ -42,7 +42,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         self.REWARD_RANGE = (0, 4)
 
         # Seed the rng.
-        self.seed(seed=seed)
+        self._seed(seed=seed)
 
     def reset(self) -> np.array:
         return self._reset_()
@@ -56,7 +56,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
     def close(self):
         return self._close_()
 
-    def seed(self, seed: int = 8191):
+    def _seed(self, seed: int = 8191):
         self.np_random, _ = seeding.np_random(seed)
 
     @property
@@ -70,11 +70,11 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         raise NotImplementedError()
 
     @abstractmethod
-    def _get_obs(self):
+    def _get_obs_(self):
         raise NotImplementedError()
 
     @abstractmethod
-    def _get_reward(self):
+    def _get_reward_(self):
         raise NotImplementedError()
 
     @abstractmethod

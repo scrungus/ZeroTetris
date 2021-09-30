@@ -48,8 +48,8 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
         return spaces.Discrete(self.num_actions)
 
     def _reset_(self) -> np.array:
-        self.engine.reset()
-        return self._get_obs()
+        self.engine._reset()
+        return self._get_obs_()
 
     def _step_(self, action: int) -> Tuple[np.array, float, bool, dict]:
         """
@@ -63,7 +63,7 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
         info = {}
 
         # Get the translation and rotation.
-        translation, rotation = self.engine.all_available_actions[self._get_obs(
+        translation, rotation = self.engine.all_available_actions[self._get_obs_(
         )[-1]][action]
 
         # Set the anchor and fetch the rotated piece.
@@ -71,8 +71,8 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
         self.engine.piece = self.engine.current_piece_coords[rotation]
 
         # Hard drop the piece and update the grid.
-        self.engine.hard_drop()
-        self.engine.update_grid(True)
+        self.engine._hard_drop()
+        self.engine._update_grid(True)
 
         # Game terminates if any of the dropped piece's blocks occupies any of the
         # top piece_size rows, before any full rows are cleared.
@@ -80,32 +80,32 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
             info['num_rows_cleared'] = 0
             self.engine.final_scores = np.append(
                 self.engine.final_scores, self.engine.score)
-            return self._get_obs(), 0.0, True, info
+            return self._get_obs_(), 0.0, True, info
 
         # Get the reward and update the score.
-        reward, num_rows_cleared = self._get_reward()
+        reward, num_rows_cleared = self._get_reward_()
         self.engine.score += num_rows_cleared
 
         # Get a new piece and update the anchor.
-        self.engine.update_coords_and_anchor()
+        self.engine._update_coords_and_anchor()
 
         # Update the info.
         info['num_rows_cleared'] = num_rows_cleared
 
-        return self._get_obs(), float(reward), False, info
+        return self._get_obs_(), float(reward), False, info
 
     def _render_(self, mode: str) -> np.ndarray:
-        return self.engine.render(mode)
+        return self.engine._render(mode)
 
     def _close_(self):
-        return self.engine.close()
+        return self.engine._close()
 
-    def _get_obs(self) -> np.array:
+    def _get_obs_(self) -> np.array:
         current_grid = np.clip(self.engine.grid.flatten(), 0, 1)
         return np.append(current_grid, self.engine.current_piece_id)
 
-    def _get_reward(self) -> Tuple[float, int]:
-        return self.engine.get_reward()
+    def _get_reward_(self) -> Tuple[float, int]:
+        return self.engine._get_reward()
 
 
 register(
