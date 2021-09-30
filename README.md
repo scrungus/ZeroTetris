@@ -110,7 +110,7 @@ env.render()
 
 ### 3.4. Variable dimensions and piece size
 
-The user can choose to deviate from the standard grid dimensions and Tetriminos by editing the `gym_register` kwargs. The user can choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. The user can select a height in the interval $[$`piece_size`$+1, 20]$ and a width in the interval $[$`piece_size`$, 10]$. Below is a GIF showing games being played on a $8 \times 6$ grid with trominoes as the pieces.
+The user can choose to deviate from the standard grid dimensions and Tetriminos by editing the `gym_register` kwargs. The user can choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. The user can select a height in the interval [`piece_size`+1, 20] and a width in the interval [`piece_size`, 10]. Below is a GIF showing games being played on a 8 x 6 grid with trominoes as the pieces.
 
 <p align="center">
     <img src="assets/8x6_3.gif" width="400">
@@ -119,12 +119,12 @@ The user can choose to deviate from the standard grid dimensions and Tetriminos 
 ### 3.5. Action and observation spaces
 
 Each environment comes with an `observation_space` that is a `Box` space and an `action_space` that is a `Discrete` space. At each time step, the artificial agent must choose an action (an integer from a particular range). Each action maps to a translation/rotation tuple that specifies the column to drop the piece and its rotation. The ranges for the four different piece sizes are:
-- Monominos: $[0, w - 1]$
-- Dominos: $[0, 2w - 2]$
-- Trominoes: $[0, 4w - 5]$
-- Tetriminos: $[0, 4w  - 7]$
+- Monominos: [0, w - 1]
+- Dominos: [0, 2w - 2]
+- Trominoes: [0, 4w - 5]
+- Tetriminos: [0, 4w  - 7]
 
-where $w$ is the grid width.
+where w is the grid width.
 
 ### 3.6. Game ending
 
