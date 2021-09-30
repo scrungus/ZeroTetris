@@ -1,5 +1,5 @@
 import time
-from typing import Dict, List, Sequence, Tuple, Union
+from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 import cv2.cv2 as cv
 import imageio
@@ -132,7 +132,7 @@ class SimplifiedTetrisEngine:
 
     def __init__(
             self,
-            grid_dims: Sequence[int, int],
+            grid_dims: Sequence[int],
             piece_size: int,
             num_pieces: int,
             num_actions: int,

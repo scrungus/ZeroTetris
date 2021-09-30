@@ -19,7 +19,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     def __init__(
             self,
-            grid_dims: Sequence[int, int],
+            grid_dims: Sequence[int],
             piece_size: int,
             seed: Optional[int] = 8191,
     ):
