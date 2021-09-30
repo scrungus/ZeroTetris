@@ -147,7 +147,7 @@ class SimplifiedTetrisEngine:
         self.anchor = [grid_dims[1] / 2 - 1, piece_size - 1]
         self.old_anchor = [grid_dims[1] / 2 - 1, piece_size - 1]
 
-        # Initialise render attributes
+        # Initialise render attributes.
         self.final_scores = np.array([], dtype=int)
         self.sleep_time = 500
         self.show_agent_playing = True
@@ -158,14 +158,14 @@ class SimplifiedTetrisEngine:
         self.WHITE: tuple = self.get_bgr_code('white')
         self.RED: tuple = self.get_bgr_code('red')
         self.GRID_COLOURS: list = [
-            self.WHITE,  # Empty
-            self.get_bgr_code('cyan'),  # 'I'
-            self.get_bgr_code('orange'),  # 'L'
-            self.get_bgr_code('yellow'),  #  'O'
-            self.get_bgr_code('purple'),  # 'T'
-            self.get_bgr_code('blue'),  # 'J'
-            self.get_bgr_code('green'),  # 'S'
-            self.RED,  # 'Z'
+            self.WHITE,  # Empty.
+            self.get_bgr_code('cyan'),  # 'I'.
+            self.get_bgr_code('orange'),  # 'L'.
+            self.get_bgr_code('yellow'),  #  'O'.
+            self.get_bgr_code('purple'),  # 'T'.
+            self.get_bgr_code('blue'),  # 'J'.
+            self.get_bgr_code('green'),  # 'S'.
+            self.RED,  # 'Z'.
         ]
 
         # Initialise an empty img array.
@@ -324,6 +324,7 @@ class SimplifiedTetrisEngine:
         img_array = np.zeros((self.height * self.cell_size,
                               self.LEFT_SPACE, 3)).astype(np.uint8)
 
+        # Calculate the mean score.
         mean_score = 0.0 if len(
             self.final_scores) == 0 else np.mean(self.final_scores)
 
