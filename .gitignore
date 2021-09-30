@@ -1,5 +1,5 @@
 .DS_Store
 *.pyc
 
-test_env.py
-test_env2.py
+test_env_gym.py
+test_env_direct.py
