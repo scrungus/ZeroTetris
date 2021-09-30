@@ -9,7 +9,7 @@ def main():
     This function checks if each env created conforms to the OpenAI Gym API. 
     The first observation is printed out for visual inspection. Ten games are
     played using an agent that selects actions uniformly at random. In every game,
-    the reward received is validated. The env is rendered for visual inspection.
+    the reward received is validated and the env is rendered for visual inspection.
     """
 
     num_envs = len(gym_simplifiedtetris.register.env_list)
