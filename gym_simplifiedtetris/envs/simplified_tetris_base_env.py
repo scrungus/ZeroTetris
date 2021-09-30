@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Tuple
+from typing import Any, Dict, Optional, Sequence, Tuple
 
 import numpy as np
 import gym
@@ -19,9 +19,9 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     def __init__(
             self,
-            grid_dims: Tuple[int, int],
+            grid_dims: Sequence[int, int],
             piece_size: int,
-            seed: int = 8191,
+            seed: Optional[int] = 8191,
     ):
         assert piece_size in [
             1, 2, 3, 4], 'Size of piece should be either 1, 2, 3, or 4.'
@@ -47,16 +47,16 @@ class SimplifiedTetrisBaseEnv(gym.Env):
     def reset(self) -> np.array:
         return self._reset_()
 
-    def step(self, action: int) -> Tuple[np.array, float, bool, dict]:
+    def step(self, action: int) -> Tuple[np.array, float, bool, Dict[Any, Any]]:
         return self._step_(action)
 
-    def render(self, mode: str = 'human') -> np.ndarray:
+    def render(self, mode: Optional[str] = 'human') -> np.ndarray:
         return self._render_(mode)
 
-    def close(self):
+    def close(self) -> None:
         return self._close_()
 
-    def _seed(self, seed: int = 8191):
+    def _seed(self, seed: Optional[int] = 8191) -> None:
         self.np_random, _ = seeding.np_random(seed)
 
     @property
@@ -82,7 +82,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         raise NotImplementedError()
 
     @abstractmethod
-    def _render_(self, mode: str):
+    def _render_(self, mode):
         raise NotImplementedError()
 
     @abstractmethod
@@ -90,5 +90,5 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         raise NotImplementedError()
 
     @abstractmethod
-    def _step_(self, action: int):
+    def _step_(self, action):
         raise NotImplementedError()
