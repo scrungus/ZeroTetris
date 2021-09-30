@@ -17,15 +17,14 @@ def register(
         "gym_simplifiedtetris.envs:SimplifiedTetris"), 'Entry point should\
             start with "gym_simplifiedtetris.envs:SimplifiedTetris".'
     assert entry_point.endswith("Env"), 'Entry point should end with "Env".'
-    # assert idx not in env_list, f'Already registered env id: {idx}'
+    assert idx not in env_list, f'Already registered env id: {idx}'
 
-    if idx not in env_list:
-        gym_register(
-            id=idx,
-            entry_point=entry_point,
-            kwargs={
-                'grid_dims': (20, 10),
-                'piece_size': 4,
-            },
-        )
-        env_list.append(idx)
+    gym_register(
+        id=idx,
+        entry_point=entry_point,
+        kwargs={
+            'grid_dims': (20, 10),
+            'piece_size': 4,
+        },
+    )
+    env_list.append(idx)
