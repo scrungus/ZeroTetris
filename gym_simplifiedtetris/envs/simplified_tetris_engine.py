@@ -385,7 +385,7 @@ class SimplifiedTetrisEngine:
 
     def is_illegal(self) -> bool:
         """
-        Checks if the piece's current position is legal by looping over each
+        Checks if the piece's current position is illegal by looping over each
         of its square blocks.
 
         Author:
@@ -399,18 +399,14 @@ class SimplifiedTetrisEngine:
 
         # Loop over each of the piece's blocks.
         for i, j in self.piece:
-            x_pos, y_pos = self.anchor[0] + i, self.anchor[1] + j
+            x_pos, y_pos = int(self.anchor[0] + i), int(self.anchor[1] + j)
 
-            # Doesn't matter if a block is too high.
+            # Don't check if illegal move if block is too high.
             if y_pos < 0:
                 continue
 
-            cond1 = x_pos < 0
-            cond2 = x_pos >= self.width
-            cond3 = y_pos >= self.height
-
-            # Check if legal move.
-            if self.grid[x_pos, y_pos] > 0 or cond1 or cond2 or cond3:
+            # Check if illegal move. Last condition must come after previous conditions.
+            if x_pos < 0 or x_pos >= self.width or y_pos >= self.height or self.grid[x_pos, y_pos] > 0:
                 return True
 
         return False
