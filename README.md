@@ -91,6 +91,12 @@ The `reset()` method returns a 1D array containing some grid binary representati
 
 ```python
 obs = env.reset()
+print(obs)
+[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 4]
 ```
 
 #### 3.3.2. `step(action: int)` method
@@ -154,6 +160,8 @@ Each game of Tetris terminates if the following condition is satisfied: any of t
 
 Here is an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
 
+**`run_gym_env.py`**
+
 ```python
 import gym
 
@@ -178,6 +186,8 @@ env.close()
 ```
 
 Alternatively, the env can be imported directly:
+
+**`run_env_directly.py`**
 
 ```python
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
