@@ -78,10 +78,10 @@ There are currently two environments provided:
 The user can implement more custom Gym environments with different observation spaces and reward functions easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBinaryEnv` and are registered using:
 
 ```python
-register(
-    idx='INSERT_ENV_NAME_HERE',
-    entry_point='gym_simplifiedtetris.envs:INSERT_ENV_CLASS_NAME_HERE',
-)
+>>> register(
+>>>     idx='INSERT_ENV_NAME_HERE',
+>>>     entry_point='gym_simplifiedtetris.envs:INSERT_ENV_CLASS_NAME_HERE',
+>>> )
 ```
 
 ### 3.3. Methods
@@ -91,8 +91,8 @@ register(
 The `reset()` method returns a 1D array containing some grid binary representation, plus the current piece's ID.
 
 ```python
-obs = env.reset()
-print(obs)
+>>> obs = env.reset()
+>>> print(obs)
 [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -110,7 +110,7 @@ Each environment's step method returns four values:
 - `info` (**dict**): only contains the `num_rows_cleared` due to taking the previous action
 
 ```python
-obs, rwd, done, info = env.step(action)
+>>> obs, rwd, done, info = env.step(action)
 ```
 
 #### 3.3.3. `render()` method
@@ -123,7 +123,7 @@ The user has access to the following controls during rendering:
 - Quit (**ESC**)
 
 ```python
-env.render()
+>>> env.render()
 ```
 
 #### 3.3.4. `close()` method
@@ -131,7 +131,7 @@ env.render()
 The user can close all open windows using:
 
 ```python
-env.close()
+>>> env.close()
 ```
 
 ### 3.4. Variable dimensions and piece size
@@ -186,7 +186,7 @@ while num_episodes < 10:
 env.close()
 ```
 
-Alternatively, the env can be imported directly:
+Alternatively, the environment can be imported directly:
 
 **`run_env_directly.py`**
 
