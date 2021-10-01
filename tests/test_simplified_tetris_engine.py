@@ -8,11 +8,11 @@ from gym_simplifiedtetris.envs import SimplifiedTetrisEngine as Engine
 class SimplifiedTetrisEngineTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self._height_ = 8
-        self._width_ = 6
+        self._height_ = 20
+        self._width_ = 10
         self._piece_size_ = 4
         self._num_actions_, self._num_pieces_ = (4 * self._width_ - 6, 7)
-        
+
         self._engine = Engine(
             grid_dims=(self._height_, self._width_),
             piece_size=self._piece_size_,
