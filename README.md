@@ -59,6 +59,7 @@ Here is a list of the versions used throughout development:
 - NumPy==1.16.5
 - Gym==0.18.0
 - OpenCV-Python==4.5.1
+- Imageio==2.6.0
 - Matplotlib==3.4.2
 - Pillow==6.2.0
 - Stable-Baselines3==1.1.0
