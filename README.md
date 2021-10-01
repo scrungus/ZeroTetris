@@ -194,7 +194,7 @@ env = Tetris(
 - [ ] Agents:
   - [ ] Heuristic
   - [ ] Q-learning
-  - [ ] Uniform
+  - [X] Uniform
 - [ ] Environments with:
   - [ ] Different observation spaces
   - [ ] Different reward functions
