@@ -6,9 +6,9 @@
 
 ## Table of Contents <!-- omit in toc -->
 
-- [1. Introduction :information_source:](#1-introduction-information_source)
-- [2. Getting started :clipboard:](#2-getting-started-clipboard)
-- [3. Environments :earth_africa:](#3-environments-earth_africa)
+- [1. Introduction](#1-introduction)
+- [2. Getting started](#2-getting-started)
+- [3. Environments](#3-environments)
   - [3.1. Available environments](#31-available-environments)
   - [3.2. Building more environments](#32-building-more-environments)
   - [3.3. Methods](#33-methods)
@@ -20,12 +20,12 @@
   - [3.5. Action and observation spaces](#35-action-and-observation-spaces)
   - [3.6. Game ending](#36-game-ending)
   - [3.7. Usage](#37-usage)
-- [4. Future work :white_check_mark:](#4-future-work-white_check_mark)
-- [5. Contributing :bulb:](#5-contributing-bulb)
-- [6. Credits :raised_hands:](#6-credits-raised_hands)
-- [7. License :memo:](#7-license-memo)
+- [4. Future work](#4-future-work)
+- [5. Contributing](#5-contributing)
+- [6. Credits](#6-credits)
+- [7. License](#7-license)
 
-## 1. Introduction :information_source:
+## 1. Introduction
 
 <p align="left">
   <a href="/LICENSE.md">
@@ -43,7 +43,7 @@ Gym-SimplifiedTetris is a Python package that can create *simplified* reinforcem
 
 This README provides some help with the setup, gives an overview of the environments and how to use them, and describes how to build more environments.
 
-## 2. Getting started :clipboard:
+## 2. Getting started
 
 If you would like to contribute, I'd recommend following [this](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/) advice. In summary, fork the repo :arrow_right: clone it :arrow_right: create a new branch :arrow_right: make changes :arrow_right: merge to master :arrow_right: create a new pull request [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/compare).
 
@@ -63,7 +63,7 @@ Here is a list of the versions used during development:
 - Pillow==6.2.0
 - Stable-Baselines3==1.1.0
 
-## 3. Environments :earth_africa:
+## 3. Environments
 
 ### 3.1. Available environments
 
@@ -138,6 +138,7 @@ The user can deviate from the standard grid dimensions and Tetriminos by editing
 ### 3.5. Action and observation spaces
 
 Each environment comes with an `observation_space` that is a `Box` space and an `action_space` that is a `Discrete` space. At each time step, the artificial agent must choose an action (an integer from a particular range). Each action maps to a translation/rotation tuple that specifies the column to drop the piece and its rotation. The ranges for the four different piece sizes are:
+
 - Monominos: [0, w - 1]
 - Dominos: [0, 2w - 2]
 - Trominoes: [0, 4w - 5]
@@ -187,7 +188,7 @@ env = Tetris(
 )
 ```
 
-## 4. Future work :white_check_mark:
+## 4. Future work
 
 - [X] Unit tests
 - [ ] Agents:
@@ -200,14 +201,14 @@ env = Tetris(
   - [ ] Alternative action space representation
   - [ ] Normalised observation spaces
 
-## 5. Contributing :bulb:
+## 5. Contributing
 
 Please feel free to provide any suggestions [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/discussions/new). Please report any bugs [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new?assignees=OliverOverend&labels=bug&template=BUG_REPORT.md&title=%5BBUG%5D%3A) or create a feature request [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new?assignees=OliverOverend&labels=enhancement&template=FEATURE_REQUEST.md&title=%5BFEATURE%5D%3A). Pull requests can be created [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/compare).
 
-## 6. Credits :raised_hands:
+## 6. Credits
 
 This package utilises several methods from the [codebase](https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning) developed by andreanlay (2020). The class hierarchy design was inspired by a [codebase](https://github.com/Hewiiitt/Gym-Circuitboard) developed by Hewiiitt.
 
-## 7. License :memo:
+## 7. License
 
 This project is licensed under the terms of the [MIT license](/LICENSE.md).
