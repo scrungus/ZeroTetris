@@ -33,7 +33,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         self._height_, self._width_ = grid_dims
         self._piece_size_ = piece_size
 
-        self.num_actions, self._num_pieces_ = {
+        self._num_actions_, self._num_pieces_ = {
             1: (grid_dims[1], 1),
             2: (2 * grid_dims[1] - 1, 1),
             3: (4 * grid_dims[1] - 4, 2),

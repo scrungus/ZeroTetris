@@ -2,6 +2,7 @@ import gym
 from stable_baselines3.common.env_checker import check_env
 
 import gym_simplifiedtetris
+from gym_simplifiedtetris.agents import UniformAgent
 
 
 def main() -> None:
@@ -26,12 +27,16 @@ def main() -> None:
         obs = env.reset()
         print(f'First observation given: {obs}')
 
+        agent = gym_simplifiedtetris.agents.UniformAgent(env._num_actions_)
+
         num_episodes = 0
         while num_episodes < 10:
 
             env.render()
 
-            obs, reward, done, _ = env.step(env.action_space.sample())
+            action = agent.predict()
+
+            obs, reward, done, _ = env.step(action)
 
             # Checks the reward is valid.
             assert env._REWARD_RANGE[0] <= reward <= env._REWARD_RANGE[
