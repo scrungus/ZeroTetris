@@ -2,7 +2,6 @@ import gym
 from stable_baselines3.common.env_checker import check_env
 
 import gym_simplifiedtetris
-from gym_simplifiedtetris.agents import UniformAgent
 
 
 def main() -> None:
