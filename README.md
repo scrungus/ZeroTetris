@@ -53,7 +53,7 @@ Or, you can clone the repository to create a local copy on your machine:
 git clone https://github.com/OliverOverend/gym-simplifiedtetristemp
 ```
 
-Here is a list of the versions used during development:
+Here is a list of the versions used throughout development:
 
 - Python==3.7.4
 - NumPy==1.16.5
