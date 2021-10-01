@@ -39,7 +39,7 @@
   </a>
 </p>
 
-Gym-SimplifiedTetris is a Python package that can create *simplified* reinforcement learning (RL) environments for Tetris, which conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting. To the best of the author's knowledge, this is the first open-source package to create Gym environments for Tetris that use the simplified setting.
+Gym-SimplifiedTetris is a Python package that can create *simplified* reinforcement learning (RL) environments for Tetris, which conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
 
 This README provides some help with the setup, gives an overview of the environments and how to use them, and describes how to build more environments.
 
