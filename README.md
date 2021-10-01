@@ -45,7 +45,9 @@ This README provides some help with the setup, gives an overview of the environm
 
 ## 2. Getting started :clipboard:
 
-To clone the repository:
+If you would like to contribute, I'd recommend following [this](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/) advice. In summary, fork the repo :arrow_right: clone it :arrow_right: create a new branch :arrow_right: make changes :arrow_right: merge to master :arrow_right: create a new pull request [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/compare).
+
+Or, you can just clone the repository to create a local copy on your machine:
 ```bash
 git clone https://github.com/OliverOverend/gym-simplifiedtetristemp
 ```
@@ -194,7 +196,7 @@ env = Tetris(
 
 ## 5. Contributing :bulb:
 
-Please feel free to provide any suggestions [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/discussions/new). Please report any bugs [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new?assignees=OliverOverend&labels=bug&template=BUG_REPORT.md&title=%5BBUG%5D%3A) or create a feature request [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new?assignees=OliverOverend&labels=enhancement&template=FEATURE_REQUEST.md&title=%5BFEATURE%5D%3A).
+Please feel free to provide any suggestions [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/discussions/new). Please report any bugs [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new?assignees=OliverOverend&labels=bug&template=BUG_REPORT.md&title=%5BBUG%5D%3A) or create a feature request [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new?assignees=OliverOverend&labels=enhancement&template=FEATURE_REQUEST.md&title=%5BFEATURE%5D%3A). Pull requests can be created [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/compare).
 
 ## 6. Credits :raised_hands:
 
