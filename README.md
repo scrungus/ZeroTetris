@@ -15,12 +15,12 @@
     - [3.3.1. `reset()` method](#331-reset-method)
     - [3.3.2. `step(action: int)` method](#332-stepaction-int-method)
     - [3.3.3. `render()` method](#333-render-method)
-    - [3.3.3. `close()` method](#333-close-method)
+    - [3.3.4. `close()` method](#334-close-method)
   - [3.4. Variable dimensions and piece size](#34-variable-dimensions-and-piece-size)
   - [3.5. Action and observation spaces](#35-action-and-observation-spaces)
   - [3.6. Game ending](#36-game-ending)
   - [3.7. Usage](#37-usage)
-- [4. Checklist :white_check_mark:](#4-checklist-white_check_mark)
+- [4. Future work :white_check_mark:](#4-future-work-white_check_mark)
 - [5. Contributing :bulb:](#5-contributing-bulb)
 - [6. Credits :raised_hands:](#6-credits-raised_hands)
 - [7. License :memo:](#7-license-memo)
@@ -119,7 +119,7 @@ The user has access to the following controls during rendering:
 env.render()
 ```
 
-#### 3.3.3. `close()` method
+#### 3.3.4. `close()` method
 
 The user can close all open windows using:
 
@@ -187,7 +187,7 @@ env = Tetris(
 )
 ```
 
-## 4. Checklist :white_check_mark:
+## 4. Future work :white_check_mark:
 
 - [X] Unit tests
 - [ ] Agents:
