@@ -39,7 +39,7 @@
   </a>
 </p>
 
-Gym-SimplifiedTetris is a Python package that can create *simplified* reinforcement learning (RL) environments for Tetris that conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. To the best of the author's knowledge, this is the first open-source package to create RL Gym environments that use the simplified setting — used by most of the previous approaches to the game of Tetris.
+Gym-SimplifiedTetris is a Python package that can create *simplified* reinforcement learning (RL) environments for Tetris, which conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting. To the best of the author's knowledge, this is the first open-source package to create Gym environments for Tetris that use the simplified setting.
 
 This README provides some help with the setup, gives an overview of the environments and how to use them, and describes how to build more environments.
 
@@ -47,7 +47,7 @@ This README provides some help with the setup, gives an overview of the environm
 
 If you would like to contribute, I'd recommend following [this](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/) advice. In summary, fork the repo :arrow_right: clone it :arrow_right: create a new branch :arrow_right: make changes :arrow_right: merge to master :arrow_right: create a new pull request [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/compare).
 
-Or, you can just clone the repository to create a local copy on your machine:
+Or, you can clone the repository to create a local copy on your machine:
 
 ```bash
 git clone https://github.com/OliverOverend/gym-simplifiedtetristemp
@@ -74,7 +74,7 @@ There are currently two environments provided:
 
 ### 3.2. Building more environments
 
-More custom Gym environments with different observation spaces and reward functions can be implemented easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBinaryEnv` and are registered using:
+The user can implement more custom Gym environments with different observation spaces and reward functions easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBinaryEnv` and are registered using:
 
 ```python
 register(
@@ -147,7 +147,7 @@ where w is the grid width.
 
 ### 3.6. Game ending
 
-Each game of Tetris terminates if the following condition is satisfied: any of the dropped piece's square blocks enter into the top `piece_size` rows before any full rows are cleared. This definition ensures that scores achieved are lower bounds on the score that could have been obtained on a standard game of Tetris, as laid out in Colin Fahey's ['Standard Tetris' specification](https://www.colinfahey.com/tetris/tetris.html#:~:text=5.%20%22Standard%20Tetris%22%20specification).
+Each game of Tetris terminates if the following condition is satisfied: any of the dropped piece's square blocks enter into the top `piece_size` rows before any full rows are cleared. This definition ensures that scores achieved are lower bounds on the score that the agent could have been obtained on a standard game of Tetris, as laid out in Colin Fahey's ['Standard Tetris' specification](https://www.colinfahey.com/tetris/tetris.html#:~:text=5.%20%22Standard%20Tetris%22%20specification).
 
 ### 3.7. Usage
 
