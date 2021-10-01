@@ -48,6 +48,7 @@ This README provides some help with the setup, gives an overview of the environm
 If you would like to contribute, I'd recommend following [this](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/) advice. In summary, fork the repo :arrow_right: clone it :arrow_right: create a new branch :arrow_right: make changes :arrow_right: merge to master :arrow_right: create a new pull request [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/compare).
 
 Or, you can just clone the repository to create a local copy on your machine:
+
 ```bash
 git clone https://github.com/OliverOverend/gym-simplifiedtetristemp
 ```
@@ -67,12 +68,14 @@ Here is a list of the versions used during development:
 ### 3.1. Available environments
 
 There are currently two environments provided:
+
 - `simplifiedtetris-binary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID
 - `simplifiedtetris-partbinary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID
 
 ### 3.2. Building more environments
 
 More custom Gym environments with different observation spaces and reward functions can be implemented easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBinaryEnv` and are registered using:
+
 ```python
 register(
     idx='INSERT_ENV_NAME_HERE',
@@ -93,6 +96,7 @@ obs = env.reset()
 #### 3.3.2. `step(action: int)` method
 
 Each environment's step method returns four values:
+
 - `observation` (**NumPy array**): a 1D array that contains some binary representation of the grid, plus the current piece's ID
 - `reward` (**float**): the amount of reward received from the previous action
 - `done` (**bool**): a game termination flag
@@ -105,6 +109,7 @@ obs, rwd, done, info = env.step(action)
 #### 3.3.3. `render()` method
 
 The user has access to the following controls during rendering:
+
 - Pause (**SPACEBAR**)
 - Speed up (**RIGHT key**)
 - Slow down (**LEFT key**)
@@ -172,6 +177,7 @@ env.close()
 ```
 
 Alternatively, the env can be imported directly:
+
 ```python
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
