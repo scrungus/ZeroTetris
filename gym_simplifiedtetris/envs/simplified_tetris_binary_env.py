@@ -32,7 +32,7 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
             grid_dims=grid_dims,
             piece_size=piece_size,
             num_pieces=self._num_pieces_,
-            num_actions=self.num_actions,
+            num_actions=self._num_actions_,
         )
 
     @property
@@ -46,7 +46,7 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
 
     @property
     def action_space(self) -> spaces.Discrete:
-        return spaces.Discrete(self.num_actions)
+        return spaces.Discrete(self._num_actions_)
 
     def _reset_(self) -> np.array:
         self._engine._reset()
