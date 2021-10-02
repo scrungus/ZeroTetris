@@ -13,7 +13,7 @@ Piece_info = Dict[str, Union[Coords, str]]
 
 PIECES_DICT: Dict[int, Dict[int, Piece_info]] = {
     1: {
-        1: {
+        0: {
             "coords": [
                 [(0, 0)],
             ],
@@ -21,7 +21,7 @@ PIECES_DICT: Dict[int, Dict[int, Piece_info]] = {
         }
     },
     2: {
-        1: {
+        0: {
             "coords": [
                 [(0, 0), (0, -1)],
                 [(0, 0), (1, 0)],
@@ -30,7 +30,7 @@ PIECES_DICT: Dict[int, Dict[int, Piece_info]] = {
         }
     },
     3: {
-        1: {
+        0: {
             "coords": [
                 [(0, 0), (0, -1), (0, -2)],
                 [(0, 0), (1, 0), (2, 0)],
@@ -39,7 +39,7 @@ PIECES_DICT: Dict[int, Dict[int, Piece_info]] = {
             ],
             "name": "I",
         },
-        2: {
+        1: {
             "coords": [
                 [(0, 0), (1, 0), (0, -1)],
                 [(0, 0), (0, 1), (1, 0)],
@@ -50,7 +50,7 @@ PIECES_DICT: Dict[int, Dict[int, Piece_info]] = {
         },
     },
     4: {
-        1: {
+        0: {
             "coords": [
                 [(0, 0), (0, -1), (0, -2), (0, -3)],
                 [(0, 0), (1, 0), (2, 0), (3, 0)],
@@ -59,7 +59,7 @@ PIECES_DICT: Dict[int, Dict[int, Piece_info]] = {
             ],
             "name": "I",
         },
-        2: {
+        1: {
             "coords": [
                 [(0, 0), (1, 0), (0, -1), (0, -2)],
                 [(0, 0), (0, 1), (1, 0), (2, 0)],
@@ -68,7 +68,7 @@ PIECES_DICT: Dict[int, Dict[int, Piece_info]] = {
             ],
             "name": "L",
         },
-        3: {
+        2: {
             "coords": [
                 [(0, 0), (0, -1), (-1, 0), (-1, -1)],
                 [(0, 0), (0, -1), (-1, 0), (-1, -1)],
@@ -77,7 +77,7 @@ PIECES_DICT: Dict[int, Dict[int, Piece_info]] = {
             ],
             "name": "O",
         },
-        4: {
+        3: {
             "coords": [
                 [(0, 0), (-1, 0), (1, 0), (0, -1)],
                 [(0, 0), (0, -1), (0, 1), (1, 0)],
@@ -86,7 +86,7 @@ PIECES_DICT: Dict[int, Dict[int, Piece_info]] = {
             ],
             "name": "T",
         },
-        5: {
+        4: {
             "coords": [
                 [(0, 0), (-1, 0), (0, -1), (0, -2)],
                 [(0, 0), (0, -1), (1, 0), (2, 0)],
@@ -95,7 +95,7 @@ PIECES_DICT: Dict[int, Dict[int, Piece_info]] = {
             ],
             "name": "J",
         },
-        6: {
+        5: {
             "coords": [
                 [(0, 0), (-1, 0), (0, -1), (1, -1)],
                 [(0, 0), (0, -1), (1, 0), (1, 1)],
@@ -104,7 +104,7 @@ PIECES_DICT: Dict[int, Dict[int, Piece_info]] = {
             ],
             "name": "S",
         },
-        7: {
+        6: {
             "coords": [
                 [(0, 0), (-1, -1), (0, -1), (1, 0)],
                 [(0, 0), (1, -1), (1, 0), (0, 1)],
@@ -498,7 +498,7 @@ class SimplifiedTetrisEngine:
         # Loop over each block.
         for i, j in self._piece:
             self._grid[int(i + self._anchor[0]), int(j + self._anchor[1])] = (
-                self._current_piece_id if set_piece else 0
+                self._current_piece_id + 1 if set_piece else 0
             )
 
     def _get_reward(self) -> Tuple[float, int]:
@@ -513,7 +513,7 @@ class SimplifiedTetrisEngine:
     def _get_all_available_actions(self) -> None:
         """Gets the actions available for each of the pieces in use."""
         self._all_available_actions = {}
-        for k in range(1, self._num_pieces + 1):
+        for k in range(self._num_pieces):
             self._current_piece_coords = self._all_piece_coords._select_piece(k)
             self._current_piece_id = k
             self._all_available_actions[k] = self._compute_available_actions()
