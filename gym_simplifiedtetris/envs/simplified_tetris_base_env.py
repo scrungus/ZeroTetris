@@ -15,20 +15,27 @@ class SimplifiedTetrisBaseEnv(gym.Env):
     :param piece_size: the size of every piece.
     :param seed: the rng seed.
     """
-    metadata = {'render.modes': ['human']}
+
+    metadata = {"render.modes": ["human"]}
 
     def __init__(
-            self,
-            grid_dims: Sequence[int],
-            piece_size: int,
-            seed: Optional[int] = 8191,
+        self,
+        grid_dims: Sequence[int],
+        piece_size: int,
+        seed: Optional[int] = 8191,
     ):
         assert piece_size in [
-            1, 2, 3, 4], 'Size of piece should be either 1, 2, 3, or 4.'
-        assert grid_dims[0] in list(range(
-            piece_size + 1, 21)), 'Height must be an integer in the interval [piece_size + 1, 20]'
-        assert grid_dims[1] in list(range(
-            piece_size, 11)), 'Width must be an integer in the interval [piece_size, 10].'
+            1,
+            2,
+            3,
+            4,
+        ], "Size of piece should be either 1, 2, 3, or 4."
+        assert grid_dims[0] in list(
+            range(piece_size + 1, 21)
+        ), "Height must be an integer in the interval [piece_size + 1, 20]"
+        assert grid_dims[1] in list(
+            range(piece_size, 11)
+        ), "Width must be an integer in the interval [piece_size, 10]."
 
         self._height_, self._width_ = grid_dims
         self._piece_size_ = piece_size
@@ -37,7 +44,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
             1: (grid_dims[1], 1),
             2: (2 * grid_dims[1] - 1, 1),
             3: (4 * grid_dims[1] - 4, 2),
-            4: (4 * grid_dims[1] - 6, 7)
+            4: (4 * grid_dims[1] - 6, 7),
         }[piece_size]
         self._REWARD_RANGE = (0, 4)
 
@@ -50,7 +57,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
     def step(self, action: int) -> Tuple[np.array, float, bool, Dict[Any, Any]]:
         return self._step_(action)
 
-    def render(self, mode: Optional[str] = 'human') -> np.ndarray:
+    def render(self, mode: Optional[str] = "human") -> np.ndarray:
         return self._render_(mode)
 
     def close(self) -> None:

@@ -2,7 +2,9 @@ import numpy as np
 
 from gym import spaces
 
-from gym_simplifiedtetris.envs.simplified_tetris_binary_env import SimplifiedTetrisBinaryEnv
+from gym_simplifiedtetris.envs.simplified_tetris_binary_env import (
+    SimplifiedTetrisBinaryEnv,
+)
 from gym_simplifiedtetris.register import register
 
 
@@ -17,10 +19,13 @@ class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBinaryEnv):
     def observation_space(self) -> spaces.Box:
         return spaces.Box(
             low=np.append(
-                np.zeros(self._width_ * (self._height_ - self._piece_size_)), 1),
+                np.zeros(self._width_ * (self._height_ - self._piece_size_)), 1
+            ),
             high=np.append(
-                np.ones(self._width_ * (self._height_ - self._piece_size_)), self._num_pieces_),
-            dtype=np.int
+                np.ones(self._width_ * (self._height_ - self._piece_size_)),
+                self._num_pieces_,
+            ),
+            dtype=np.int,
         )
 
     def _get_obs_(self) -> np.array:
@@ -31,11 +36,12 @@ class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBinaryEnv):
         :return: the current observation.
         """
         current_grid = np.clip(
-            self._engine._grid[:, self._piece_size_:].flatten(), 0, 1)
+            self._engine._grid[:, self._piece_size_ :].flatten(), 0, 1
+        )
         return np.append(current_grid, self._engine._current_piece_id)
 
 
 register(
-    idx='simplifiedtetris-partbinary-v0',
-    entry_point='gym_simplifiedtetris.envs:SimplifiedTetrisPartBinaryEnv',
+    idx="simplifiedtetris-partbinary-v0",
+    entry_point="gym_simplifiedtetris.envs:SimplifiedTetrisPartBinaryEnv",
 )
