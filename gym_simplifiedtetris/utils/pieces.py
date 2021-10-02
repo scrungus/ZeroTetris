@@ -16,7 +16,7 @@ class PieceCoords:
 
         :return: the piece coords and id.
         """
-        random_id = random.randint(1, len(self.coords.keys()))
+        random_id = random.randint(0, len(self.coords.keys()) - 1)
         return self.coords[random_id]["coords"], random_id
 
     def _select_piece(self, idx: int) -> Coords:
