@@ -2,7 +2,7 @@ import gym
 
 import gym_simplifiedtetris
 
-env = gym.make('simplifiedtetris-binary-v0')
+env = gym.make("simplifiedtetris-binary-v0")
 obs = env.reset()
 
 # Run 10 games of Tetris, selecting actions uniformly at random.

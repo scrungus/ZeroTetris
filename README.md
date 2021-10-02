@@ -21,23 +21,29 @@
   - [3.6. Game ending](#36-game-ending)
   - [3.7. Usage](#37-usage)
 - [4. Future work](#4-future-work)
-- [5. Contributing](#5-contributing)
-- [6. Credits](#6-credits)
+- [5. How to contribute](#5-how-to-contribute)
+- [6. Acknowledgements](#6-acknowledgements)
+- [Citing the project](#citing-the-project)
 - [7. License](#7-license)
 
 ## 1. Introduction
 
 <p align="left">
-  <a href="/LICENSE.md">
-    <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetristemp?color=red">
-  </a>
-  <a href="http://makeapullrequest.com">
-    <img src="https://img.shields.io/badge/PRs-welcome-success.svg?style=flat">
-  </a>
   <a href="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetristemp">
     <img src="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetristemp/badge">
   </a>
+  <a href="/LICENSE.md">
+    <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetristemp?color=red">
+  </a>
+  <a href="https://github.com/OliverOverend/gym-simplifiedtetristemp/compare">
+    <img src="https://img.shields.io/badge/PRs-welcome-success.svg?style=flat">
+  </a>
+  <a href="https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new/choose">
+    <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat">
+  </a>
 </p>
+
+
 
 Gym-SimplifiedTetris is a Python package that can create *simplified* reinforcement learning (RL) environments for Tetris, which conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
 
@@ -212,13 +218,24 @@ env = Tetris(
   - [ ] Alternative action space representation
   - [ ] Normalised observation spaces
 
-## 5. Contributing
+## 5. How to contribute
 
 Please feel free to provide any suggestions [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/discussions/new). Please report any bugs [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new?assignees=OliverOverend&labels=bug&template=BUG_REPORT.md&title=%5BBUG%5D%3A) or create a feature request [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new?assignees=OliverOverend&labels=enhancement&template=FEATURE_REQUEST.md&title=%5BFEATURE%5D%3A). Pull requests can be created [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/compare).
 
-## 6. Credits
+## 6. Acknowledgements
 
 This package utilises several methods from the [codebase](https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning) developed by andreanlay (2020). The class hierarchy design was inspired by a [codebase](https://github.com/Hewiiitt/Gym-Circuitboard) developed by Hewiiitt.
+
+## Citing the project
+
+@misc{gym_simplifiedtetris,
+  author = {Overend, Oliver},
+  title = {gym-simplifiedtetris package for OpenAI Gym},
+  year = {2021},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/OliverOverend/gym-simplifiedtetristemp}},
+}
 
 ## 7. License
 

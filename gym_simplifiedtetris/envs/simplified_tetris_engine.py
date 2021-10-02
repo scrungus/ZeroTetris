@@ -14,106 +14,106 @@ Piece_info = Dict[str, Union[Coords, str]]
 PIECES_DICT: Dict[int, Dict[int, Piece_info]] = {
     1: {
         1: {
-            'coords': [
+            "coords": [
                 [(0, 0)],
             ],
-            'name': 'O',
+            "name": "O",
         }
     },
     2: {
         1: {
-            'coords': [
+            "coords": [
                 [(0, 0), (0, -1)],
                 [(0, 0), (1, 0)],
             ],
-            'name': 'I',
+            "name": "I",
         }
     },
     3: {
         1: {
-            'coords': [
+            "coords": [
                 [(0, 0), (0, -1), (0, -2)],
                 [(0, 0), (1, 0), (2, 0)],
                 [(0, 0), (0, -1), (0, -2)],
                 [(0, 0), (1, 0), (2, 0)],
             ],
-            'name': 'I',
+            "name": "I",
         },
         2: {
-            'coords': [
+            "coords": [
                 [(0, 0), (1, 0), (0, -1)],
                 [(0, 0), (0, 1), (1, 0)],
                 [(0, 0), (-1, 0), (0, 1)],
                 [(0, 0), (0, -1), (-1, 0)],
             ],
-            'name': 'L',
-        }
+            "name": "L",
+        },
     },
     4: {
         1: {
-            'coords': [
+            "coords": [
                 [(0, 0), (0, -1), (0, -2), (0, -3)],
                 [(0, 0), (1, 0), (2, 0), (3, 0)],
                 [(0, 0), (0, -1), (0, -2), (0, -3)],
                 [(0, 0), (1, 0), (2, 0), (3, 0)],
             ],
-            'name': 'I',
+            "name": "I",
         },
         2: {
-            'coords': [
+            "coords": [
                 [(0, 0), (1, 0), (0, -1), (0, -2)],
                 [(0, 0), (0, 1), (1, 0), (2, 0)],
                 [(0, 0), (-1, 0), (0, 1), (0, 2)],
                 [(0, 0), (0, -1), (-1, 0), (-2, 0)],
             ],
-            'name': 'L',
+            "name": "L",
         },
         3: {
-            'coords': [
+            "coords": [
                 [(0, 0), (0, -1), (-1, 0), (-1, -1)],
                 [(0, 0), (0, -1), (-1, 0), (-1, -1)],
                 [(0, 0), (0, -1), (-1, 0), (-1, -1)],
                 [(0, 0), (0, -1), (-1, 0), (-1, -1)],
             ],
-            'name': 'O',
+            "name": "O",
         },
         4: {
-            'coords': [
+            "coords": [
                 [(0, 0), (-1, 0), (1, 0), (0, -1)],
                 [(0, 0), (0, -1), (0, 1), (1, 0)],
                 [(0, 0), (1, 0), (-1, 0), (0, 1)],
                 [(0, 0), (0, 1), (0, -1), (-1, 0)],
             ],
-            'name': 'T',
+            "name": "T",
         },
         5: {
-            'coords': [
+            "coords": [
                 [(0, 0), (-1, 0), (0, -1), (0, -2)],
                 [(0, 0), (0, -1), (1, 0), (2, 0)],
                 [(0, 0), (1, 0), (0, 1), (0, 2)],
                 [(0, 0), (0, 1), (-1, 0), (-2, 0)],
             ],
-            'name': 'J',
+            "name": "J",
         },
         6: {
-            'coords': [
+            "coords": [
                 [(0, 0), (-1, 0), (0, -1), (1, -1)],
                 [(0, 0), (0, -1), (1, 0), (1, 1)],
                 [(0, 0), (-1, 0), (0, -1), (1, -1)],
                 [(0, 0), (0, -1), (1, 0), (1, 1)],
             ],
-            'name': 'S',
+            "name": "S",
         },
         7: {
-            'coords': [
+            "coords": [
                 [(0, 0), (-1, -1), (0, -1), (1, 0)],
                 [(0, 0), (1, -1), (1, 0), (0, 1)],
                 [(0, 0), (-1, -1), (0, -1), (1, 0)],
                 [(0, 0), (1, -1), (1, 0), (0, 1)],
             ],
-            'name': 'Z',
+            "name": "Z",
         },
-    }
+    },
 }
 
 
@@ -131,11 +131,11 @@ class SimplifiedTetrisEngine:
     """
 
     def __init__(
-            self,
-            grid_dims: Sequence[int],
-            piece_size: int,
-            num_pieces: int,
-            num_actions: int,
+        self,
+        grid_dims: Sequence[int],
+        piece_size: int,
+        num_pieces: int,
+        num_actions: int,
     ):
         self._height, self._width = grid_dims
         self._piece_size = piece_size
@@ -150,20 +150,19 @@ class SimplifiedTetrisEngine:
         self._final_scores = np.array([], dtype=int)
         self._sleep_time = 500
         self._show_agent_playing = True
-        self._cell_size = int(min(0.8 * 1000 / grid_dims[0],
-                                  0.8 * 2000 / grid_dims[1]))
+        self._cell_size = int(min(0.8 * 1000 / grid_dims[0], 0.8 * 2000 / grid_dims[1]))
         self._LEFT_SPACE = 400
-        self._BLACK: tuple = self._get_bgr_code('black')
-        self._WHITE: tuple = self._get_bgr_code('white')
-        self._RED: tuple = self._get_bgr_code('red')
+        self._BLACK: tuple = self._get_bgr_code("black")
+        self._WHITE: tuple = self._get_bgr_code("white")
+        self._RED: tuple = self._get_bgr_code("red")
         self._GRID_COLOURS: list = [
             self._WHITE,  # Empty.
-            self._get_bgr_code('cyan'),  # 'I'.
-            self._get_bgr_code('orange'),  # 'L'.
-            self._get_bgr_code('yellow'),  #  'O'.
-            self._get_bgr_code('purple'),  # 'T'.
-            self._get_bgr_code('blue'),  # 'J'.
-            self._get_bgr_code('green'),  # 'S'.
+            self._get_bgr_code("cyan"),  # 'I'.
+            self._get_bgr_code("orange"),  # 'L'.
+            self._get_bgr_code("yellow"),  #  'O'.
+            self._get_bgr_code("purple"),  # 'T'.
+            self._get_bgr_code("blue"),  # 'J'.
+            self._get_bgr_code("green"),  # 'S'.
             self._RED,  # 'Z'.
         ]
 
@@ -172,8 +171,10 @@ class SimplifiedTetrisEngine:
 
         # Initialise the piece coordinates.
         self._all_piece_coords = PieceCoords(PIECES_DICT[piece_size])
-        self._current_piece_coords, self._current_piece_id = \
-            self._all_piece_coords._get_piece_at_random()
+        (
+            self._current_piece_coords,
+            self._current_piece_id,
+        ) = self._all_piece_coords._get_piece_at_random()
 
         self._get_all_available_actions()
         self._reset()
@@ -205,7 +206,7 @@ class SimplifiedTetrisEngine:
         self._grid = np.zeros_like(self._grid)
         self._update_coords_and_anchor()
 
-    def _render(self, mode: Optional[str] = 'human') -> np.ndarray:
+    def _render(self, mode: Optional[str] = "human") -> np.ndarray:
         """
         Shows an image of the current grid, having dropped the current piece.
         The human has the option to pause (SPACEBAR), speed up (RIGHT key),
@@ -230,7 +231,7 @@ class SimplifiedTetrisEngine:
         # Draws a horizontal red line to indicate the top of the playfield.
         self._draw_boundary()
 
-        if mode == 'human':
+        if mode == "human":
             if self._show_agent_playing:
 
                 if self._save_frame:
@@ -238,11 +239,15 @@ class SimplifiedTetrisEngine:
                     self._image_lst.append(frame_rgb)
 
                     if len(self._final_scores) == 5:
-                        imageio.mimsave(f'assets/{self._height}x{self._width}_{self._piece_size}.gif',
-                                        self._image_lst, fps=60, duration=0.5)
+                        imageio.mimsave(
+                            f"assets/{self._height}x{self._width}_{self._piece_size}.gif",
+                            self._image_lst,
+                            fps=60,
+                            duration=0.5,
+                        )
                         self._save_frame = False
 
-                cv.imshow('Simplified Tetris', self._img)
+                cv.imshow("Simplified Tetris", self._img)
                 k = cv.waitKey(self._sleep_time)
 
                 # Escape to exit, spacebar to pause and resume.
@@ -252,10 +257,10 @@ class SimplifiedTetrisEngine:
                     if self._sleep_time < 100:
                         self._sleep_time = 1
 
-                    time.sleep(self._sleep_time/1000)
+                    time.sleep(self._sleep_time / 1000)
                 elif k == 2:  # Left arrow.
                     self._sleep_time += 100
-                    time.sleep(self._sleep_time/1000)
+                    time.sleep(self._sleep_time / 1000)
                 elif k == 27:  # Esc.
                     self._show_agent_playing = False
                     self._close()
@@ -278,8 +283,14 @@ class SimplifiedTetrisEngine:
     def _draw_boundary(self) -> None:
         """Draws a horizontal red line to indicate the cut off point."""
         vertical_position = self._piece_size * self._cell_size
-        self._img[vertical_position - int(self._cell_size/40): vertical_position
-                  + int(self._cell_size/40) + 1, self._LEFT_SPACE:, :] = self._RED
+        self._img[
+            vertical_position
+            - int(self._cell_size / 40) : vertical_position
+            + int(self._cell_size / 40)
+            + 1,
+            self._LEFT_SPACE :,
+            :,
+        ] = self._RED
 
     def _get_grid(self) -> np.ndarray:
         """
@@ -287,8 +298,10 @@ class SimplifiedTetrisEngine:
 
         :return: the array of the current grid.
         """
-        grid = [[self._GRID_COLOURS[self._grid[j][i]] for j in range(
-            self._width)] for i in range(self._height)]
+        grid = [
+            [self._GRID_COLOURS[self._grid[j][i]] for j in range(self._width)]
+            for i in range(self._height)
+        ]
         return np.array(grid)
 
     def _resize_grid(self, grid: np.ndarray) -> None:
@@ -298,31 +311,35 @@ class SimplifiedTetrisEngine:
 
         :param grid: the grid to be resized.
         """
-        self._img = grid.reshape(
-            (self._height, self._width, 3)).astype(np.uint8)
-        self._img = Image.fromarray(self._img, 'RGB')
-        self._img = self._img.resize((self._width * self._cell_size,
-                                      self._height * self._cell_size))
+        self._img = grid.reshape((self._height, self._width, 3)).astype(np.uint8)
+        self._img = Image.fromarray(self._img, "RGB")
+        self._img = self._img.resize(
+            (self._width * self._cell_size, self._height * self._cell_size)
+        )
         self._img = np.array(self._img)
 
     def _draw_separating_lines(self) -> None:
         """Draws the horizontal and vertical _BLACK lines to separate the grid's cells."""
         for j in range(-int(self._cell_size / 40), int(self._cell_size / 40) + 1):
-            self._img[[i * self._cell_size +
-                       j for i in range(self._height)], :, :] = self._BLACK
-            self._img[:, [i * self._cell_size +
-                          j for i in range(self._width)], :] = self._BLACK
+            self._img[
+                [i * self._cell_size + j for i in range(self._height)], :, :
+            ] = self._BLACK
+            self._img[
+                :, [i * self._cell_size + j for i in range(self._width)], :
+            ] = self._BLACK
 
     def _add_img_left(self) -> None:
         """
         Adds the image that will appear to the left of the grid.
         """
-        img_array = np.zeros((self._height * self._cell_size,
-                              self._LEFT_SPACE, 3)).astype(np.uint8)
+        img_array = np.zeros(
+            (self._height * self._cell_size, self._LEFT_SPACE, 3)
+        ).astype(np.uint8)
 
         # Calculate the mean score.
-        mean_score = 0.0 if len(
-            self._final_scores) == 0 else np.mean(self._final_scores)
+        mean_score = (
+            0.0 if len(self._final_scores) == 0 else np.mean(self._final_scores)
+        )
 
         # Add statistics.
         self._add_statistics(
@@ -335,27 +352,27 @@ class SimplifiedTetrisEngine:
                     "Current score",
                     "Mean score",
                     "",
-                    "Current piece"
+                    "Current piece",
                 ],
                 [
                     f"{self._height}",
                     f"{self._width}",
-                    '',
+                    "",
                     f"{self._score}",
                     f"{mean_score:.1f}",
                     "",
-                    f"{PIECES_DICT[self._piece_size][self._current_piece_id]['name']}"
-                ]
+                    f"{PIECES_DICT[self._piece_size][self._current_piece_id]['name']}",
+                ],
             ],
             x_offsets=[50, 300],
         )
         self._img = np.concatenate((img_array, self._img), axis=1)
 
     def _add_statistics(
-            self,
-            img_array: np.ndarray,
-            items: List[List[str]],
-            x_offsets: List[int],
+        self,
+        img_array: np.ndarray,
+        items: List[List[str]],
+        x_offsets: List[int],
     ) -> None:
         """
         Adds statistics to the array provided.
@@ -374,13 +391,15 @@ class SimplifiedTetrisEngine:
                     1,
                     self._WHITE,
                     2,
-                    cv.LINE_AA
+                    cv.LINE_AA,
                 )
 
     def _update_coords_and_anchor(self) -> None:
         """Updates the current piece's coords and ID, and resets the anchor."""
-        self._current_piece_coords, self._current_piece_id = \
-            self._all_piece_coords._get_piece_at_random()
+        (
+            self._current_piece_coords,
+            self._current_piece_id,
+        ) = self._all_piece_coords._get_piece_at_random()
         self._anchor = [self._width / 2 - 1, self._piece_size - 1]
 
     def _is_illegal(self) -> bool:
@@ -397,7 +416,7 @@ class SimplifiedTetrisEngine:
         :return: whether the piece's current position is legal.
         """
 
-        # Loop over each of the piece's blocks.
+        # Loop over each of the piece's blocks.
         for i, j in self._piece:
             x_pos, y_pos = int(self._anchor[0] + i), int(self._anchor[1] + j)
 
@@ -406,7 +425,12 @@ class SimplifiedTetrisEngine:
                 continue
 
             # Check if illegal move. Last condition must come after previous conditions.
-            if x_pos < 0 or x_pos >= self._width or y_pos >= self._height or self._grid[x_pos, y_pos] > 0:
+            if (
+                x_pos < 0
+                or x_pos >= self._width
+                or y_pos >= self._height
+                or self._grid[x_pos, y_pos] > 0
+            ):
                 return True
 
         return False
@@ -442,8 +466,10 @@ class SimplifiedTetrisEngine:
         :return: the number of rows cleared.
         """
 
-        can_clear = [(self._grid[:, i + self._piece_size] != 0).all()
-                     for i in range(self._height - self._piece_size)]
+        can_clear = [
+            (self._grid[:, i + self._piece_size] != 0).all()
+            for i in range(self._height - self._piece_size)
+        ]
         new_grid = np.zeros_like(self._grid)
         j = self._height - 1
 
@@ -471,8 +497,9 @@ class SimplifiedTetrisEngine:
         """
         # Loop over each block.
         for i, j in self._piece:
-            self._grid[int(i + self._anchor[0]), int(j + self._anchor[1])
-                       ] = self._current_piece_id if set_piece else 0
+            self._grid[int(i + self._anchor[0]), int(j + self._anchor[1])] = (
+                self._current_piece_id if set_piece else 0
+            )
 
     def _get_reward(self) -> Tuple[float, int]:
         """
@@ -487,8 +514,7 @@ class SimplifiedTetrisEngine:
         """Gets the actions available for each of the pieces in use."""
         self._all_available_actions = {}
         for k in range(1, self._num_pieces + 1):
-            self._current_piece_coords = self._all_piece_coords._select_piece(
-                k)
+            self._current_piece_coords = self._all_piece_coords._select_piece(k)
             self._current_piece_id = k
             self._all_available_actions[k] = self._compute_available_actions()
 

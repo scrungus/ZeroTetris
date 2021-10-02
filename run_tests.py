@@ -6,7 +6,7 @@ import gym_simplifiedtetris
 
 def main() -> None:
     """
-    This function checks if each env created conforms to the OpenAI Gym API. 
+    This function checks if each env created conforms to the OpenAI Gym API.
     The first observation is printed out for visual inspection. Ten games are
     played using an agent that selects actions uniformly at random. In every game,
     the reward received is validated and the env is rendered for visual inspection.
@@ -15,8 +15,7 @@ def main() -> None:
     num_envs = len(gym_simplifiedtetris.register.env_list)
 
     for env_id, env_name in enumerate(gym_simplifiedtetris.register.env_list):
-        print(
-            f'\nTesting the env: {env_name} ({env_id+1}/{num_envs})')
+        print(f"\nTesting the env: {env_name} ({env_id+1}/{num_envs})")
 
         env = gym.make(env_name)
 
@@ -24,7 +23,7 @@ def main() -> None:
         check_env(env)
 
         obs = env.reset()
-        print(f'First observation given: {obs}')
+        print(f"First observation given: {obs}")
 
         agent = gym_simplifiedtetris.agents.UniformAgent(env._num_actions_)
 
@@ -38,8 +37,9 @@ def main() -> None:
             obs, reward, done, _ = env.step(action)
 
             # Checks the reward is valid.
-            assert env._REWARD_RANGE[0] <= reward <= env._REWARD_RANGE[
-                1], f"Reward seen: {reward}"
+            assert (
+                env._REWARD_RANGE[0] <= reward <= env._REWARD_RANGE[1]
+            ), f"Reward seen: {reward}"
 
             if done:
                 num_episodes += 1
@@ -48,5 +48,5 @@ def main() -> None:
         env.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
