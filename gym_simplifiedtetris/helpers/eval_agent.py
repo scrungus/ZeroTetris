@@ -23,6 +23,9 @@ def eval_agent(
 
     returns = np.zeros(num_eval_episodes)
 
+    # Reset the game scores.
+    env._engine._final_scores = np.array([], dtype=int)
+
     for episode_id in tqdm(range(num_eval_episodes), desc="No. of episodes completed"):
 
         obs = env.reset()
