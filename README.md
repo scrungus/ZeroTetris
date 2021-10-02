@@ -208,16 +208,20 @@ env = Tetris(
 
 ## 4. Future work
 
-- [X] Unit tests
-- [ ] Agents:
+- [ ] Unit tests:
+  - [X] Tetriminos
+  - [ ] Trominoes
+  - [ ] Dominos
+  - [ ] Monominos
   - [ ] Heuristic
+- [ ] Agents:
   - [X] Q-learning
   - [X] Uniform
-- [ ] Environments with:
-  - [ ] Different observation spaces
-  - [ ] Different reward functions
-  - [ ] Alternative action space representation
-  - [ ] Normalised observation spaces
+  - [ ] Heuristic (Dellacherie feature set)
+- [ ] Environments with alternative:
+  - [ ] Observation spaces (normalised)
+  - [ ] Reward functions
+  - [ ] Action spaces
 
 ## 5. How to contribute
 
