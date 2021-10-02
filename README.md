@@ -4,7 +4,7 @@
   </a>
 </p>
 
-## Table of Contents <!-- omit in toc -->
+## Table of contents <!-- omit in toc -->
 
 - [1. Introduction](#1-introduction)
 - [2. Getting started](#2-getting-started)
