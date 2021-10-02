@@ -229,6 +229,7 @@ This package utilises several methods from the [codebase](https://github.com/and
 
 ## 7. Citing the project
 
+```
 @misc{gym_simplifiedtetris,
   author = {Overend, Oliver},
   title = {gym-simplifiedtetris package for OpenAI Gym},
@@ -237,6 +238,7 @@ This package utilises several methods from the [codebase](https://github.com/and
   journal = {GitHub repository},
   howpublished = {\url{https://github.com/OliverOverend/gym-simplifiedtetristemp}},
 }
+```
 
 ## 8. License
 
