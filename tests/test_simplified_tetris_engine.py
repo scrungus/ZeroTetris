@@ -45,7 +45,8 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         # 'L' piece rotated 90 CW.
         self._engine._piece = [(0, 0), (0, 1), (1, 0), (2, 0)]
         # Bottom right.
-        self._engine._anchor = [self._engine._width - 1, self._engine._height - 1]
+        self._engine._anchor = [
+            self._engine._width - 1, self._engine._height - 1]
         self._engine._grid = np.zeros(
             (self._engine._width, self._engine._height), dtype=int
         )
@@ -61,7 +62,8 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         self.assertEqual(self._engine._is_illegal(), True)
 
         # Piece off the left.
-        self._engine._piece = [(0, 0), (-1, 0), (0, 1), (0, 2)]  # 'L' piece rotated 180
+        self._engine._piece = [(0, 0), (-1, 0), (0, 1),
+                               (0, 2)]  # 'L' piece rotated 180
         self._engine._anchor = [0, self._engine._height - 1]  # Bottom left.
         self._engine._grid = np.zeros(
             (self._engine._width, self._engine._height), dtype=int
@@ -120,7 +122,8 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         self.assertEqual(
             self._engine._clear_rows(), self._engine._height - self._engine._piece_size
         )
-        grid_after = np.zeros((self._engine._width, self._engine._height), dtype=int)
+        grid_after = np.zeros(
+            (self._engine._width, self._engine._height), dtype=int)
         np.testing.assert_array_equal(self._engine._grid, grid_after)
 
         # Empty grid.
@@ -128,35 +131,39 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
             (self._engine._width, self._engine._height), dtype=int
         )
         self.assertEqual(self._engine._clear_rows(), 0)
-        grid_after = np.zeros((self._engine._width, self._engine._height), dtype=int)
+        grid_after = np.zeros(
+            (self._engine._width, self._engine._height), dtype=int)
         np.testing.assert_array_equal(self._engine._grid, grid_after)
 
         # One row full with no full cells above.
         self._engine._grid = np.zeros(
             (self._engine._width, self._engine._height), dtype=int
         )
-        self._engine._grid[:, self._engine._height - 1 :] = 1
+        self._engine._grid[:, self._engine._height - 1:] = 1
         self.assertEqual(self._engine._clear_rows(), 1)
-        grid_after = np.zeros((self._engine._width, self._engine._height), dtype=int)
+        grid_after = np.zeros(
+            (self._engine._width, self._engine._height), dtype=int)
         np.testing.assert_array_equal(self._engine._grid, grid_after)
 
         # Two rows full with no full cells above.
         self._engine._grid = np.zeros(
             (self._engine._width, self._engine._height), dtype=int
         )
-        self._engine._grid[:, self._engine._height - 2 :] = 1
+        self._engine._grid[:, self._engine._height - 2:] = 1
         self.assertEqual(self._engine._clear_rows(), 2)
-        grid_after = np.zeros((self._engine._width, self._engine._height), dtype=int)
+        grid_after = np.zeros(
+            (self._engine._width, self._engine._height), dtype=int)
         np.testing.assert_array_equal(self._engine._grid, grid_after)
 
         # Two rows full with a full cell above.
         self._engine._grid = np.zeros(
             (self._engine._width, self._engine._height), dtype=int
         )
-        self._engine._grid[:, self._engine._height - 2 :] = 1
+        self._engine._grid[:, self._engine._height - 2:] = 1
         self._engine._grid[3, self._engine._height - 3] = 1
         self.assertEqual(self._engine._clear_rows(), 2)
-        grid_after = np.zeros((self._engine._width, self._engine._height), dtype=int)
+        grid_after = np.zeros(
+            (self._engine._width, self._engine._height), dtype=int)
         grid_after[3, self._engine._height - 1] = 1
         np.testing.assert_array_equal(self._engine._grid, grid_after)
 
@@ -164,11 +171,12 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         self._engine._grid = np.zeros(
             (self._engine._width, self._engine._height), dtype=int
         )
-        self._engine._grid[:, self._engine._height - 2 :] = 1
+        self._engine._grid[:, self._engine._height - 2:] = 1
         self._engine._grid[3, self._engine._height - 3] = 1
         self._engine._grid[4, self._engine._height - 4] = 1
         self.assertEqual(self._engine._clear_rows(), 2)
-        grid_after = np.zeros((self._engine._width, self._engine._height), dtype=int)
+        grid_after = np.zeros(
+            (self._engine._width, self._engine._height), dtype=int)
         grid_after[3, self._engine._height - 1] = 1
         grid_after[4, self._engine._height - 2] = 1
         np.testing.assert_array_equal(self._engine._grid, grid_after)
@@ -185,7 +193,7 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         grid_to_compare = np.zeros(
             (self._engine._width, self._engine._height), dtype=int
         )
-        grid_to_compare[0, self._engine._height - 4 :] = 1
+        grid_to_compare[0, self._engine._height - 4:] = 1
         self._engine._update_grid(True)
         np.testing.assert_array_equal(self._engine._grid, grid_to_compare)
 
@@ -209,7 +217,7 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
         self._engine._grid = np.zeros(
             (self._engine._width, self._engine._height), dtype=int
         )
-        self._engine._grid[0, self._engine._height - 4 :] = 1
+        self._engine._grid[0, self._engine._height - 4:] = 1
         self._engine._anchor = [0, self._engine._height - 1]  # Bottom left.
         self._engine._current_piece_id = 1
         grid_to_compare = np.zeros(
@@ -226,8 +234,10 @@ class SimplifiedTetrisEngineTest(unittest.TestCase):
             [(0, 0), (0, -1), (-1, 0), (-1, -1)],
         ]  # 'O'.
         available_actions = self._engine._compute_available_actions()
-        values = [(j, i) for i in range(4) for j in range(1, self._engine._width)]
-        dict_to_compare = {i: values[i] for i in range(self._engine._num_actions)}
+        values = [(j, i) for i in range(4)
+                  for j in range(1, self._engine._width)]
+        dict_to_compare = {i: values[i]
+                           for i in range(self._engine._num_actions)}
         self.assertDictEqual(available_actions, dict_to_compare)
 
     def test__get_all_available_actions(self) -> None:
