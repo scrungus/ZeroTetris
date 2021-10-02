@@ -23,8 +23,8 @@
 - [4. Future work](#4-future-work)
 - [5. How to contribute](#5-how-to-contribute)
 - [6. Acknowledgements](#6-acknowledgements)
-- [Citing the project](#citing-the-project)
-- [7. License](#7-license)
+- [7. Citing the project](#7-citing-the-project)
+- [8. License](#8-license)
 
 ## 1. Introduction
 
@@ -227,7 +227,7 @@ Please feel free to provide any suggestions [here](https://github.com/OliverOver
 
 This package utilises several methods from the [codebase](https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning) developed by andreanlay (2020). The class hierarchy design was inspired by a [codebase](https://github.com/Hewiiitt/Gym-Circuitboard) developed by Hewiiitt.
 
-## Citing the project
+## 7. Citing the project
 
 @misc{gym_simplifiedtetris,
   author = {Overend, Oliver},
@@ -238,6 +238,6 @@ This package utilises several methods from the [codebase](https://github.com/and
   howpublished = {\url{https://github.com/OliverOverend/gym-simplifiedtetristemp}},
 }
 
-## 7. License
+## 8. License
 
 This project is licensed under the terms of the [MIT license](/LICENSE.md).
