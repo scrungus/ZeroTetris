@@ -4,6 +4,10 @@ import gym_simplifiedtetris
 
 
 def main():
+    """
+    Usage example 1.
+    """
+    
     env = gym.make("simplifiedtetris-binary-v0")
     obs = env.reset()
 

@@ -5,6 +5,10 @@ from gym_simplifiedtetris.helpers.eval_agent import eval_agent
 
 
 def main():
+    """
+    Trains and evaluates a Q-learning agent.
+    """
+    
     grid_dims = (7, 4)
 
     env = Tetris(
