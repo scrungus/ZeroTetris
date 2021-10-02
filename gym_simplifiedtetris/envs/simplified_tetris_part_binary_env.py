@@ -19,11 +19,11 @@ class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBinaryEnv):
     def observation_space(self) -> spaces.Box:
         return spaces.Box(
             low=np.append(
-                np.zeros(self._width_ * (self._height_ - self._piece_size_)), 1
+                np.zeros(self._width_ * (self._height_ - self._piece_size_)), 0
             ),
             high=np.append(
                 np.ones(self._width_ * (self._height_ - self._piece_size_)),
-                self._num_pieces_,
+                self._num_pieces_ - 1,
             ),
             dtype=np.int,
         )
