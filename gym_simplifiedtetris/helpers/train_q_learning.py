@@ -5,9 +5,9 @@ from gym_simplifiedtetris.agents.q_learning import QLearningAgent
 
 
 def train_q_learning(
-        env: gym.Env,
-        agent: QLearningAgent,
-        num_eval_timesteps: int,
+    env: gym.Env,
+    agent: QLearningAgent,
+    num_eval_timesteps: int,
 ) -> QLearningAgent:
     """
     Trains and evaluates a Q-learning agent on the SimplifiedTetris environment.
@@ -23,7 +23,9 @@ def train_q_learning(
 
     obs = env.reset()
 
-    for time_step in tqdm(range(num_eval_timesteps), desc='No. of time steps completed'):
+    for time_step in tqdm(
+        range(num_eval_timesteps), desc="No. of time steps completed"
+    ):
 
         action = agent.predict(obs)
 
@@ -35,9 +37,9 @@ def train_q_learning(
             next_obs=next_obs,
             action=action,
         )
-        ep_return += info['num_rows_cleared']
+        ep_return += info["num_rows_cleared"]
 
-        agent.epsilon -= 1/(num_eval_timesteps)
+        agent.epsilon -= 1 / (num_eval_timesteps)
 
         if done:
             obs = env.reset()

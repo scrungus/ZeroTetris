@@ -6,10 +6,10 @@ import numpy as np
 
 
 def eval_agent(
-        agent: object,
-        env: gym.Env,
-        num_eval_episodes: int,
-        render: bool,
+    agent: object,
+    env: gym.Env,
+    num_eval_episodes: int,
+    render: bool,
 ) -> Tuple[float, float]:
     """
     Evaluates the agents performance on the game of SimplifiedTetris and returns the mean score.
@@ -23,7 +23,7 @@ def eval_agent(
 
     returns = np.zeros(num_eval_episodes)
 
-    for episode_id in tqdm(range(num_eval_episodes), desc='No. of episodes completed'):
+    for episode_id in tqdm(range(num_eval_episodes), desc="No. of episodes completed"):
 
         obs = env.reset()
         done = False
@@ -36,14 +36,16 @@ def eval_agent(
             action = agent.predict(obs)
 
             obs, _, done, info = env.step(action)
-            returns[episode_id] += info['num_rows_cleared']
+            returns[episode_id] += info["num_rows_cleared"]
 
     env.close()
 
     mean_score = np.mean(returns)
     std_score = np.std(returns)
 
-    print(f'\nScore obtained from averaging over {num_eval_episodes} '
-          f'games: {mean_score:.1f} +/- {std_score:.1f}')
+    print(
+        f"\nScore obtained from averaging over {num_eval_episodes} "
+        f"games: {mean_score:.1f} +/- {std_score:.1f}"
+    )
 
     return mean_score, std_score
