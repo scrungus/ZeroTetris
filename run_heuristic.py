@@ -13,7 +13,9 @@ def main():
     while num_episodes < 10:
         env.render()
 
-        action = agent.predict(obs)
+        heuristic_scores = env._engine._get_dellacherie_scores()
+
+        action = agent.predict(heuristic_scores)
         obs, rwd, done, info = env.step(action)
 
         if done:
