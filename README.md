@@ -78,6 +78,18 @@ Here is a list of the versions used throughout development:
 
 ## 3. Environments
 
+- [3.1. Available environments](#31-available-environments) 
+- [3.2. Building more environments](#32-building-more-environments) 
+- [3.3. Methods](#33-methods) 
+  - [3.3.1. `reset()` method](#331-reset-method) 
+  - [3.3.2. `step(action: int)` method](#332-stepaction-int-method) 
+  - [3.3.3. `render()` method](#333-render-method) 
+  - [3.3.4. `close()` method](#334-close-method) 
+- [3.4. Variable dimensions and piece size](#34-variable-dimensions-and-piece-size) 
+- [3.5. Action and observation spaces](#35-action-and-observation-spaces) 
+- [3.6. Game ending](#36-game-ending) 
+- [3.7. Usage](#37-usage)
+
 ### 3.1. Available environments
 
 There are currently two environments provided:
@@ -211,9 +223,9 @@ env = Tetris(
 
 Three agents are currently available:
 
-- [Uniform](#41-uniform)
-- [Q-learning](#42-q-learning)
-- [Heuristic](#43-heuristic)
+- [4.1 Uniform](#41-uniform)
+- [4.2 Q-learning](#42-q-learning)
+- [4.3 Heuristic](#43-heuristic)
 
 ### 4.1. Uniform
 
