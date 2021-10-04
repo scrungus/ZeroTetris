@@ -692,15 +692,24 @@ class SimplifiedTetrisEngine:
         grid[:, :-1] = self._grid
         return np.diff(grid).sum()
 
-    def _get_holes(self) -> float:
+    def _get_holes(self) -> int:
         """
-        A hole is an empty cell with at least one full cell above it in the same column.
+        Gets the number of holes present in the current grid.
 
-        Source: https://stackoverflow.com/a/68087910/14354978
+        Author: andreanlay
+        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
 
         :return: holes.
         """
-        return np.max((self._grid).cumsum(axis=1) * ~self._grid, axis=1).sum()
+        holes = 0
+
+        for col in zip(*self._grid.T):
+            row = 0
+            while row < self._height and col[row] == 0:
+                row += 1
+            holes += len([x for x in col[row + 1:] if x == 0])
+
+        return holes
 
     def _get_cumulative_wells(self) -> int:
         """
