@@ -144,8 +144,8 @@ class SimplifiedTetrisEngine:
         self._num_actions = num_actions
 
         # Create empty grid and anchor.
-        self._grid = np.zeros((grid_dims[1], grid_dims[0]), dtype='bool')
-        self._colour_grid = np.zeros((grid_dims[1], grid_dims[0]), dtype='int')
+        self._grid = np.zeros((grid_dims[1], grid_dims[0]), dtype="bool")
+        self._colour_grid = np.zeros((grid_dims[1], grid_dims[0]), dtype="int")
         self._anchor = [grid_dims[1] / 2 - 1, piece_size - 1]
 
         # Initialise render attributes.
@@ -208,8 +208,8 @@ class SimplifiedTetrisEngine:
     def _reset(self) -> None:
         """Resets the score, grid, piece coords, piece id and anchor."""
         self._score = 0
-        self._grid = np.zeros_like(self._grid, dtype='bool')
-        self._colour_grid = np.zeros_like(self._colour_grid, dtype='int')
+        self._grid = np.zeros_like(self._grid, dtype="bool")
+        self._colour_grid = np.zeros_like(self._colour_grid, dtype="int")
         self._update_coords_and_anchor()
 
     def _render(self, mode: Optional[str] = "human") -> np.ndarray:
@@ -483,7 +483,7 @@ class SimplifiedTetrisEngine:
         new_colour_grid = np.zeros_like(self._colour_grid)
         col = self._height - 1
 
-        self._last_move_info['eliminated_num_blocks'] = 0
+        self._last_move_info["eliminated_num_blocks"] = 0
 
         # Starts from bottom row.
         for row_num in range(self._height - 1, self._piece_size - 1, -1):
@@ -493,7 +493,9 @@ class SimplifiedTetrisEngine:
                 new_colour_grid[:, col] = self._colour_grid[:, row_num]
                 col -= 1
             else:
-                self._last_move_info['eliminated_num_blocks'] += self._last_move_info['rows_added_to'][row_num]
+                self._last_move_info["eliminated_num_blocks"] += self._last_move_info[
+                    "rows_added_to"
+                ][row_num]
 
         self._grid = new_grid
         self._colour_grid = new_colour_grid
@@ -501,7 +503,7 @@ class SimplifiedTetrisEngine:
         num_rows_cleared = sum(can_clear)
 
         # Update the last move info.
-        self._last_move_info['num_rows_cleared'] = num_rows_cleared
+        self._last_move_info["num_rows_cleared"] = num_rows_cleared
 
         return num_rows_cleared
 
@@ -517,26 +519,30 @@ class SimplifiedTetrisEngine:
 
         :param set_piece: whether to set the piece.
         """
-        self._last_move_info['rows_added_to'] = {row_num: 0 for row_num in range(self._height)}
+        self._last_move_info["rows_added_to"] = {
+            row_num: 0 for row_num in range(self._height)
+        }
         # Loop over each block.
         for i, j in self._piece:
             y_coord = int(j + self._anchor[1])
             if set_piece:
-                self._last_move_info['rows_added_to'][y_coord] += 1
+                self._last_move_info["rows_added_to"][y_coord] += 1
                 self._grid[int(self._anchor[0] + i),
                            int(self._anchor[1] + j)] = 1
-                self._colour_grid[int(self._anchor[0] + i),
-                                  int(self._anchor[1] + j)] = self._current_piece_id + 1
+                self._colour_grid[
+                    int(self._anchor[0] + i), int(self._anchor[1] + j)
+                ] = (self._current_piece_id + 1)
             else:
                 self._grid[int(self._anchor[0] + i),
                            int(self._anchor[1] + j)] = 0
-                self._colour_grid[int(self._anchor[0] + i),
-                                  int(self._anchor[1] + j)] = 0
+                self._colour_grid[
+                    int(self._anchor[0] + i), int(self._anchor[1] + j)
+                ] = 0
 
         anchor_height = self._height - self._anchor[1]
         max_y = int(min([s[1] for s in self._piece]))
         min_y = int(max([s[1] for s in self._piece]))
-        self._last_move_info['landing_height'] = anchor_height - \
+        self._last_move_info["landing_height"] = anchor_height - \
             0.5 * (min_y + max_y)
 
     def _get_reward(self) -> Tuple[float, int]:
@@ -552,9 +558,11 @@ class SimplifiedTetrisEngine:
         """Gets the actions available for each of the pieces in use."""
         self._all_available_actions = {}
         for idx in range(self._num_pieces):
-            self._current_piece_coords = self._all_pieces_info._select_piece(idx)
+            self._current_piece_coords = self._all_pieces_info._select_piece(
+                idx)
             self._current_piece_id = idx
-            self._all_available_actions[idx] = self._compute_available_actions()
+            self._all_available_actions[idx] = self._compute_available_actions(
+            )
 
     def _compute_available_actions(self) -> Dict[int, Tuple[int, int]]:
         """
@@ -604,10 +612,12 @@ class SimplifiedTetrisEngine:
 
         :return: a list of the Dellacherie feature values.
         """
-        weights = np.array([-1, 1, -1, -1, -4, -1], dtype='double')
-        all_scores = np.empty((self._num_actions), dtype='double')
+        weights = np.array([-1, 1, -1, -1, -4, -1], dtype="double")
+        all_scores = np.empty((self._num_actions), dtype="double")
 
-        for action, (translation, rotation) in self._all_available_actions[self._current_piece_id].items():
+        for action, (translation, rotation) in self._all_available_actions[
+            self._current_piece_id
+        ].items():
             old_grid = deepcopy(self._grid)
             old_anchor = deepcopy(self._anchor)
 
@@ -618,7 +628,7 @@ class SimplifiedTetrisEngine:
             self._hard_drop()
             self._update_grid(True)
 
-            scores = np.empty((6), dtype='double')
+            scores = np.empty((6), dtype="double")
             for count, feature_func in enumerate(self._get_dellacherie_funcs()):
                 scores[count] = feature_func()
             all_scores[action] = np.dot(scores, weights)
@@ -634,14 +644,16 @@ class SimplifiedTetrisEngine:
         """
         Gets the Dellacherie feature functions.
 
-        :return: a list of the Dellacherie feature functions. 
+        :return: a list of the Dellacherie feature functions.
         """
-        return [self._get_landing_height,
-                self._get_eroded_cells,
-                self._get_row_transitions,
-                self._get_column_transitions,
-                self._get_holes,
-                self._get_cumulative_wells]
+        return [
+            self._get_landing_height,
+            self._get_eroded_cells,
+            self._get_row_transitions,
+            self._get_column_transitions,
+            self._get_holes,
+            self._get_cumulative_wells,
+        ]
 
     def _get_landing_height(self) -> int:
         """
@@ -649,8 +661,8 @@ class SimplifiedTetrisEngine:
 
         :return: landing height.
         """
-        if 'landing_height' in self._last_move_info:
-            return self._last_move_info['landing_height']
+        if "landing_height" in self._last_move_info:
+            return self._last_move_info["landing_height"]
         return 0
 
     def _get_eroded_cells(self) -> int:
@@ -660,8 +672,11 @@ class SimplifiedTetrisEngine:
 
         :return: eroded cells.
         """
-        if 'num_rows_cleared' in self._last_move_info:
-            return self._last_move_info['num_rows_cleared'] * self._last_move_info['eliminated_num_blocks']
+        if "num_rows_cleared" in self._last_move_info:
+            return (
+                self._last_move_info["num_rows_cleared"]
+                * self._last_move_info["eliminated_num_blocks"]
+            )
         return 0
 
     def _get_row_transitions(self) -> float:
@@ -674,7 +689,7 @@ class SimplifiedTetrisEngine:
         :return: row transitions.
         """
         # A full column should be added either side.
-        grid = np.ones((self._width + 2, self._height), dtype='bool')
+        grid = np.ones((self._width + 2, self._height), dtype="bool")
         grid[1:-1, :] = self._grid
         return np.diff(grid.T).sum()
 
@@ -688,7 +703,7 @@ class SimplifiedTetrisEngine:
         :return: column transitions.
         """
         # A full row should be added to the bottom.
-        grid = np.ones((self._width, self._height + 1), dtype='bool')
+        grid = np.ones((self._width, self._height + 1), dtype="bool")
         grid[:, :-1] = self._grid
         return np.diff(grid).sum()
 
@@ -722,7 +737,7 @@ class SimplifiedTetrisEngine:
         """
         cumulative_wells = 0
 
-        new_grid = np.ones((self._width + 2, self._height + 1), dtype='bool')
+        new_grid = np.ones((self._width + 2, self._height + 1), dtype="bool")
         new_grid[1:-1, :-1] = self._grid
 
         for col in range(1, self._width + 1):  # Iterate over the columns.

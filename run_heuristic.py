@@ -1,6 +1,7 @@
 from gym_simplifiedtetris.agents import DellacherieAgent
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
+
 def main():
     agent = DellacherieAgent()
     env = Tetris(
@@ -26,5 +27,5 @@ def main():
     env.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

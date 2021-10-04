@@ -17,7 +17,7 @@ def run_example_1():
     import gym
 
     import gym_simplifiedtetris
-    
+
     env = gym.make("simplifiedtetris-binary-v0")
     agent = gym_simplifiedtetris.agents.UniformAgent(env._num_actions_)
     obs = env.reset()
@@ -35,6 +35,7 @@ def run_example_1():
             obs = env.reset()
 
     env.close()
+
 
 def main():
     run_example_1()
