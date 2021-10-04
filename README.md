@@ -1,8 +1,9 @@
 <h1 align="center"> Gym-SimplifiedTetris </h1> <br>
+
 <p align="center">
-    <img alt="Tetris" title="Tetris" src="assets/20x10_4.gif" width="450">
-  </a>
+    <img src="assets/20x10_4_heuristic.gif" width="400">
 </p>
+
 
 ## Table of contents <!-- omit in toc -->
 
@@ -20,11 +21,15 @@
   - [3.5. Action and observation spaces](#35-action-and-observation-spaces)
   - [3.6. Game ending](#36-game-ending)
   - [3.7. Usage](#37-usage)
-- [4. Future work](#4-future-work)
-- [5. How to contribute](#5-how-to-contribute)
-- [6. Acknowledgements](#6-acknowledgements)
-- [7. Citing the project](#7-citing-the-project)
-- [8. License](#8-license)
+- [4. Agents](#4-agents)
+  - [4.1. Uniform](#41-uniform)
+  - [4.2. Q-learning](#42-q-learning)
+  - [4.3. Heuristic](#43-heuristic)
+- [5. Future work](#5-future-work)
+- [6. How to contribute](#6-how-to-contribute)
+- [7. Acknowledgements](#7-acknowledgements)
+- [8. Citing the project](#8-citing-the-project)
+- [9. License](#9-license)
 
 ## 1. Introduction
 
@@ -166,9 +171,7 @@ Each game of Tetris terminates if the following condition is satisfied: any of t
 
 ### 3.7. Usage
 
-Here is an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
-
-**`example.py`**
+The file `example.py` shows an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
 
 ```python
 import gym
@@ -195,8 +198,6 @@ env.close()
 
 Alternatively, the environment can be imported directly:
 
-**`example.py`**
-
 ```python
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
@@ -206,32 +207,72 @@ env = Tetris(
 )
 ```
 
-## 4. Future work
+## 4. Agents
+
+Three agents are currently available:
+
+- [Uniform](#41-uniform)
+- [Q-learning](#42-q-learning)
+- [Heuristic](#43-heuristic)
+
+### 4.1. Uniform
+
+The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects actions uniformly at random. See **`run_uniform.py`** for an example of how to use the uniform agent.
+
+<p align="center">
+    <img src="assets/20x10_4.gif" width="450">
+</p>
+
+### 4.2. Q-learning
+
+The Q-learning agent implemented by `gym_simplifiedtetris.QLearningAgent` selects the action with the highest Q-value (state-action value). Note that this agent struggles to learn as the grid's dimensions are increased (the size of the state-action space becomes too large).
+
+See **`run_q_learning.py`** for an example of how to use the Q-learning agent.
+
+<p align="center">
+    <img src="assets/7x4_3_q_learning.gif" width="400">
+</p>
+
+### 4.3. Heuristic
+
+The heuristic agent implemented by `gym_simplifiedtetris.DellacherieAgent` selects the action with the highest heuristic score, which is based on the [Dellacherie feature set](https://arxiv.org/abs/1905.01652). 
+
+The heuristic score for each possible action is computed using the following heuristic:
+
+***- landing height + eroded cells - row transitions - column transitions -4 x holes - cumulative wells***
+
+See **`run_heuristic.py`** for an example of how to use the heuristic agent.
+
+<p align="center">
+    <img src="assets/20x10_4_heuristic.gif" width="400">
+</p>
+
+## 5. Future work
 
 - [ ] Unit tests:
   - [X] Tetriminos
   - [ ] Trominoes
   - [ ] Dominos
   - [ ] Monominos
-  - [ ] Heuristic
-- [ ] Agents:
+  - [X] Heuristic
+- [X] Agents:
   - [X] Q-learning
   - [X] Uniform
-  - [ ] Heuristic (Dellacherie feature set)
+  - [X] Heuristic (Dellacherie feature set)
 - [ ] Environments with alternative:
   - [ ] Observation spaces (normalised)
   - [ ] Reward functions
   - [ ] Action spaces
 
-## 5. How to contribute
+## 6. How to contribute
 
 Please feel free to provide any suggestions [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/discussions/new). Please report any bugs [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new?assignees=OliverOverend&labels=bug&template=BUG_REPORT.md&title=%5BBUG%5D%3A) or create a feature request [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new?assignees=OliverOverend&labels=enhancement&template=FEATURE_REQUEST.md&title=%5BFEATURE%5D%3A). Pull requests can be created [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/compare).
 
-## 6. Acknowledgements
+## 7. Acknowledgements
 
 This package utilises several methods from the [codebase](https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning) developed by andreanlay (2020). The class hierarchy design was inspired by a [codebase](https://github.com/Hewiiitt/Gym-Circuitboard) developed by Hewiiitt.
 
-## 7. Citing the project
+## 8. Citing the project
 
 ```
 @misc{gym_simplifiedtetris,
@@ -244,6 +285,6 @@ This package utilises several methods from the [codebase](https://github.com/and
 }
 ```
 
-## 8. License
+## 9. License
 
 This project is licensed under the terms of the [MIT license](/LICENSE.md).
