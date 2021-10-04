@@ -38,7 +38,7 @@ def run_example_1():
 
 def main():
     run_example_1()
-    run_example_2
+    run_example_2()
 
 
 if __name__ == "__main__":

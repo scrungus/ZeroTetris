@@ -651,8 +651,7 @@ class SimplifiedTetrisEngine:
         """
         if 'landing_height' in self._last_move_info:
             return self._last_move_info['landing_height']
-        else:
-            return 0
+        return 0
 
     def _get_eroded_cells(self) -> int:
         """
@@ -663,8 +662,7 @@ class SimplifiedTetrisEngine:
         """
         if 'num_rows_cleared' in self._last_move_info:
             return self._last_move_info['num_rows_cleared'] * self._last_move_info['eliminated_num_blocks']
-        else:
-            return 0
+        return 0
 
     def _get_row_transitions(self) -> float:
         """
