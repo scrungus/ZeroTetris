@@ -171,7 +171,7 @@ Each game of Tetris terminates if the following condition is satisfied: any of t
 
 ### 3.7. Usage
 
-The file `example.py` shows an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
+The file [example.py](https://github.com/OliverOverend/gym-simplifiedtetristemp/blob/master/example.py) shows an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
 
 ```python
 import gym
@@ -217,7 +217,7 @@ Three agents are currently available:
 
 ### 4.1. Uniform
 
-The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects actions uniformly at random. See **`run_uniform.py`** for an example of how to use the uniform agent.
+The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects actions uniformly at random. See [run_uniform.py](https://github.com/OliverOverend/gym-simplifiedtetristemp/blob/master/run_uniform.py) for an example of how to use the uniform agent.
 
 <p align="center">
     <img src="assets/20x10_4.gif" width="450">
@@ -227,7 +227,7 @@ The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects act
 
 The Q-learning agent implemented by `gym_simplifiedtetris.QLearningAgent` selects the action with the highest Q-value (state-action value). Note that this agent struggles to learn as the grid's dimensions are increased (the size of the state-action space becomes too large).
 
-See **`run_q_learning.py`** for an example of how to use the Q-learning agent.
+See [run_q_learning.py](https://github.com/OliverOverend/gym-simplifiedtetristemp/blob/master/run_q_learning.py) for an example of how to use the Q-learning agent.
 
 <p align="center">
     <img src="assets/7x4_3_q_learning.gif" width="400">
@@ -241,7 +241,7 @@ The heuristic score for each possible action is computed using the following heu
 
 ***- landing height + eroded cells - row transitions - column transitions -4 x holes - cumulative wells***
 
-See **`run_heuristic.py`** for an example of how to use the heuristic agent.
+See [run_heuristic.py](https://github.com/OliverOverend/gym-simplifiedtetristemp/blob/master/run_heuristic.py) for an example of how to use the heuristic agent.
 
 <p align="center">
     <img src="assets/20x10_4_heuristic.gif" width="400">
@@ -261,8 +261,8 @@ See **`run_heuristic.py`** for an example of how to use the heuristic agent.
   - [X] Heuristic (Dellacherie feature set)
 - [ ] Environments with alternative:
   - [ ] Observation spaces (normalised)
-  - [ ] Reward functions
-  - [ ] Action spaces
+  - [ ] Reward functions (shaping rewards)
+  - [ ] Action spaces (non-terminal actions only)
 
 ## 6. How to contribute
 
