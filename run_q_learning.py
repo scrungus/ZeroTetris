@@ -30,7 +30,7 @@ def main():
     eval_agent(
         agent=agent,
         env=env,
-        num_eval_episodes=30,
+        num_eval_episodes=10,
         render=True,
     )
 

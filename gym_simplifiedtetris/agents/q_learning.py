@@ -64,6 +64,5 @@ class QLearningAgent:
         current_obs_action = tuple(list(obs) + [action])
         max_q_value = np.max(self._q_table[tuple(next_obs)])
         self._q_table[current_obs_action] += self.alpha * (
-            reward + self.gamma * max_q_value -
-            self._q_table[current_obs_action]
+            reward + self.gamma * max_q_value - self._q_table[current_obs_action]
         )

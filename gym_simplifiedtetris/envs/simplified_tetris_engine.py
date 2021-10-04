@@ -152,8 +152,7 @@ class SimplifiedTetrisEngine:
         self._final_scores = np.array([], dtype=int)
         self._sleep_time = 500
         self._show_agent_playing = True
-        self._cell_size = int(
-            min(0.8 * 1000 / grid_dims[0], 0.8 * 2000 / grid_dims[1]))
+        self._cell_size = int(min(0.8 * 1000 / grid_dims[0], 0.8 * 2000 / grid_dims[1]))
         self._LEFT_SPACE = 400
         self._BLACK: tuple = self._get_bgr_code("black")
         self._WHITE: tuple = self._get_bgr_code("white")
@@ -246,7 +245,7 @@ class SimplifiedTetrisEngine:
 
                     if len(self._final_scores) == 5:
                         imageio.mimsave(
-                            f"assets/{self._height}x{self._width}_{self._piece_size}.gif",
+                            f"assets/{self._height}x{self._width}_{self._piece_size}_q_learning.gif",
                             self._image_lst,
                             fps=60,
                             duration=0.5,
@@ -291,10 +290,10 @@ class SimplifiedTetrisEngine:
         vertical_position = self._piece_size * self._cell_size
         self._img[
             vertical_position
-            - int(self._cell_size / 40): vertical_position
+            - int(self._cell_size / 40) : vertical_position
             + int(self._cell_size / 40)
             + 1,
-            self._LEFT_SPACE:,
+            self._LEFT_SPACE :,
             :,
         ] = self._RED
 
@@ -305,8 +304,7 @@ class SimplifiedTetrisEngine:
         :return: the array of the current grid.
         """
         grid = [
-            [self._GRID_COLOURS[self._colour_grid[j][i]]
-                for j in range(self._width)]
+            [self._GRID_COLOURS[self._colour_grid[j][i]] for j in range(self._width)]
             for i in range(self._height)
         ]
         return np.array(grid)
@@ -318,8 +316,7 @@ class SimplifiedTetrisEngine:
 
         :param grid: the grid to be resized.
         """
-        self._img = grid.reshape(
-            (self._height, self._width, 3)).astype(np.uint8)
+        self._img = grid.reshape((self._height, self._width, 3)).astype(np.uint8)
         self._img = Image.fromarray(self._img, "RGB")
         self._img = self._img.resize(
             (self._width * self._cell_size, self._height * self._cell_size)
@@ -346,8 +343,7 @@ class SimplifiedTetrisEngine:
 
         # Calculate the mean score.
         mean_score = (
-            0.0 if len(self._final_scores) == 0 else np.mean(
-                self._final_scores)
+            0.0 if len(self._final_scores) == 0 else np.mean(self._final_scores)
         )
 
         # Add statistics.
@@ -355,7 +351,7 @@ class SimplifiedTetrisEngine:
             img_array=img_array,
             items=[
                 [
-                    "heights",
+                    "Height",
                     "Width",
                     "",
                     "Current score",
@@ -527,14 +523,12 @@ class SimplifiedTetrisEngine:
             y_coord = int(j + self._anchor[1])
             if set_piece:
                 self._last_move_info["rows_added_to"][y_coord] += 1
-                self._grid[int(self._anchor[0] + i),
-                           int(self._anchor[1] + j)] = 1
+                self._grid[int(self._anchor[0] + i), int(self._anchor[1] + j)] = 1
                 self._colour_grid[
                     int(self._anchor[0] + i), int(self._anchor[1] + j)
                 ] = (self._current_piece_id + 1)
             else:
-                self._grid[int(self._anchor[0] + i),
-                           int(self._anchor[1] + j)] = 0
+                self._grid[int(self._anchor[0] + i), int(self._anchor[1] + j)] = 0
                 self._colour_grid[
                     int(self._anchor[0] + i), int(self._anchor[1] + j)
                 ] = 0
@@ -542,8 +536,7 @@ class SimplifiedTetrisEngine:
         anchor_height = self._height - self._anchor[1]
         max_y = int(min([s[1] for s in self._piece]))
         min_y = int(max([s[1] for s in self._piece]))
-        self._last_move_info["landing_height"] = anchor_height - \
-            0.5 * (min_y + max_y)
+        self._last_move_info["landing_height"] = anchor_height - 0.5 * (min_y + max_y)
 
     def _get_reward(self) -> Tuple[float, int]:
         """
@@ -558,11 +551,9 @@ class SimplifiedTetrisEngine:
         """Gets the actions available for each of the pieces in use."""
         self._all_available_actions = {}
         for idx in range(self._num_pieces):
-            self._current_piece_coords = self._all_pieces_info._select_piece(
-                idx)
+            self._current_piece_coords = self._all_pieces_info._select_piece(idx)
             self._current_piece_id = idx
-            self._all_available_actions[idx] = self._compute_available_actions(
-            )
+            self._all_available_actions[idx] = self._compute_available_actions()
 
     def _compute_available_actions(self) -> Dict[int, Tuple[int, int]]:
         """
@@ -722,7 +713,7 @@ class SimplifiedTetrisEngine:
             row = 0
             while row < self._height and col[row] == 0:
                 row += 1
-            holes += len([x for x in col[row + 1:] if x == 0])
+            holes += len([x for x in col[row + 1 :] if x == 0])
 
         return holes
 
