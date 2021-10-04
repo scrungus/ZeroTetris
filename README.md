@@ -2,7 +2,7 @@
     <img src="assets/20x10_4_heuristic.gif" width="400">
 </p>
 
-<h2 align="center"> Gym-SimplifiedTetris </h2>
+<h2 align="center"> 🟥 Gym-SimplifiedTetris </h2>
 
 <p align="center">
   <a href="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetristemp">
