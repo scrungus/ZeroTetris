@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="assets/20x10_4_heuristic.gif" width="400">
+    <img src="assets/20x10_4_heuristic.gif" width="500">
 </p>
 
 <div align="center">
@@ -162,7 +162,7 @@ The user can close all open windows using:
 The user can deviate from the standard grid dimensions and Tetriminos by editing the `gym_register` keyword arguments. The user can choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. The user can select a height in the interval [`piece_size`+1, 20] and a width in the interval [`piece_size`, 10]. Below is a GIF showing games being played on a 8 x 6 grid with trominoes as the pieces.
 
 <p align="center">
-    <img src="assets/8x6_3.gif" width="400">
+    <img src="assets/8x6_3.gif" width="500">
 </p>
 
 ### 2.5. Action and observation spaces
@@ -225,7 +225,7 @@ env = Tetris(
 The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects actions uniformly at random. See [run_uniform.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_uniform.py) for an example of how to use the uniform agent.
 
 <p align="center">
-    <img src="assets/20x10_4.gif" width="450">
+    <img src="assets/20x10_4.gif" width="500">
 </p>
 
 ### 3.2. Q-learning
@@ -235,7 +235,7 @@ The Q-learning agent implemented by `gym_simplifiedtetris.QLearningAgent` select
 See [run_q_learning.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_q_learning.py) for an example of how to use the Q-learning agent.
 
 <p align="center">
-    <img src="assets/7x4_3_q_learning.gif" width="400">
+    <img src="assets/7x4_3_q_learning.gif" width="500">
 </p>
 
 ### 3.3. Heuristic
@@ -249,7 +249,7 @@ The heuristic score for each possible action is computed using the following heu
 See [run_heuristic.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_heuristic.py) for an example of how to use the heuristic agent.
 
 <p align="center">
-    <img src="assets/20x10_4_heuristic.gif" width="400">
+    <img src="assets/20x10_4_heuristic.gif" width="500">
 </p>
 
 ## 4. Future work
