@@ -2,19 +2,25 @@
     <img src="assets/20x10_4_heuristic.gif" width="400">
 </p>
 
-<h2 align="center"> 🟥 Gym-SimplifiedTetris </h2>
+<div align="center">
+    <h1>🟥 Gym-SimplifiedTetris</h1>
+    <i>Simplified Tetris environments for OpenAI Gym</i>
+</div>
+
+<br />
+
 
 <p align="center">
-  <a href="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetristemp">
-    <img src="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetristemp/badge">
+  <a href="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetris">
+    <img src="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetris/badge">
   </a>
   <a href="/LICENSE.md">
-    <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetristemp?color=red">
+    <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetris?color=red">
   </a>
-  <a href="https://github.com/OliverOverend/gym-simplifiedtetristemp/compare">
+  <a href="https://github.com/OliverOverend/gym-simplifiedtetris/compare">
     <img src="https://img.shields.io/badge/PRs-welcome-success.svg?style=flat">
   </a>
-  <a href="https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new/choose">
+  <a href="https://github.com/OliverOverend/gym-simplifiedtetris/issues/new/choose">
     <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat">
   </a>
   <a href="https://github.com/psf/black">
@@ -23,14 +29,14 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new?assignees=OliverOverend&labels=bug&template=BUG_REPORT.md&title=%5BBUG%5D%3A">Report Bug</a>
+    <a href="https://github.com/OliverOverend/gym-simplifiedtetris/issues/new?assignees=OliverOverend&labels=bug&late=BUG_REPORT.md&title=%5BBUG%5D%3A">Report Bug</a>
     ·
-    <a href="https://github.com/OliverOverend/gym-simplifiedtetristemp/issues/new?assignees=OliverOverend&labels=enhancement&template=FEATURE_REQUEST.md&title=%5BFEATURE%5D%3A">Request Feature</a>
+    <a href="https://github.com/OliverOverend/gym-simplifiedtetris/issues/new?assignees=OliverOverend&labels=enhancement&late=FEATURE_REQUEST.md&title=%5BFEATURE%5D%3A">Request Feature</a>
     ·
-    <a href="https://github.com/OliverOverend/gym-simplifiedtetristemp/discussions/new">Suggestions</a>
-    ·
-    <a href="https://github.com/OliverOverend/gym-simplifiedtetristemp/compare">Pull Request</a>
+    <a href="https://github.com/OliverOverend/gym-simplifiedtetris/discussions/new">Suggestions</a>
 </p>
+
+---
 
 _Gym-SimplifiedTetris_ is a Python package that can create simplified Tetris environments, which conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
 
@@ -62,12 +68,12 @@ This README provides some help with the setup, gives an overview of the environm
 
 ## 1. Getting started
 
-If you would like to contribute, I'd recommend following [this](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/) advice. In summary, fork the repo :arrow_right: clone it :arrow_right: create a new branch :arrow_right: make changes :arrow_right: merge to master :arrow_right: create a new pull request [here](https://github.com/OliverOverend/gym-simplifiedtetristemp/compare).
+If you would like to contribute, I'd recommend following [this](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/) advice. In summary, fork the repo :arrow_right: clone it :arrow_right: create a new branch :arrow_right: make changes :arrow_right: merge to master :arrow_right: create a new pull request [here](https://github.com/OliverOverend/gym-simplifiedtetris/compare).
 
 Or, you can clone the repository to create a local copy on your machine:
 
 ```bash
-git clone https://github.com/OliverOverend/gym-simplifiedtetristemp
+git clone https://github.com/OliverOverend/gym-simplifiedtetris
 ```
 
 Here is a list of the versions used throughout development:
@@ -176,7 +182,7 @@ Each game of Tetris terminates if the following condition is satisfied: any of t
 
 ### 2.7. Usage
 
-The file [example.py](https://github.com/OliverOverend/gym-simplifiedtetristemp/blob/master/example.py) shows an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
+The file [example.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/example.py) shows an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
 
 ```python
 import gym
@@ -216,7 +222,7 @@ env = Tetris(
 
 ### 3.1. Uniform
 
-The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects actions uniformly at random. See [run_uniform.py](https://github.com/OliverOverend/gym-simplifiedtetristemp/blob/master/run_uniform.py) for an example of how to use the uniform agent.
+The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects actions uniformly at random. See [run_uniform.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_uniform.py) for an example of how to use the uniform agent.
 
 <p align="center">
     <img src="assets/20x10_4.gif" width="450">
@@ -226,7 +232,7 @@ The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects act
 
 The Q-learning agent implemented by `gym_simplifiedtetris.QLearningAgent` selects the action with the highest Q-value (state-action value). Note that this agent struggles to learn as the grid's dimensions are increased (the size of the state-action space becomes too large).
 
-See [run_q_learning.py](https://github.com/OliverOverend/gym-simplifiedtetristemp/blob/master/run_q_learning.py) for an example of how to use the Q-learning agent.
+See [run_q_learning.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_q_learning.py) for an example of how to use the Q-learning agent.
 
 <p align="center">
     <img src="assets/7x4_3_q_learning.gif" width="400">
@@ -240,7 +246,7 @@ The heuristic score for each possible action is computed using the following heu
 
 ***- landing height + eroded cells - row transitions - column transitions -4 x holes - cumulative wells***
 
-See [run_heuristic.py](https://github.com/OliverOverend/gym-simplifiedtetristemp/blob/master/run_heuristic.py) for an example of how to use the heuristic agent.
+See [run_heuristic.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_heuristic.py) for an example of how to use the heuristic agent.
 
 <p align="center">
     <img src="assets/20x10_4_heuristic.gif" width="400">
@@ -270,7 +276,7 @@ This package utilises several methods from the [codebase](https://github.com/and
   year = {2021},
   publisher = {GitHub},
   journal = {GitHub repository},
-  howpublished = {\url{https://github.com/OliverOverend/gym-simplifiedtetristemp}},
+  howpublished = {\url{https://github.com/OliverOverend/gym-simplifiedtetris}},
 }
 ```
 
