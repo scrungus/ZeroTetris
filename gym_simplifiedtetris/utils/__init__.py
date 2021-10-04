@@ -1,1 +1,1 @@
-from .pieces import PieceCoords
+from .pieces import PiecesInfo

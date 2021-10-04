@@ -168,7 +168,7 @@ Each game of Tetris terminates if the following condition is satisfied: any of t
 
 Here is an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
 
-**`examples/run_gym_env.py`**
+**`example.py`**
 
 ```python
 import gym
@@ -195,7 +195,7 @@ env.close()
 
 Alternatively, the environment can be imported directly:
 
-**`examples/run_env_directly.py`**
+**`example.py`**
 
 ```python
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris

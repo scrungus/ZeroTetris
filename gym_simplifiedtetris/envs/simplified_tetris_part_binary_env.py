@@ -35,9 +35,7 @@ class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBinaryEnv):
 
         :return: the current observation.
         """
-        current_grid = np.clip(
-            self._engine._grid[:, self._piece_size_ :].flatten(), 0, 1
-        )
+        current_grid = self._engine._grid[:, self._piece_size_ :].flatten()
         return np.append(current_grid, self._engine._current_piece_id)
 
 
