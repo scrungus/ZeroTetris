@@ -481,7 +481,7 @@ class SimplifiedTetrisEngine:
         ]
         new_grid = np.zeros_like(self._grid)
         new_colour_grid = np.zeros_like(self._colour_grid)
-        j = self._height - 1
+        col = self._height - 1
 
         self._last_move_info['eliminated_num_blocks'] = 0
 
@@ -489,9 +489,9 @@ class SimplifiedTetrisEngine:
         for row_num in range(self._height - 1, self._piece_size - 1, -1):
 
             if not can_clear[row_num - self._piece_size]:  # Unable to clear.
-                new_grid[:, j] = self._grid[:, row_num]
-                new_colour_grid[:, j] = self._colour_grid[:, row_num]
-                j -= 1
+                new_grid[:, col] = self._grid[:, row_num]
+                new_colour_grid[:, col] = self._colour_grid[:, row_num]
+                col -= 1
             else:
                 self._last_move_info['eliminated_num_blocks'] += self._last_move_info['rows_added_to'][row_num]
 
@@ -551,10 +551,10 @@ class SimplifiedTetrisEngine:
     def _get_all_available_actions(self) -> None:
         """Gets the actions available for each of the pieces in use."""
         self._all_available_actions = {}
-        for k in range(self._num_pieces):
-            self._current_piece_coords = self._all_pieces_info._select_piece(k)
-            self._current_piece_id = k
-            self._all_available_actions[k] = self._compute_available_actions()
+        for idx in range(self._num_pieces):
+            self._current_piece_coords = self._all_pieces_info._select_piece(idx)
+            self._current_piece_id = idx
+            self._all_available_actions[idx] = self._compute_available_actions()
 
     def _compute_available_actions(self) -> Dict[int, Tuple[int, int]]:
         """
@@ -671,6 +671,8 @@ class SimplifiedTetrisEngine:
         Row transitions = # transitions from empty to full (or vice versa), examining
         each row one at a time.
 
+        Source: https://github.com/Benjscho/gym-mdptetris/blob/main/gym_mdptetris/envs/feature_functions.py
+
         :return: row transitions.
         """
         # A full column should be added either side.
@@ -683,9 +685,11 @@ class SimplifiedTetrisEngine:
         Column transitions = # transitions from empty to full (or vice versa), examining
         each column one at a time.
 
+        Source: https://github.com/Benjscho/gym-mdptetris/blob/main/gym_mdptetris/envs/feature_functions.py
+
         :return: column transitions.
         """
-        # A row should be added to the bottom.
+        # A full row should be added to the bottom.
         grid = np.ones((self._width, self._height + 1), dtype='bool')
         grid[:, :-1] = self._grid
         return np.diff(grid).sum()
@@ -694,9 +698,9 @@ class SimplifiedTetrisEngine:
         """
         A hole is an empty cell with at least one full cell above it in the same column.
 
-        Helper function that sums the False values in a row that precede
-        at least one True value.
-        Attribution: https://stackoverflow.com/a/68087910/14354978
+        Source: https://stackoverflow.com/a/68087910/14354978
+
+        :return: holes.
         """
         return np.max((self._grid).cumsum(axis=1) * ~self._grid, axis=1).sum()
 
@@ -706,23 +710,25 @@ class SimplifiedTetrisEngine:
         A block is part of a well if the cells directly either side are full,
         and the block can be reached from above (there are no full cells directly
         above it).
+
+        :return: cumulative wells.
         """
         cumulative_wells = 0
 
         new_grid = np.ones((self._width + 2, self._height + 1), dtype='bool')
         new_grid[1:-1, :-1] = self._grid
 
-        for i in range(1, self._width + 1):  # Iterate over the columns.
+        for col in range(1, self._width + 1):  # Iterate over the columns.
 
             depth = 1
             num_full_cells_above = 0
             well_complete = False
 
-            for j in range(self._height):  # Iterate over the rows.
+            for row in range(self._height):  # Iterate over the rows.
 
-                cell_mid = new_grid[i][j]
-                cell_right = new_grid[i + 1][j]
-                cell_left = new_grid[i - 1][j]
+                cell_mid = new_grid[col][row]
+                cell_right = new_grid[col + 1][row]
+                cell_left = new_grid[col - 1][row]
 
                 if cell_mid >= 1:  # Full cell.
                     num_full_cells_above += 1
