@@ -101,7 +101,7 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
         return self._engine._close()
 
     def _get_obs_(self) -> np.array:
-        current_grid = np.clip(self._engine._grid.flatten(), 0, 1)
+        current_grid = self._engine._grid.flatten()
         return np.append(current_grid, self._engine._current_piece_id)
 
     def _get_reward_(self) -> Tuple[float, int]:
