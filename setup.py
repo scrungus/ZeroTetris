@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="gym_simplifiedtetris",
-    version="0.1.1",
+    version="0.1.2",
     author="Oliver Overend",
     author_email="ollyoverend10@gmail.com",
     url="https://github.com/OliverOverend/gym-simplifiedtetris",
