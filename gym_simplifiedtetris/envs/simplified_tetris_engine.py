@@ -185,7 +185,7 @@ class SimplifiedTetrisEngine:
 
         # Initialise attributes for saving GIFs.
         self._image_lst = []
-        self._save_frame = False
+        self._save_frame = True
 
     @staticmethod
     def _get_bgr_code(colour_name: str) -> Tuple[float, float, float]:
@@ -243,9 +243,9 @@ class SimplifiedTetrisEngine:
                     frame_rgb = cv.cvtColor(self._img, cv.COLOR_BGR2RGB)
                     self._image_lst.append(frame_rgb)
 
-                    if len(self._final_scores) == 5:
+                    if self._score == 20: # len(self._final_scores) == 4:
                         imageio.mimsave(
-                            f"assets/{self._height}x{self._width}_{self._piece_size}_q_learning.gif",
+                            f"assets/{self._height}x{self._width}_{self._piece_size}_heuristic.gif",
                             self._image_lst,
                             fps=60,
                             duration=0.5,

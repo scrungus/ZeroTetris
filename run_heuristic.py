@@ -9,7 +9,7 @@ def main():
 
     agent = DellacherieAgent()
     env = Tetris(
-        grid_dims=(8, 10),
+        grid_dims=(20, 10),
         piece_size=4,
     )
     obs = env.reset()

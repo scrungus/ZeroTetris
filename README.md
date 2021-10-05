@@ -3,9 +3,7 @@
 </p>
 
 <div align="center">
-    <h1>🟥 Gym-SimplifiedTetris <a href="https://twitter.com/intent/tweet?text=Conduct%20AI%20research%20using%20simplified%20Tetris%20environments%20conforming%20to%20OpenAI%20Gym's%20API&url=https://github.com/OliverOverend/gym-simplifiedtetris&via=OllyOverend10&hashtags=tetris,reinforcementlearning,openaigym">
-    <img src="https://img.shields.io/twitter/url/http/shields.io.svg?style=social">
-    </a> </h1>
+    <h1>🟥 Gym-SimplifiedTetris </h1>
     <i>Simplified Tetris environments for OpenAI Gym</i>
 </div>
 
@@ -18,6 +16,9 @@
   <a href="/LICENSE.md">
     <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetris?color=red">
   </a>
+  <a href="https://github.com/OliverOverend/gym-simplifiedtetris/releases">
+    <img src="https://img.shields.io/github/v/release/OliverOverend/gym-simplifiedtetris?sort=semver">
+  </a>
   <a href="https://github.com/OliverOverend/gym-simplifiedtetris/compare">
     <img src="https://img.shields.io/badge/PRs-welcome-success.svg?style=flat">
   </a>
@@ -27,6 +28,9 @@
   <a href="https://github.com/psf/black">
     <img src="https://img.shields.io/badge/code%20style-black-000000.svg">
   </a>
+  <a href="https://twitter.com/intent/tweet?text=Conduct%20AI%20research%20using%20simplified%20Tetris%20environments%20conforming%20to%20OpenAI%20Gym's%20API&url=https://github.com/OliverOverend/gym-simplifiedtetris&via=OllyOverend10&hashtags=tetris,reinforcementlearning,openaigym">
+  <img src="https://img.shields.io/twitter/url/http/shields.io.svg?style=social">
+  </a> 
 </p>
 
 <p align="center">
@@ -39,7 +43,7 @@
 
 ---
 
-_Gym-SimplifiedTetris_ is a Python package capable of creating simplified Tetris environments for AI research (more speficially reinforcement learning), which conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
+_Gym-SimplifiedTetris_ is a Python package capable of creating simplified Tetris environments for AI research (more specifically reinforcement learning), which conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
 
 This README provides some help with the setup, gives an overview of the environments and agents and how to use them, and describes how to build more environments.
 
@@ -69,9 +73,14 @@ This README provides some help with the setup, gives an overview of the environm
 
 ## 1. Getting started
 
-If you would like to contribute, I'd recommend following [this](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/) advice. In summary, fork the repo :arrow_right: clone it :arrow_right: create a new branch :arrow_right: make changes :arrow_right: merge to master :arrow_right: create a new pull request [here](https://github.com/OliverOverend/gym-simplifiedtetris/compare).
+If you would like to contribute, I'd recommend following [this](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/) advice. In summary, fork the repo ➡️ clone it ➡️ create a new branch ➡️ make changes ➡️ merge to master ➡️ create a new pull request [here](https://github.com/OliverOverend/gym-simplifiedtetris/compare).
 
-Or, you can clone the repository to create a local copy on your machine:
+The package is pip installable:
+```
+pip install gym-simplifiedtetris
+```
+
+The repository can be cloned using:
 
 ```bash
 git clone https://github.com/OliverOverend/gym-simplifiedtetris
@@ -79,7 +88,6 @@ git clone https://github.com/OliverOverend/gym-simplifiedtetris
 
 Here is a list of dependencies:
 
-- Python 3
 - NumPy
 - Gym
 - OpenCV-Python
