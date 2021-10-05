@@ -1,14 +1,15 @@
 <p align="center">
-    <img src="assets/20x10_4_heuristic.gif" width="500">
+    <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/20x10_4_heuristic.gif" width="500">
 </p>
 
 <div align="center">
-    <h1>🟥 Gym-SimplifiedTetris</h1>
+    <h1>🟥 Gym-SimplifiedTetris <a href="https://twitter.com/intent/tweet?text=Conduct%20AI%20research%20using%20simplified%20Tetris%20environments%20conforming%20to%20OpenAI%20Gym's%20API&url=https://github.com/OliverOverend/gym-simplifiedtetris&via=OllyOverend10&hashtags=tetris,reinforcementlearning,openaigym">
+    <img src="https://img.shields.io/twitter/url/http/shields.io.svg?style=social">
+    </a> </h1>
     <i>Simplified Tetris environments for OpenAI Gym</i>
 </div>
 
 <br />
-
 
 <p align="center">
   <a href="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetris">
@@ -38,7 +39,7 @@
 
 ---
 
-_Gym-SimplifiedTetris_ is a Python package capable of creating simplified Tetris environments that conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
+_Gym-SimplifiedTetris_ is a Python package capable of creating simplified Tetris environments for AI research (more speficially reinforcement learning), which conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
 
 This README provides some help with the setup, gives an overview of the environments and agents and how to use them, and describes how to build more environments.
 
@@ -76,16 +77,16 @@ Or, you can clone the repository to create a local copy on your machine:
 git clone https://github.com/OliverOverend/gym-simplifiedtetris
 ```
 
-Here is a list of the versions used throughout development:
+Here is a list of dependencies:
 
-- Python==3.7.4
-- NumPy==1.16.5
-- Gym==0.18.0
-- OpenCV-Python==4.5.1
-- Imageio==2.6.0
-- Matplotlib==3.4.2
-- Pillow==6.2.0
-- Stable-Baselines3==1.1.0
+- Python 3
+- NumPy
+- Gym
+- OpenCV-Python
+- Imageio
+- Matplotlib
+- Pillow
+- Stable-Baselines3
 
 ## 2. Environments
 
@@ -162,7 +163,7 @@ The user can close all open windows using:
 The user can deviate from the standard grid dimensions and Tetriminos by editing the `gym_register` keyword arguments. The user can choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. The user can select a height in the interval [`piece_size`+1, 20] and a width in the interval [`piece_size`, 10]. Below is a GIF showing games being played on a 8 x 6 grid with trominoes as the pieces.
 
 <p align="center">
-    <img src="assets/8x6_3.gif" width="500">
+    <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/8x6_3.gif" width="500">
 </p>
 
 ### 2.5. Action and observation spaces
@@ -225,7 +226,7 @@ env = Tetris(
 The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects actions uniformly at random. See [run_uniform.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_uniform.py) for an example of how to use the uniform agent.
 
 <p align="center">
-    <img src="assets/20x10_4.gif" width="500">
+    <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/20x10_4.gif" width="500">
 </p>
 
 ### 3.2. Q-learning
@@ -235,7 +236,7 @@ The Q-learning agent implemented by `gym_simplifiedtetris.QLearningAgent` select
 See [run_q_learning.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_q_learning.py) for an example of how to use the Q-learning agent.
 
 <p align="center">
-    <img src="assets/7x4_3_q_learning.gif" width="500">
+    <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/7x4_3_q_learning.gif" width="500">
 </p>
 
 ### 3.3. Heuristic
