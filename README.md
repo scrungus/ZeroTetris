@@ -15,9 +15,6 @@
   <a href="/LICENSE.md">
     <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetris?color=red">
   </a>
-  <a href="https://github.com/OliverOverend/gym-simplifiedtetris/releases">
-    <img src="https://img.shields.io/github/v/release/OliverOverend/gym-simplifiedtetris?sort=semver">
-  </a>
   <a href="https://github.com/OliverOverend/gym-simplifiedtetris/compare">
     <img src="https://img.shields.io/badge/PRs-welcome-success.svg?style=flat">
   </a>
