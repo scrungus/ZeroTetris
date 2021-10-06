@@ -4,8 +4,6 @@
 
 <h1 align="center">Gym-SimplifiedTetris </h1>
 
----
-
 <p align="center">
   <a href="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetris">
     <img src="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetris/badge">
