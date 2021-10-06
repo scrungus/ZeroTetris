@@ -243,7 +243,7 @@ class SimplifiedTetrisEngine:
                     frame_rgb = cv.cvtColor(self._img, cv.COLOR_BGR2RGB)
                     self._image_lst.append(frame_rgb)
 
-                    if self._score == 20: # len(self._final_scores) == 4:
+                    if self._score == 20:  # len(self._final_scores) == 4:
                         imageio.mimsave(
                             f"assets/{self._height}x{self._width}_{self._piece_size}_heuristic.gif",
                             self._image_lst,
@@ -714,7 +714,7 @@ class SimplifiedTetrisEngine:
             row = self._piece_size
             while row < self._height and col[row] == 0:
                 row += 1
-            
+
             # Count the number of empty cells, below the first full cell.
             holes += len([x for x in col[row + 1 :] if x == 0])
 
