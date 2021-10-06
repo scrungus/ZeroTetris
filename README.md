@@ -2,12 +2,9 @@
     <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/20x10_4_heuristic.gif" width="500">
 </p>
 
-<div align="center">
-    <h1>🟥 Gym-SimplifiedTetris </h1>
-    <i>Simplified Tetris environments for OpenAI Gym</i>
-</div>
+<h1 align="center">Gym-SimplifiedTetris </h1>
 
-<br />
+---
 
 <p align="center">
   <a href="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetris">
@@ -15,7 +12,8 @@
   </a>
   <a href="https://github.com/psf/black">
     <img src="https://img.shields.io/badge/code%20style-black-000000.svg">
-  </a>
+  </a href="https://www.python.org/">
+  <img src="https://img.shields.io/pypi/pyversions/gym-simplifiedtetris">
   <a href="/LICENSE.md">
     <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetris?color=red">
   </a>
@@ -42,6 +40,8 @@
 </p>
 
 ---
+
+> 🟥 Simplified Tetris environments for AI research, which conform to the OpenAI Gym API
 
 _Gym-SimplifiedTetris_ is a Python package capable of creating simplified Tetris environments for AI research (more specifically reinforcement learning), which conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
 
