@@ -13,6 +13,9 @@
   <a href="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetris">
     <img src="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetris/badge">
   </a>
+  <a href="https://github.com/psf/black">
+    <img src="https://img.shields.io/badge/code%20style-black-000000.svg">
+  </a>
   <a href="/LICENSE.md">
     <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetris?color=red">
   </a>
@@ -24,9 +27,6 @@
   </a>
   <a href="https://github.com/OliverOverend/gym-simplifiedtetris/issues/new/choose">
     <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat">
-  </a>
-  <a href="https://github.com/psf/black">
-    <img src="https://img.shields.io/badge/code%20style-black-000000.svg">
   </a>
   <a href="https://twitter.com/intent/tweet?text=Conduct%20AI%20research%20using%20simplified%20Tetris%20environments%20conforming%20to%20OpenAI%20Gym's%20API&url=https://github.com/OliverOverend/gym-simplifiedtetris&via=OllyOverend10&hashtags=tetris,reinforcementlearning,openaigym">
   <img src="https://img.shields.io/twitter/url/http/shields.io.svg?style=social">
@@ -52,16 +52,16 @@ This README provides some help with the setup, gives an overview of the environm
 - [1. Getting started](#1-getting-started)
 - [2. Environments](#2-environments)
   - [2.1. Available environments](#21-available-environments)
-  - [2.2. Building more environments](#22-building-more-environments)
-  - [2.3. Methods](#23-methods)
-    - [2.3.1. `reset()` method](#231-reset-method)
-    - [2.3.2. `step(action: int)` method](#232-stepaction-int-method)
-    - [2.3.3. `render()` method](#233-render-method)
-    - [2.3.4. `close()` method](#234-close-method)
-  - [2.4. Variable dimensions and piece size](#24-variable-dimensions-and-piece-size)
-  - [2.5. Action and observation spaces](#25-action-and-observation-spaces)
-  - [2.6. Game ending](#26-game-ending)
-  - [2.7. Usage](#27-usage)
+  - [2.2. Methods](#22-methods)
+    - [2.2.1. `reset()` method](#221-reset-method)
+    - [2.2.2. `step(action: int)` method](#222-stepaction-int-method)
+    - [2.2.3. `render()` method](#223-render-method)
+    - [2.2.4. `close()` method](#224-close-method)
+  - [2.3. Variable dimensions and piece size](#23-variable-dimensions-and-piece-size)
+  - [2.4. Action and observation spaces](#24-action-and-observation-spaces)
+  - [2.5. Game ending](#25-game-ending)
+  - [2.6. Usage](#26-usage)
+  - [2.7. Building more environments](#27-building-more-environments)
 - [3. Agents](#3-agents)
   - [3.1. Uniform](#31-uniform)
   - [3.2. Q-learning](#32-q-learning)
@@ -72,8 +72,6 @@ This README provides some help with the setup, gives an overview of the environm
 - [7. License](#7-license)
 
 ## 1. Getting started
-
-If you would like to contribute, I'd recommend following [this](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/) advice. In summary, fork the repo ➡️ clone it ➡️ create a new branch ➡️ make changes ➡️ merge to master ➡️ create a new pull request [here](https://github.com/OliverOverend/gym-simplifiedtetris/compare).
 
 The package is pip installable:
 ```
@@ -105,20 +103,9 @@ There are currently two environments provided:
 - `simplifiedtetris-binary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID
 - `simplifiedtetris-partbinary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID
 
-### 2.2. Building more environments
+### 2.2. Methods
 
-The user can implement more custom Gym environments with different observation spaces and reward functions easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBinaryEnv` and are registered using:
-
-```python
->>> register(
->>>     idx='INSERT_ENV_NAME_HERE',
->>>     entry_point='gym_simplifiedtetris.envs:INSERT_ENV_CLASS_NAME_HERE',
->>> )
-```
-
-### 2.3. Methods
-
-#### 2.3.1. `reset()` method
+#### 2.2.1. `reset()` method
 
 The `reset()` method returns a 1D array containing some grid binary representation, plus the current piece's ID.
 
@@ -132,7 +119,7 @@ The `reset()` method returns a 1D array containing some grid binary representati
  0 0 0 0 0 0 0 0 0 0 0 0 4]
 ```
 
-#### 2.3.2. `step(action: int)` method
+#### 2.2.2. `step(action: int)` method
 
 Each environment's step method returns four values:
 
@@ -145,7 +132,7 @@ Each environment's step method returns four values:
 >>> obs, rwd, done, info = env.step(action)
 ```
 
-#### 2.3.3. `render()` method
+#### 2.2.3. `render()` method
 
 The user has access to the following controls during rendering:
 
@@ -158,7 +145,7 @@ The user has access to the following controls during rendering:
 >>> env.render()
 ```
 
-#### 2.3.4. `close()` method
+#### 2.2.4. `close()` method
 
 The user can close all open windows using:
 
@@ -166,7 +153,7 @@ The user can close all open windows using:
 >>> env.close()
 ```
 
-### 2.4. Variable dimensions and piece size
+### 2.3. Variable dimensions and piece size
 
 The user can deviate from the standard grid dimensions and Tetriminos by editing the `gym_register` keyword arguments. The user can choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. The user can select a height in the interval [`piece_size`+1, 20] and a width in the interval [`piece_size`, 10]. Below is a GIF showing games being played on a 8 x 6 grid with trominoes as the pieces.
 
@@ -174,7 +161,7 @@ The user can deviate from the standard grid dimensions and Tetriminos by editing
     <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/8x6_3.gif" width="500">
 </p>
 
-### 2.5. Action and observation spaces
+### 2.4. Action and observation spaces
 
 Each environment comes with an `observation_space` that is a `Box` space and an `action_space` that is a `Discrete` space. At each time step, the artificial agent must choose an action (an integer from a particular range). Each action maps to a translation/rotation tuple that specifies the column to drop the piece and its rotation. The ranges for the four different piece sizes are:
 
@@ -185,11 +172,11 @@ Each environment comes with an `observation_space` that is a `Box` space and an 
 
 where w is the grid width.
 
-### 2.6. Game ending
+### 2.5. Game ending
 
 Each game of Tetris terminates if the following condition is satisfied: any of the dropped piece's square blocks enter into the top `piece_size` rows before any full rows are cleared. This definition ensures that scores achieved are lower bounds on the score that the agent could have obtained on a standard game of Tetris, as laid out in Colin Fahey's ['Standard Tetris' specification](https://www.colinfahey.com/tetris/tetris.html#:~:text=5.%20%22Standard%20Tetris%22%20specification).
 
-### 2.7. Usage
+### 2.6. Usage
 
 The file [example.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/example.py) shows an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
 
@@ -225,6 +212,17 @@ env = Tetris(
     grid_dims=(20, 10),
     piece_size=4,
 )
+```
+
+### 2.7. Building more environments
+
+The user can implement more custom Gym environments with different observation spaces and reward functions easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBinaryEnv` and are registered using:
+
+```python
+>>> register(
+>>>     idx='INSERT_ENV_NAME_HERE',
+>>>     entry_point='gym_simplifiedtetris.envs:INSERT_ENV_CLASS_NAME_HERE',
+>>> )
 ```
 
 ## 3. Agents

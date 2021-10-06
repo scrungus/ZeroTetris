@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="gym_simplifiedtetris",
-    version="0.1.2",
+    version="0.1.3",
     author="Oliver Overend",
     author_email="ollyoverend10@gmail.com",
     url="https://github.com/OliverOverend/gym-simplifiedtetris",
@@ -28,12 +28,14 @@ setup(
         "Intended Audience :: Developers",
         "Intended Audience :: Education",
         "Intended Audience :: Science/Research",
-        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "License :: OSI Approved :: MIT License",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
         "Topic :: Games/Entertainment :: Puzzle Games",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     package_dir={"": "gym_simplifiedtetris"},
-    keywords='tetris, gym, openaigym, reinforcementlearning, research, '
+    keywords="tetris, gym, openaigym, reinforcementlearning, research, ",
 )

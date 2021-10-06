@@ -243,7 +243,7 @@ class SimplifiedTetrisEngine:
                     frame_rgb = cv.cvtColor(self._img, cv.COLOR_BGR2RGB)
                     self._image_lst.append(frame_rgb)
 
-                    if self._score == 20: # len(self._final_scores) == 4:
+                    if self._score == 20:  # len(self._final_scores) == 4:
                         imageio.mimsave(
                             f"assets/{self._height}x{self._width}_{self._piece_size}_heuristic.gif",
                             self._image_lst,
@@ -710,19 +710,21 @@ class SimplifiedTetrisEngine:
         holes = 0
 
         for col in zip(*self._grid.T):
-            row = 0
+            # Find the first full cell, starting from the top row below the cut off.
+            row = self._piece_size
             while row < self._height and col[row] == 0:
                 row += 1
+
+            # Count the number of empty cells, below the first full cell.
             holes += len([x for x in col[row + 1 :] if x == 0])
 
         return holes
 
     def _get_cumulative_wells(self) -> int:
         """
-        Cumulative wells is defined as the sum over the depth of all wells.
-        A block is part of a well if the cells directly either side are full,
-        and the block can be reached from above (there are no full cells directly
-        above it).
+        Cumulative wells is defined as the sum of the depths of all wells.
+        A block is part of a well if the cells directly on either side are full,
+        and the block can be reached from above (there are no full cells directly above it).
 
         :return: cumulative wells.
         """
