@@ -73,10 +73,10 @@ The package is pip installable:
 pip install gym-simplifiedtetris
 ```
 
-The repository can be cloned using:
+Or, you can copy the repository by forking it, and then download it using:
 
 ```bash
-git clone https://github.com/OliverOverend/gym-simplifiedtetris
+git clone https://github.com/INSERT-YOUR-USERNAME-HERE/gym-simplifiedtetris
 ```
 
 Here is a list of dependencies:
