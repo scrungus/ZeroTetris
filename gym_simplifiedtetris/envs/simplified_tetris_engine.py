@@ -740,7 +740,6 @@ class SimplifiedTetrisEngine:
         for col in range(1, self._width + 1):  # Iterate over the columns.
 
             depth = 1
-            num_full_cells_above = 0
             well_complete = False
 
             for row in range(self._height):  # Iterate over the rows.
@@ -750,7 +749,6 @@ class SimplifiedTetrisEngine:
                 cell_left = new_grid[col - 1][row]
 
                 if cell_mid >= 1:  # Full cell.
-                    num_full_cells_above += 1
                     well_complete = True
 
                 # Checks either side to see if the cells are occupied.
