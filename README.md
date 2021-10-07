@@ -69,7 +69,7 @@ This README provides some help with the setup, gives an overview of the environm
 ## 1. Getting started
 
 The package is pip installable:
-```
+```bash
 pip install gym-simplifiedtetris
 ```
 
@@ -77,6 +77,13 @@ Or, you can copy the repository by forking it, and then download it using:
 
 ```bash
 git clone https://github.com/INSERT-YOUR-USERNAME-HERE/gym-simplifiedtetris
+```
+
+Packages can be installed using pip:
+
+```bash
+cd gym-simplifiedtetris
+pip install -r requirements.txt
 ```
 
 Here is a list of dependencies:
