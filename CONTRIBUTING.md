@@ -27,7 +27,7 @@ If you want to help improve the docs, please create a new issue (or comment on a
 
 ## Contributing code
 
-If you would like to contribute, I'd recommend following [this](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/) advice. In summary, fork the repo ➡️ clone it ➡️ create a new branch ➡️ make changes ➡️ merge to master ➡️ create a new pull request.
+If you would like to contribute, I'd recommend following [this](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/) advice. In summary, fork the repo ➡️ clone the copied repo ➡️ create a new branch ➡️ make changes ➡️ merge to master ➡️ create a new pull request.
 
 ### Finding an issue
 

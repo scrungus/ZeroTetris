@@ -2,12 +2,7 @@
     <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/20x10_4_heuristic.gif" width="500">
 </p>
 
-<div align="center">
-    <h1>🟥 Gym-SimplifiedTetris </h1>
-    <i>Simplified Tetris environments for OpenAI Gym</i>
-</div>
-
-<br />
+<h1 align="center">Gym-SimplifiedTetris </h1>
 
 <p align="center">
   <a href="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetris">
@@ -15,12 +10,10 @@
   </a>
   <a href="https://github.com/psf/black">
     <img src="https://img.shields.io/badge/code%20style-black-000000.svg">
-  </a>
+  </a href="https://www.python.org/">
+  <img src="https://img.shields.io/pypi/pyversions/gym-simplifiedtetris">
   <a href="/LICENSE.md">
     <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetris?color=red">
-  </a>
-  <a href="https://github.com/OliverOverend/gym-simplifiedtetris/releases">
-    <img src="https://img.shields.io/github/v/release/OliverOverend/gym-simplifiedtetris?sort=semver">
   </a>
   <a href="https://github.com/OliverOverend/gym-simplifiedtetris/compare">
     <img src="https://img.shields.io/badge/PRs-welcome-success.svg?style=flat">
@@ -42,6 +35,8 @@
 </p>
 
 ---
+
+> 🟥 Simplified Tetris environments for AI research conforming to OpenAI Gym's API.
 
 _Gym-SimplifiedTetris_ is a Python package capable of creating simplified Tetris environments for AI research (more specifically reinforcement learning), which conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
 
@@ -78,10 +73,10 @@ The package is pip installable:
 pip install gym-simplifiedtetris
 ```
 
-The repository can be cloned using:
+Or, you can copy the repository by forking it, and then download it using:
 
 ```bash
-git clone https://github.com/OliverOverend/gym-simplifiedtetris
+git clone https://github.com/INSERT-YOUR-USERNAME-HERE/gym-simplifiedtetris
 ```
 
 Here is a list of dependencies:
