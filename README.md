@@ -45,6 +45,8 @@ This README provides some help with the setup, gives an overview of the environm
 ## Table of contents <!-- omit in toc -->
 
 - [1. Getting started](#1-getting-started)
+  - [1.1. Installation](#11-installation)
+  - [1.2. Usage](#12-usage)
 - [2. Environments](#2-environments)
   - [2.1. Available environments](#21-available-environments)
   - [2.2. Methods](#22-methods)
@@ -55,8 +57,7 @@ This README provides some help with the setup, gives an overview of the environm
   - [2.3. Variable dimensions and piece size](#23-variable-dimensions-and-piece-size)
   - [2.4. Action and observation spaces](#24-action-and-observation-spaces)
   - [2.5. Game ending](#25-game-ending)
-  - [2.6. Usage](#26-usage)
-  - [2.7. Building more environments](#27-building-more-environments)
+  - [2.6. Building more environments](#26-building-more-environments)
 - [3. Agents](#3-agents)
   - [3.1. Uniform](#31-uniform)
   - [3.2. Q-learning](#32-q-learning)
@@ -68,12 +69,14 @@ This README provides some help with the setup, gives an overview of the environm
 
 ## 1. Getting started
 
+### 1.1. Installation
+
 The package is pip installable:
 ```bash
 pip install gym-simplifiedtetris
 ```
 
-Or, you can copy the repository by forking it, and then download it using:
+Or, you can copy the repository by forking it and then download it using:
 
 ```bash
 git clone https://github.com/INSERT-YOUR-USERNAME-HERE/gym-simplifiedtetris
@@ -95,6 +98,44 @@ Here is a list of dependencies:
 - Matplotlib
 - Pillow
 - Stable-Baselines3
+
+### 1.2. Usage
+
+The file [example.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/example.py) shows an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
+
+```python
+import gym
+
+import gym_simplifiedtetris
+
+env = gym.make('simplifiedtetris-binary-v0')
+obs = env.reset()
+
+# Run 10 games of Tetris, selecting actions uniformly at random.
+num_episodes = 0
+while num_episodes < 10:
+    env.render()
+    action = env.action_space.sample()
+    obs, rwd, done, info = env.step(action)
+
+    if done:
+        print(f"Episode {num_episodes + 1} has terminated.")
+        num_episodes += 1
+        obs = env.reset()
+
+env.close()
+```
+
+Alternatively, you can import the environment directly:
+
+```python
+from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
+
+env = Tetris(
+    grid_dims=(20, 10),
+    piece_size=4,
+)
+```
 
 ## 2. Environments
 
@@ -157,7 +198,7 @@ The user can close all open windows using:
 
 ### 2.3. Variable dimensions and piece size
 
-The user can deviate from the standard grid dimensions and Tetriminos by editing the `gym_register` keyword arguments. The user can choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. The user can select a height in the interval [`piece_size`+1, 20] and a width in the interval [`piece_size`, 10]. Below is a GIF showing games being played on a 8 x 6 grid with trominoes as the pieces.
+If you are not importing the environment directly, the user can deviate from the standard grid dimensions and Tetriminos by editing the `gym_register` keyword arguments. The user can choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. The user can select a height in the interval [`piece_size`+1, 20] and a width in the interval [`piece_size`, 10]. Below is a GIF showing games being played on a 8 x 6 grid with trominoes as the pieces.
 
 <p align="center">
     <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/8x6_3.gif" width="500">
@@ -178,45 +219,7 @@ where w is the grid width.
 
 Each game of Tetris terminates if the following condition is satisfied: any of the dropped piece's square blocks enter into the top `piece_size` rows before any full rows are cleared. This definition ensures that scores achieved are lower bounds on the score that the agent could have obtained on a standard game of Tetris, as laid out in Colin Fahey's ['Standard Tetris' specification](https://www.colinfahey.com/tetris/tetris.html#:~:text=5.%20%22Standard%20Tetris%22%20specification).
 
-### 2.6. Usage
-
-The file [example.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/example.py) shows an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
-
-```python
-import gym
-
-import gym_simplifiedtetris
-
-env = gym.make('simplifiedtetris-binary-v0')
-obs = env.reset()
-
-# Run 10 games of Tetris, selecting actions uniformly at random.
-num_episodes = 0
-while num_episodes < 10:
-    env.render()
-    action = env.action_space.sample()
-    obs, rwd, done, info = env.step(action)
-
-    if done:
-        print(f"Episode {num_episodes + 1} has terminated.")
-        num_episodes += 1
-        obs = env.reset()
-
-env.close()
-```
-
-Alternatively, the environment can be imported directly:
-
-```python
-from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
-
-env = Tetris(
-    grid_dims=(20, 10),
-    piece_size=4,
-)
-```
-
-### 2.7. Building more environments
+### 2.6. Building more environments
 
 The user can implement more custom Gym environments with different observation spaces and reward functions easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBinaryEnv` and are registered using:
 
