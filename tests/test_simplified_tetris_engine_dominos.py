@@ -108,51 +108,47 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
     def test__clear_rows_empty_grid_after(self) -> None:
         self._engine._clear_rows()
 
-        grid_after = np.zeros(
-            (self._engine._width, self._engine._height), dtype="bool")
+        grid_after = np.zeros((self._engine._width, self._engine._height), dtype="bool")
 
         np.testing.assert_array_equal(self._engine._grid, grid_after)
 
     def test__clear_rows_output_one_full_row(self) -> None:
-        self._engine._grid[:, self._engine._height - 1:] = 1
+        self._engine._grid[:, self._engine._height - 1 :] = 1
 
         self.assertEqual(self._engine._clear_rows(), 1)
 
     def test__clear_rows_one_full_row_grid_after(self) -> None:
-        self._engine._grid[:, self._engine._height - 1:] = 1
+        self._engine._grid[:, self._engine._height - 1 :] = 1
         self._engine._clear_rows()
-        grid_after = np.zeros(
-            (self._engine._width, self._engine._height), dtype="bool")
+        grid_after = np.zeros((self._engine._width, self._engine._height), dtype="bool")
 
         np.testing.assert_array_equal(self._engine._grid, grid_after)
 
     def test__clear_rows_output_two_full_rows(self) -> None:
-        self._engine._grid[:, self._engine._height - 2:] = 1
+        self._engine._grid[:, self._engine._height - 2 :] = 1
 
         self.assertEqual(self._engine._clear_rows(), 2)
 
     def test__clear_rows_two_full_rows_grid_after(self) -> None:
-        self._engine._grid[:, self._engine._height - 2:] = 1
+        self._engine._grid[:, self._engine._height - 2 :] = 1
         self._engine._clear_rows()
-        grid_after = np.zeros(
-            (self._engine._width, self._engine._height), dtype="bool")
+        grid_after = np.zeros((self._engine._width, self._engine._height), dtype="bool")
 
         np.testing.assert_array_equal(self._engine._grid, grid_after)
 
     def test__clear_rows_output_two_full_rows_full_cell_above(self) -> None:
-        self._engine._grid[:, self._engine._height - 2:] = 1
+        self._engine._grid[:, self._engine._height - 2 :] = 1
         self._engine._grid[3, self._engine._height - 3] = 1
 
         self.assertEqual(self._engine._clear_rows(), 2)
 
     def test__clear_rows_two_full_rows_full_cell_above_grid_after(self) -> None:
-        self._engine._grid[:, self._engine._height - 2:] = 1
+        self._engine._grid[:, self._engine._height - 2 :] = 1
         self._engine._grid[3, self._engine._height - 3] = 1
 
         self._engine._clear_rows()
 
-        grid_after = np.zeros(
-            (self._engine._width, self._engine._height), dtype="bool")
+        grid_after = np.zeros((self._engine._width, self._engine._height), dtype="bool")
         grid_after[3, self._engine._height - 1] = 1
 
         np.testing.assert_array_equal(self._engine._grid, grid_after)
@@ -166,7 +162,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
         grid_to_compare = np.zeros(
             (self._engine._width, self._engine._height), dtype="bool"
         )
-        grid_to_compare[0, self._engine._height - 2:] = 1
+        grid_to_compare[0, self._engine._height - 2 :] = 1
 
         self._engine._update_grid(True)
 
@@ -189,7 +185,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
         # 'I' piece vertical.
         self._engine._piece = [(0, 0), (0, -1)]
 
-        self._engine._grid[0, self._engine._height - 2:] = 1
+        self._engine._grid[0, self._engine._height - 2 :] = 1
         self._engine._anchor = [0, self._engine._height - 1]  # Bottom left.
         self._engine._current_piece_id = 0
 
@@ -213,8 +209,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
         # w-1 actions
         values.extend([(j, 1) for j in range(self._engine._width - 1)])
-        dict_to_compare = {i: values[i]
-                           for i in range(self._engine._num_actions)}
+        dict_to_compare = {i: values[i] for i in range(self._engine._num_actions)}
 
         self.assertDictEqual(available_actions, dict_to_compare)
 
@@ -227,16 +222,12 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
     def test__get_dellacherie_funcs(self) -> None:
         self._engine._grid[:, -5:] = True
         self._engine._grid[
-            1:2, self._engine._height - 5: self._engine._height - 1
+            1:2, self._engine._height - 5 : self._engine._height - 1
         ] = False
-        self._engine._grid[self._engine._width -
-                           1, self._engine._height - 2] = False
-        self._engine._grid[self._engine._width -
-                           2, self._engine._height - 1] = False
-        self._engine._grid[self._engine._width -
-                           3, self._engine._height - 3] = False
-        self._engine._grid[self._engine._width -
-                           1, self._engine._height - 6] = True
+        self._engine._grid[self._engine._width - 1, self._engine._height - 2] = False
+        self._engine._grid[self._engine._width - 2, self._engine._height - 1] = False
+        self._engine._grid[self._engine._width - 3, self._engine._height - 3] = False
+        self._engine._grid[self._engine._width - 1, self._engine._height - 6] = True
 
         # 'I' piece vertical.
         self._engine._piece = [(0, 0), (0, -1)]
@@ -301,7 +292,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
         self.assertEqual(self._engine._get_eroded_cells(), 0)
 
     def test__get_eroded_cells_single(self) -> None:
-        self._engine._grid[:, self._engine._height - 1:] = True
+        self._engine._grid[:, self._engine._height - 1 :] = True
         self._engine._grid[0, self._engine._height - 1] = False
 
         # 'I' piece vertical.
@@ -316,8 +307,8 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
         self.assertEqual(self._engine._get_eroded_cells(), 1)
 
     def test__get_eroded_cells_double(self) -> None:
-        self._engine._grid[:, self._engine._height - 2:] = True
-        self._engine._grid[0, self._engine._height - 2:] = False
+        self._engine._grid[:, self._engine._height - 2 :] = True
+        self._engine._grid[0, self._engine._height - 2 :] = False
 
         # 'I' piece vertical.
         self._engine._piece = [(0, 0), (0, -1)]
@@ -343,8 +334,8 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
     def test__get_row_transitions_populated_more_row_transitions(self) -> None:
         self._engine._grid[:, -2:] = True
-        self._engine._grid[0, self._engine._height - 2:] = False
-        self._engine._grid[2, self._engine._height - 2:] = False
+        self._engine._grid[0, self._engine._height - 2 :] = False
+        self._engine._grid[2, self._engine._height - 2 :] = False
         self._engine._grid[4, self._engine._height - 1] = False
 
         np.testing.assert_array_equal(self._engine._get_row_transitions(), 46)
@@ -362,12 +353,11 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
     def test__get_column_transitions_populated_less_column_transitions(self) -> None:
         self._engine._grid[:, -2:] = True
-        self._engine._grid[0, self._engine._height - 2:] = False
-        self._engine._grid[2, self._engine._height - 2:] = False
+        self._engine._grid[0, self._engine._height - 2 :] = False
+        self._engine._grid[2, self._engine._height - 2 :] = False
         self._engine._grid[4, self._engine._height - 1] = False
 
-        np.testing.assert_array_equal(
-            self._engine._get_column_transitions(), 12)
+        np.testing.assert_array_equal(self._engine._get_column_transitions(), 12)
 
     def test__get_holes_empty(self) -> None:
         self.assertEqual(self._engine._get_holes(), 0)
@@ -381,13 +371,13 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
     def test__get_holes_populated_no_holes(self) -> None:
         self._engine._grid[:, -2:] = True
-        self._engine._grid[0, self._engine._height - 2:] = False
+        self._engine._grid[0, self._engine._height - 2 :] = False
         self.assertEqual(self._engine._get_holes(), 0)
 
     def test__get_holes_populated_one_hole(self) -> None:
         self._engine._grid[:, -2:] = True
-        self._engine._grid[0, self._engine._height - 2:] = False
-        self._engine._grid[2, self._engine._height - 2:] = False
+        self._engine._grid[0, self._engine._height - 2 :] = False
+        self._engine._grid[2, self._engine._height - 2 :] = False
         self._engine._grid[4, self._engine._height - 1] = False
 
         np.testing.assert_array_equal(self._engine._get_holes(), 1)
@@ -397,14 +387,14 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
     def test__get_cumulative_wells_populated(self) -> None:
         self._engine._grid[:, -2:] = True
-        self._engine._grid[0, self._engine._height - 2:] = False
+        self._engine._grid[0, self._engine._height - 2 :] = False
 
         np.testing.assert_array_equal(self._engine._get_cumulative_wells(), 3)
 
     def test__get_cumulative_wells_populated_deeper_well(self) -> None:
         self._engine._grid[:, -2:] = True
-        self._engine._grid[0, self._engine._height - 2:] = False
-        self._engine._grid[2, self._engine._height - 2:] = False
+        self._engine._grid[0, self._engine._height - 2 :] = False
+        self._engine._grid[2, self._engine._height - 2 :] = False
         self._engine._grid[4, self._engine._height - 1] = False
 
         np.testing.assert_array_equal(self._engine._get_cumulative_wells(), 6)

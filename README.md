@@ -266,10 +266,6 @@ See [run_heuristic.py](https://github.com/OliverOverend/gym-simplifiedtetris/blo
 
 ## 4. Future work
 
-- Unit tests:
-  - Trominoes
-  - Dominos
-  - Monominos
 - Environments with alternative:
   - Observation spaces (normalised)
   - Reward functions (shaping rewards)
