@@ -7,8 +7,8 @@ piece_info = Dict[str, Union[coords, str]]
 
 
 @dataclass
-class PiecesInfo:
-    info: Dict[int, piece_info]
+class Pieces:
+    _info: Dict[int, piece_info]
 
     def _get_piece_at_random(self) -> Tuple[coords, int]:
         """
@@ -16,8 +16,8 @@ class PiecesInfo:
 
         :return: the piece coords and id.
         """
-        random_id = random.randint(0, len(self.info.keys()) - 1)
-        return self.info[random_id]["coords"], random_id
+        random_id = random.randint(0, len(self._info.keys()) - 1)
+        return self._info[random_id]["coords"], random_id
 
     def _select_piece(self, idx: int) -> coords:
         """
@@ -25,5 +25,5 @@ class PiecesInfo:
 
         :param idx: the ID of the piece to be selected.
         """
-        assert idx in list(self.info.keys()), "Incorrect ID provided."
-        return self.info[idx]["coords"]
+        assert idx in list(self._info.keys()), "Incorrect ID provided."
+        return self._info[idx]["coords"]

@@ -5,14 +5,14 @@ from copy import deepcopy
 import cv2.cv2 as cv
 import imageio
 import numpy as np
-from gym_simplifiedtetris.utils.pieces import PiecesInfo
+from gym_simplifiedtetris.utils.pieces import Pieces
 from matplotlib import colors
 from PIL import Image
 
-Coords = List[List[Tuple[int, int]]]
-Piece_info = Dict[str, Union[Coords, str]]
+coords = List[List[Tuple[int, int]]]
+piece_info = Dict[str, Union[coords, str]]
 
-PIECES_DICT: Dict[int, Dict[int, Piece_info]] = {
+PIECES_DICT: Dict[int, Dict[int, piece_info]] = {
     1: {
         0: {
             "coords": [
@@ -172,7 +172,7 @@ class SimplifiedTetrisEngine:
         self._img = np.array([])
 
         # Initialise the piece coordinates.
-        self._all_pieces_info = PiecesInfo(PIECES_DICT[piece_size])
+        self._all_pieces_info = Pieces(PIECES_DICT[piece_size])
         (
             self._current_piece_coords,
             self._current_piece_id,
@@ -366,7 +366,7 @@ class SimplifiedTetrisEngine:
                     f"{self._score}",
                     f"{mean_score:.1f}",
                     "",
-                    f"{PIECES_DICT[self._piece_size][self._current_piece_id]['name']}",
+                    f"{self._all_pieces_info._info[self._current_piece_id]['name']}",
                 ],
             ],
             x_offsets=[50, 300],
