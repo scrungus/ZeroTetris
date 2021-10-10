@@ -203,23 +203,6 @@ class SimplifiedTetrisEngineMonominoesTest(unittest.TestCase):
             self.assertEqual(self._engine._num_actions, len(value))
 
     def test__get_dellacherie_funcs(self) -> None:
-        self._engine._grid[:, -5:] = True
-        self._engine._grid[
-            1:2, self._engine._height - 5 : self._engine._height - 1
-        ] = False
-        self._engine._grid[self._engine._width - 1, self._engine._height - 2] = False
-        self._engine._grid[self._engine._width - 2, self._engine._height - 1] = False
-        self._engine._grid[self._engine._width - 3, self._engine._height - 3] = False
-        self._engine._grid[self._engine._width - 1, self._engine._height - 6] = True
-
-        self._engine._piece = [(0, 0)]
-        self._engine._current_piece_id = 0
-        self._engine._anchor = [0, 0]
-
-        self._engine._hard_drop()
-        self._engine._update_grid(True)
-        self._engine._clear_rows()
-
         """
         0000000000
         0000000000
@@ -242,6 +225,22 @@ class SimplifiedTetrisEngineMonominoesTest(unittest.TestCase):
         1011111110
         1111111101
         """
+        self._engine._grid[:, -5:] = True
+        self._engine._grid[
+            1:2, self._engine._height - 5 : self._engine._height - 1
+        ] = False
+        self._engine._grid[self._engine._width - 1, self._engine._height - 2] = False
+        self._engine._grid[self._engine._width - 2, self._engine._height - 1] = False
+        self._engine._grid[self._engine._width - 3, self._engine._height - 3] = False
+        self._engine._grid[self._engine._width - 1, self._engine._height - 6] = True
+
+        self._engine._piece = [(0, 0)]
+        self._engine._current_piece_id = 0
+        self._engine._anchor = [0, 0]
+
+        self._engine._hard_drop()
+        self._engine._update_grid(True)
+        self._engine._clear_rows()
 
         array_to_compare = np.array(
             [fn() for fn in self._engine._get_dellacherie_funcs()]
