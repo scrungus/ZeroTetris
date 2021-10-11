@@ -54,7 +54,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
     def reset(self) -> np.array:
         return self._reset_()
 
-    def step(self, action: int) -> Tuple[np.array, float, bool, Dict[Any, Any]]:
+    def step(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
         return self._step_(action)
 
     def render(self, mode: Optional[str] = "human") -> np.ndarray:

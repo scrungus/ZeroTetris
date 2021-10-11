@@ -125,7 +125,7 @@ class SimplifiedTetrisEngine:
     pieces vertically downwards, having identified the correct location to
     drop them, clear full rows, and render a game of Tetris.
 
-    :param grid_dims: the grid dimensions; height, width.
+    :param grid_dims: the grid dimensions (height and width).
     :param piece_size: the size of the pieces in use.
     :param num_pieces: the number of pieces in use.
     :param num_actions: the number of available actions in each state.
@@ -177,7 +177,6 @@ class SimplifiedTetrisEngine:
             self._current_piece_coords,
             self._current_piece_id,
         ) = self._all_pieces_info._get_piece_at_random()
-
         self._last_move_info = {}
 
         self._get_all_available_actions()
@@ -534,9 +533,9 @@ class SimplifiedTetrisEngine:
                 ] = 0
 
         anchor_height = self._height - self._anchor[1]
-        max_y = int(min([s[1] for s in self._piece]))
-        min_y = int(max([s[1] for s in self._piece]))
-        self._last_move_info["landing_height"] = anchor_height - 0.5 * (min_y + max_y)
+        max_y_coord = int(min([coord[1] for coord in self._piece]))
+        min_y_coord = int(max([coord[1] for coord in self._piece]))
+        self._last_move_info["landing_height"] = anchor_height - 0.5 * (min_y_coord + max_y_coord)
 
     def _get_reward(self) -> Tuple[float, int]:
         """
@@ -603,29 +602,34 @@ class SimplifiedTetrisEngine:
 
         :return: a list of the Dellacherie feature values.
         """
+        # Initialise the arrays of weights and scores.
         weights = np.array([-1, 1, -1, -1, -4, -1], dtype="double")
         all_scores = np.empty((self._num_actions), dtype="double")
 
+        # Loop over every available action.
         for action, (translation, rotation) in self._all_available_actions[
             self._current_piece_id
         ].items():
+            # Create a copy to revert back to.
             old_grid = deepcopy(self._grid)
             old_anchor = deepcopy(self._anchor)
 
             self._anchor = [translation, 0]
-
             self._piece = self._current_piece_coords[rotation]
 
             self._hard_drop()
             self._update_grid(True)
 
+            # Find the six feature values.
             scores = np.empty((6), dtype="double")
             for count, feature_func in enumerate(self._get_dellacherie_funcs()):
                 scores[count] = feature_func()
+
+            # Compute the heuristic score.
             all_scores[action] = np.dot(scores, weights)
 
+            # Revert back.
             self._update_grid(False)
-
             self._anchor = deepcopy(old_anchor)
             self._grid = deepcopy(old_grid)
 

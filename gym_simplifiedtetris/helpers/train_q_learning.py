@@ -39,6 +39,7 @@ def train_q_learning(
         )
         ep_return += info["num_rows_cleared"]
 
+        # Epislon annealing.
         agent.epsilon -= 1 / (num_eval_timesteps)
 
         if done:

@@ -51,7 +51,7 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
         self._engine._reset()
         return self._get_obs_()
 
-    def _step_(self, action: int) -> Tuple[np.array, float, bool, Dict[Any, Any]]:
+    def _step_(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
         """
         Hard drops the current piece according to the argument provided. Terminates
         the game if a condition is met. Otherwise, a new piece is selected, and the
