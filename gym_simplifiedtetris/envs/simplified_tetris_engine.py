@@ -422,7 +422,7 @@ class SimplifiedTetrisEngine:
 
         # Loop over each of the piece's blocks.
         for i, j in self._piece:
-            x_pos, y_pos = int(self._anchor[0] + i), int(self._anchor[1] + j)
+            x_pos, y_pos = self._anchor[0] + i, self._anchor[1] + j
 
             # Don't check if illegal move if block is too high.
             if y_pos < 0:
@@ -519,22 +519,22 @@ class SimplifiedTetrisEngine:
         }
         # Loop over each block.
         for i, j in self._piece:
-            y_coord = int(j + self._anchor[1])
+            y_coord = j + self._anchor[1]
             if set_piece:
                 self._last_move_info["rows_added_to"][y_coord] += 1
-                self._grid[int(self._anchor[0] + i), int(self._anchor[1] + j)] = 1
+                self._grid[self._anchor[0] + i, self._anchor[1] + j] = 1
                 self._colour_grid[
-                    int(self._anchor[0] + i), int(self._anchor[1] + j)
+                    self._anchor[0] + i, self._anchor[1] + j
                 ] = (self._current_piece_id + 1)
             else:
-                self._grid[int(self._anchor[0] + i), int(self._anchor[1] + j)] = 0
+                self._grid[self._anchor[0] + i, self._anchor[1] + j] = 0
                 self._colour_grid[
-                    int(self._anchor[0] + i), int(self._anchor[1] + j)
+                    self._anchor[0] + i, self._anchor[1] + j
                 ] = 0
 
         anchor_height = self._height - self._anchor[1]
-        max_y_coord = int(min([coord[1] for coord in self._piece]))
-        min_y_coord = int(max([coord[1] for coord in self._piece]))
+        max_y_coord = min([coord[1] for coord in self._piece])
+        min_y_coord = max([coord[1] for coord in self._piece])
         self._last_move_info["landing_height"] = anchor_height - 0.5 * (min_y_coord + max_y_coord)
 
     def _get_reward(self) -> Tuple[float, int]:
@@ -573,10 +573,10 @@ class SimplifiedTetrisEngine:
         for rotation, piece in enumerate(self._current_piece_coords):
             self._piece = piece.copy()
 
-            max_x = int(max([coord[0] for coord in self._piece]))
-            min_x = int(min([coord[0] for coord in self._piece]))
+            max_x_coord = max([coord[0] for coord in self._piece])
+            min_x_coord = min([coord[0] for coord in self._piece])
 
-            for translation in range(abs(min_x), self._width - max_x):
+            for translation in range(abs(min_x_coord), self._width - max_x_coord):
 
                 # This ensures that no more than self._num_actions are returned.
                 if count == self._num_actions:
