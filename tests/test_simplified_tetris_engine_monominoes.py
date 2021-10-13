@@ -189,7 +189,14 @@ class SimplifiedTetrisEngineMonominoesTest(unittest.TestCase):
         np.testing.assert_array_equal(self._engine._grid, grid_to_compare)
 
     def test__compute_available_actions(self) -> None:
-        self._engine._current_piece_coords = [[(0, 0)]]
+        self._engine._current_piece_info = {
+                "coords": {0: [(0, 0)]},
+                "max_y_coord": {0: 0},
+                "min_y_coord": {0: 0},
+                "max_x_coord": {0: 0},
+                "min_x_coord": {0: 0},
+                "name": "O",
+            }
         available_actions = self._engine._compute_available_actions()
         values = [(j, 0) for j in range(self._engine._width - 1)]
         dict_to_compare = {i: values[i] for i in range(self._engine._num_actions)}
