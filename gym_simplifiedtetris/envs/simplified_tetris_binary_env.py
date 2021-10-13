@@ -63,13 +63,12 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
         info = {}
 
         # Get the translation and rotation.
-        translation, rotation = self._engine._all_available_actions[
+        translation, self._engine._rotation = self._engine._all_available_actions[
             self._get_obs_()[-1]
         ][action]
 
-        # Set the anchor and fetch the rotated piece.
+        # Set the anchor.
         self._engine._anchor = [translation, self._piece_size_ - 1]
-        self._engine._piece = self._engine._current_piece_coords[rotation]
 
         # Hard drop the piece and update the grid.
         self._engine._hard_drop()
