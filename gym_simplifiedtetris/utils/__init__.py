@@ -1,1 +1,1 @@
-from .pieces import PiecesInfo
+from .pieces import Pieces

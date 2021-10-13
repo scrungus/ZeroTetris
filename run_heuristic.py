@@ -5,28 +5,29 @@ from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
 
 def main():
-    ep_returns = np.zeros(10)
+    num_episodes = 10
+    ep_returns = np.zeros(num_episodes)
 
     agent = DellacherieAgent()
     env = Tetris(
-        grid_dims=(20, 10),
+        grid_dims=(6, 10),
         piece_size=4,
     )
     obs = env.reset()
 
-    num_episodes = 0
-    while num_episodes < 10:
+    episode_num = 0
+    while episode_num < num_episodes:
         env.render()
 
         heuristic_scores = env._engine._get_dellacherie_scores()
 
         action = agent.predict(heuristic_scores)
         obs, rwd, done, info = env.step(action)
-        ep_returns[num_episodes] += info["num_rows_cleared"]
+        ep_returns[episode_num] += info["num_rows_cleared"]
 
         if done:
-            print(f"Episode {num_episodes + 1} has terminated.")
-            num_episodes += 1
+            print(f"Episode {episode_num + 1} has terminated.")
+            episode_num += 1
             obs = env.reset()
 
     env.close()

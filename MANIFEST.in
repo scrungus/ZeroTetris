@@ -1,4 +1,11 @@
+include CODE_OF_CONDUCT.md
+include CONTRIBUTING.md
+include example.py
+include LICENSE.md
 include pyproject.toml
 include README.md
-include LICENSE.md
+include requirements.txt
+include run_heuristic.py
+include run_q_learning.py
+include run_uniform.py
 include setup.py

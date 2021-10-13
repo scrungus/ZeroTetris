@@ -189,7 +189,14 @@ class SimplifiedTetrisEngineMonominoesTest(unittest.TestCase):
         np.testing.assert_array_equal(self._engine._grid, grid_to_compare)
 
     def test__compute_available_actions(self) -> None:
-        self._engine._current_piece_coords = [[(0, 0)]]
+        self._engine._current_piece_info = {
+            "coords": {0: [(0, 0)]},
+            "max_y_coord": {0: 0},
+            "min_y_coord": {0: 0},
+            "max_x_coord": {0: 0},
+            "min_x_coord": {0: 0},
+            "name": "O",
+        }
         available_actions = self._engine._compute_available_actions()
         values = [(j, 0) for j in range(self._engine._width - 1)]
         dict_to_compare = {i: values[i] for i in range(self._engine._num_actions)}
@@ -203,23 +210,6 @@ class SimplifiedTetrisEngineMonominoesTest(unittest.TestCase):
             self.assertEqual(self._engine._num_actions, len(value))
 
     def test__get_dellacherie_funcs(self) -> None:
-        self._engine._grid[:, -5:] = True
-        self._engine._grid[
-            1:2, self._engine._height - 5 : self._engine._height - 1
-        ] = False
-        self._engine._grid[self._engine._width - 1, self._engine._height - 2] = False
-        self._engine._grid[self._engine._width - 2, self._engine._height - 1] = False
-        self._engine._grid[self._engine._width - 3, self._engine._height - 3] = False
-        self._engine._grid[self._engine._width - 1, self._engine._height - 6] = True
-
-        self._engine._piece = [(0, 0)]
-        self._engine._current_piece_id = 0
-        self._engine._anchor = [0, 0]
-
-        self._engine._hard_drop()
-        self._engine._update_grid(True)
-        self._engine._clear_rows()
-
         """
         0000000000
         0000000000
@@ -242,6 +232,22 @@ class SimplifiedTetrisEngineMonominoesTest(unittest.TestCase):
         1011111110
         1111111101
         """
+        self._engine._grid[:, -5:] = True
+        self._engine._grid[
+            1:2, self._engine._height - 5 : self._engine._height - 1
+        ] = False
+        self._engine._grid[self._engine._width - 1, self._engine._height - 2] = False
+        self._engine._grid[self._engine._width - 2, self._engine._height - 1] = False
+        self._engine._grid[self._engine._width - 3, self._engine._height - 3] = False
+        self._engine._grid[self._engine._width - 1, self._engine._height - 6] = True
+
+        self._engine._piece = [(0, 0)]
+        self._engine._current_piece_id = 0
+        self._engine._anchor = [0, 0]
+
+        self._engine._hard_drop()
+        self._engine._update_grid(True)
+        self._engine._clear_rows()
 
         array_to_compare = np.array(
             [fn() for fn in self._engine._get_dellacherie_funcs()]

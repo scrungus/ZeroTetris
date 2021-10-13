@@ -51,7 +51,7 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
         self._engine._reset()
         return self._get_obs_()
 
-    def _step_(self, action: int) -> Tuple[np.array, float, bool, Dict[Any, Any]]:
+    def _step_(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
         """
         Hard drops the current piece according to the argument provided. Terminates
         the game if a condition is met. Otherwise, a new piece is selected, and the
@@ -63,13 +63,12 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
         info = {}
 
         # Get the translation and rotation.
-        translation, rotation = self._engine._all_available_actions[
+        translation, self._engine._rotation = self._engine._all_available_actions[
             self._get_obs_()[-1]
         ][action]
 
-        # Set the anchor and fetch the rotated piece.
+        # Set the anchor.
         self._engine._anchor = [translation, self._piece_size_ - 1]
-        self._engine._piece = self._engine._current_piece_coords[rotation]
 
         # Hard drop the piece and update the grid.
         self._engine._hard_drop()

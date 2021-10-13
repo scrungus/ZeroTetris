@@ -22,7 +22,7 @@ class QLearningAgent:
         self.epsilon = epsilon
         self.alpha = alpha
         self.gamma = gamma
-        self._q_table = np.zeros((q_table_dims), dtype=float)
+        self._q_table = np.zeros((q_table_dims), dtype="double")
         self._num_actions = q_table_dims[-1]
 
     def predict(
