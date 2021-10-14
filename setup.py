@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
-with open("README.md", "r", encoding="utf-8") as fh:
-    long_description = fh.read()
+with open("README.md", "r", encoding="utf-8") as file:
+    long_description = file.read()
 
 setup(
     name="gym_simplifiedtetris",
-    version="0.1.5",
+    version="0.1.6",
     author="Oliver Overend",
     author_email="ollyoverend10@gmail.com",
     url="https://github.com/OliverOverend/gym-simplifiedtetris",
@@ -37,5 +37,5 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     package_dir={"": "gym_simplifiedtetris"},
-    keywords="tetris, gym, openaigym, reinforcementlearning, research, ",
+    keywords="tetris, gym, openai-gym, reinforcement-learning, research",
 )

@@ -36,9 +36,9 @@
 
 ---
 
-> 🟥 Simplified Tetris environments for AI research conforming to OpenAI Gym's API.
+> 🟥 Research into AI using simplified Tetris environments conforming to OpenAI Gym's API
 
-_Gym-SimplifiedTetris_ is a Python package capable of creating simplified Tetris environments for AI research (more specifically reinforcement learning), which conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
+_Gym-SimplifiedTetris_ is a pip installable package capable of creating simplified Tetris environments for AI research (more specifically reinforcement learning), which conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
 
 This README provides some help with the setup, gives an overview of the environments and agents and how to use them, and describes how to build more environments.
 
@@ -141,10 +141,11 @@ env = Tetris(
 
 ### 2.1. Available environments
 
-There are currently two environments provided:
+There are three environments provided:
 
-- `simplifiedtetris-binary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID
-- `simplifiedtetris-partbinary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID
+- `simplifiedtetris-binary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID. A reward of +1 is given for each line cleared, and 0 otherwise
+- `simplifiedtetris-partbinary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID. A reward of +1 is given for each line cleared, and 0 otherwise
+- `simplifiedtetris-binary-shaped-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID. The reward function is a potential-based reward function based on the _holes_ feature
 
 ### 2.2. Methods
 
@@ -268,7 +269,6 @@ See [run_heuristic.py](https://github.com/OliverOverend/gym-simplifiedtetris/blo
 
 - Environments with alternative:
   - Observation spaces (normalised)
-  - Reward functions (shaping rewards)
   - Action spaces (non-terminal actions only)
 
 ## 5. Acknowledgements
