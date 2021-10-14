@@ -2,7 +2,9 @@ from typing import Sequence, Tuple
 
 import numpy as np
 
-from gym_simplifiedtetris.envs.simplified_tetris_binary_env import SimplifiedTetrisBinaryEnv
+from gym_simplifiedtetris.envs.simplified_tetris_binary_env import (
+    SimplifiedTetrisBinaryEnv,
+)
 from gym_simplifiedtetris.register import register
 
 
@@ -17,9 +19,9 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
     """
 
     def __init__(
-            self,
-            grid_dims: Sequence[int],
-            piece_size: int,
+        self,
+        grid_dims: Sequence[int],
+        piece_size: int,
     ):
         super(SimplifiedTetrisBinaryShapedEnv, self).__init__(
             grid_dims,
@@ -27,10 +29,7 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
         )
         # Set the reward and heuristic ranges.
         self.reward_range = (-1, 5)
-        self.heuristic_range = {
-            "min": 1000,
-            "max": -1
-        }
+        self.heuristic_range = {"min": 1000, "max": -1}
 
         # Set the old and initial potential.
         self.old_potential = 1
@@ -56,7 +55,12 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
 
         # Calculate the new potential and the shaping reward.
         new_potential = np.clip(
-            1 - (heuristic_value-self.heuristic_range["min"])/(self.heuristic_range["max"]+1e-9), 0, 1)
+            1
+            - (heuristic_value - self.heuristic_range["min"])
+            / (self.heuristic_range["max"] + 1e-9),
+            0,
+            1,
+        )
         shaping_reward = (new_potential - self.old_potential) + num_lines_cleared
 
         # Update the old potential
@@ -78,6 +82,6 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
 
 
 register(
-    idx='simplifiedtetris-binary-shaped-v0',
-    entry_point='gym_simplifiedtetris.envs:SimplifiedTetrisBinaryShapedEnv',
+    idx="simplifiedtetris-binary-shaped-v0",
+    entry_point="gym_simplifiedtetris.envs:SimplifiedTetrisBinaryShapedEnv",
 )
