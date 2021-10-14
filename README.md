@@ -141,10 +141,11 @@ env = Tetris(
 
 ### 2.1. Available environments
 
-There are currently two environments provided:
+There are three environments provided:
 
-- `simplifiedtetris-binary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID
-- `simplifiedtetris-partbinary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID
+- `simplifiedtetris-binary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID. A reward of +1 is given for each line cleared, and 0 otherwise
+- `simplifiedtetris-partbinary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID. A reward of +1 is given for each line cleared, and 0 otherwise
+- `simplifiedtetris-binary-shaped-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID. The reward function is a potential-based reward function based on the _holes_ feature
 
 ### 2.2. Methods
 
@@ -268,7 +269,6 @@ See [run_heuristic.py](https://github.com/OliverOverend/gym-simplifiedtetris/blo
 
 - Environments with alternative:
   - Observation spaces (normalised)
-  - Reward functions (shaping rewards)
   - Action spaces (non-terminal actions only)
 
 ## 5. Acknowledgements
