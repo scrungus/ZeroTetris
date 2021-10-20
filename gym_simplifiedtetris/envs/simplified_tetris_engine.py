@@ -27,60 +27,20 @@ class SimplifiedTetrisEngine:
     """
 
     PIECES_DICT: Dict[int, Dict[int, piece_info]] = {
-        1: {
-            0: {
-                "coords": {0: [(0, 0)]},
-                "name": "O",
-            }
-        },
-        2: {
-            0: {
-                "coords": {
-                    0: [(0, 0), (0, -1)],
-                    90: [(0, 0), (1, 0)],
-                },
-                "name": "I",
-            }
-        },
+        1: {0: {"coords": {0: [(0, 0)]}, "name": "O"}},
+        2: {0: {"coords": {0: [(0, 0), (0, -1)], 90: [(0, 0), (1, 0)]}, "name": "I"}},
         3: {
-            0: {
-                "coords": [(0, 0), (0, -1), (0, -2)],
-                "name": "I",
-            },
-            1: {
-                "coords": [(0, 0), (1, 0), (0, -1)],
-                "name": "L",
-            },
+            0: {"coords": [(0, 0), (0, -1), (0, -2)], "name": "I"},
+            1: {"coords": [(0, 0), (1, 0), (0, -1)], "name": "L"},
         },
         4: {
-            0: {
-                "coords": [(0, 0), (0, -1), (0, -2), (0, -3)],
-                "name": "I",
-            },
-            1: {
-                "coords": [(0, 0), (1, 0), (0, -1), (0, -2)],
-                "name": "L",
-            },
-            2: {
-                "coords": [(0, 0), (0, -1), (-1, 0), (-1, -1)],
-                "name": "O",
-            },
-            3: {
-                "coords": [(0, 0), (-1, 0), (1, 0), (0, 1)],
-                "name": "T",
-            },
-            4: {
-                "coords": [(0, 0), (-1, 0), (0, -1), (0, -2)],
-                "name": "J",
-            },
-            5: {
-                "coords": [(0, 0), (-1, 0), (0, -1), (1, -1)],
-                "name": "S",
-            },
-            6: {
-                "coords": [(0, 0), (-1, -1), (0, -1), (1, 0)],
-                "name": "Z",
-            },
+            0: {"coords": [(0, 0), (0, -1), (0, -2), (0, -3)], "name": "I"},
+            1: {"coords": [(0, 0), (1, 0), (0, -1), (0, -2)], "name": "L"},
+            2: {"coords": [(0, 0), (0, -1), (-1, 0), (-1, -1)], "name": "O"},
+            3: {"coords": [(0, 0), (-1, 0), (1, 0), (0, 1)], "name": "T"},
+            4: {"coords": [(0, 0), (-1, 0), (0, -1), (0, -2)], "name": "J"},
+            5: {"coords": [(0, 0), (-1, 0), (0, -1), (1, -1)], "name": "S"},
+            6: {"coords": [(0, 0), (-1, -1), (0, -1), (1, 0)], "name": "Z"},
         },
     }
 
@@ -366,10 +326,7 @@ class SimplifiedTetrisEngine:
         self._img = np.concatenate((img_array, self._img), axis=1)
 
     def _add_statistics(
-        self,
-        img_array: np.ndarray,
-        items: List[List[str]],
-        x_offsets: List[int],
+        self, img_array: np.ndarray, items: List[List[str]], x_offsets: List[int]
     ) -> None:
         """
         Adds statistics to the array provided.

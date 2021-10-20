@@ -16,14 +16,9 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
     :param piece_size: the size of the pieces in use.
     """
 
-    def __init__(
-        self,
-        grid_dims: Sequence[int],
-        piece_size: int,
-    ):
+    def __init__(self, grid_dims: Sequence[int], piece_size: int):
         super(SimplifiedTetrisBinaryEnv, self).__init__(
-            grid_dims=grid_dims,
-            piece_size=piece_size,
+            grid_dims=grid_dims, piece_size=piece_size
         )
 
         self._engine = SimplifiedTetrisEngine(

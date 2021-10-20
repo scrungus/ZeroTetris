@@ -5,9 +5,7 @@ from gym_simplifiedtetris.agents.q_learning import QLearningAgent
 
 
 def train_q_learning(
-    env: gym.Env,
-    agent: QLearningAgent,
-    num_eval_timesteps: int,
+    env: gym.Env, agent: QLearningAgent, num_eval_timesteps: int
 ) -> QLearningAgent:
     """
     Trains and evaluates a Q-learning agent on the SimplifiedTetris environment.
@@ -31,12 +29,7 @@ def train_q_learning(
 
         next_obs, reward, done, info = env.step(action)
 
-        agent.learn(
-            reward=reward,
-            obs=obs,
-            next_obs=next_obs,
-            action=action,
-        )
+        agent.learn(reward=reward, obs=obs, next_obs=next_obs, action=action)
         ep_return += info["num_rows_cleared"]
 
         # Epislon annealing.

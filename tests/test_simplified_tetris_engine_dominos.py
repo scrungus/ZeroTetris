@@ -5,33 +5,17 @@ import numpy as np
 
 from gym_simplifiedtetris.envs import SimplifiedTetrisEngine as Engine
 
-I_piece = {
-    "coords": {
-        0: [(0, 0), (0, -1)],
-        90: [(0, 0), (1, 0)],
-    },
-    "max_y_coord": {
-        0: 0,
-        90: 0,
-    },
-    "min_y_coord": {
-        0: -1,
-        90: 0,
-    },
-    "max_x_coord": {
-        0: 0,
-        90: 1,
-    },
-    "min_x_coord": {
-        0: 0,
-        90: 0,
-    },
-    "name": "I",
-}
-
 
 class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
     def setUp(self) -> None:
+        self._I_piece_ = {
+            "coords": {0: [(0, 0), (0, -1)], 90: [(0, 0), (1, 0)]},
+            "max_y_coord": {0: 0, 90: 0},
+            "min_y_coord": {0: -1, 90: 0},
+            "max_x_coord": {0: 0, 90: 1},
+            "min_x_coord": {0: 0, 90: 0},
+            "name": "I",
+        }
         self._height_ = 20
         self._width_ = 10
         self._piece_size_ = 2
@@ -60,7 +44,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
     def test__is_illegal_piece_off_top(self) -> None:
         # 'I' piece vertical.
-        self._engine._current_piece_info = deepcopy(I_piece)
+        self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
         self._engine._anchor = [0, 0]  # Top left.
 
@@ -68,7 +52,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
     def test__is_illegal_piece_off_bottom(self) -> None:
         # 'I' piece vertical.
-        self._engine._current_piece_info = deepcopy(I_piece)
+        self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
         # Bottom right off the bottom.
         self._engine._anchor = [self._engine._width - 1, self._engine._height]
@@ -92,7 +76,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
     def test__is_illegal_non_empty_overlapping(self) -> None:
         # 'I' piece vertical.
-        self._engine._current_piece_info = deepcopy(I_piece)
+        self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
         self._engine._anchor = [0, self._engine._height - 1]  # Bottom left.
 
@@ -102,7 +86,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
     def test__is_illegal_piece_not_empty(self) -> None:
         # 'I' piece vertical.
-        self._engine._current_piece_info = deepcopy(I_piece)
+        self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
         self._engine._anchor = [0, self._engine._height - 1]  # Bottom left.
 
@@ -113,7 +97,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
     def test__hard_drop_empty_grid(self) -> None:
         # 'I' piece vertical.
-        self._engine._current_piece_info = deepcopy(I_piece)
+        self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
         self._engine._anchor = [0, 0]  # Top left.
 
@@ -123,7 +107,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
     def test__hard_drop_non_empty_grid(self) -> None:
         # 'I' piece vertical.
-        self._engine._current_piece_info = deepcopy(I_piece)
+        self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
         self._engine._anchor = [0, 0]  # Top left.
 
@@ -186,7 +170,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
     def test__update_grid_true(self) -> None:
         # 'I' piece vertical.
-        self._engine._current_piece_info = deepcopy(I_piece)
+        self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
         self._engine._anchor = [0, self._engine._height - 1]  # Bottom left.
         self._engine._current_piece_id = 0
@@ -202,7 +186,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
     def test__update_grid_false(self) -> None:
         # 'I' piece vertical.
-        self._engine._current_piece_info = deepcopy(I_piece)
+        self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
         self._engine._anchor = [0, self._engine._height - 1]  # Bottom left.
         self._engine._current_piece_id = 0
@@ -216,7 +200,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
     def test__update_grid_populated(self) -> None:
         # 'I' piece vertical.
-        self._engine._current_piece_info = deepcopy(I_piece)
+        self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
 
         self._engine._grid[0, self._engine._height - 2 :] = 1
@@ -233,10 +217,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
 
     def test__compute_available_actions(self) -> None:
         self._engine._current_piece_info = {
-            "coords": {
-                0: [(0, 0), (0, -1)],
-                90: [(0, 0), (1, 0)],
-            },
+            "coords": {0: [(0, 0), (0, -1)], 90: [(0, 0), (1, 0)]},
             "max_y_coord": {0: 0, 90: 0},
             "min_y_coord": {0: -1, 90: 0},
             "max_x_coord": {0: 0, 90: 1},
@@ -293,7 +274,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
         self._engine._grid[self._engine._width - 1, self._engine._height - 6] = True
 
         # 'I' piece vertical.
-        self._engine._current_piece_info = deepcopy(I_piece)
+        self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
         self._engine._current_piece_id = 0
         self._engine._anchor = [0, 0]
@@ -309,9 +290,9 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
             array_to_compare, np.array([6.5, 0, 44, 16, 3, 10], dtype="double")
         )
 
-    def test__get_landing_height_I_piece(self) -> None:
+    def test__get_landing_height_I_piece_(self) -> None:
         # 'I' piece vertical.
-        self._engine._current_piece_info = deepcopy(I_piece)
+        self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
         self._engine._anchor = [0, self._engine._height - 1]  # Bottom left.
         self._engine._current_piece_id = 0
@@ -321,7 +302,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
         self.assertEqual(self._engine._get_landing_height(), 1.5)
 
     def test__get_landing_height_populated_grid(self) -> None:
-        self._engine._current_piece_info = deepcopy(I_piece)
+        self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
         self._engine._grid[:, -1:] = 1
         self._engine._current_piece_id = 1
@@ -339,7 +320,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
         self._engine._grid[0, self._engine._height - 1] = False
 
         # 'I' piece vertical.
-        self._engine._current_piece_info = deepcopy(I_piece)
+        self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
         self._engine._current_piece_id = 0
         self._engine._anchor = [0, 0]
@@ -355,7 +336,7 @@ class SimplifiedTetrisEngineDominosTest(unittest.TestCase):
         self._engine._grid[0, self._engine._height - 2 :] = False
 
         # 'I' piece vertical.
-        self._engine._current_piece_info = deepcopy(I_piece)
+        self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
         self._engine._current_piece_id = 0
         self._engine._anchor = [0, 0]

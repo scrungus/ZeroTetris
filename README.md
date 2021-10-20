@@ -23,7 +23,7 @@
   </a>
   <a href="https://twitter.com/intent/tweet?text=Conduct%20AI%20research%20using%20simplified%20Tetris%20environments%20conforming%20to%20OpenAI%20Gym's%20API&url=https://github.com/OliverOverend/gym-simplifiedtetris&via=OllyOverend10&hashtags=tetris,reinforcementlearning,openaigym">
   <img src="https://img.shields.io/twitter/url/http/shields.io.svg?style=social">
-  </a> 
+  </a>
 </p>
 
 <p align="center">
@@ -253,7 +253,7 @@ See [run_q_learning.py](https://github.com/OliverOverend/gym-simplifiedtetris/bl
 
 ### 3.3. Heuristic
 
-The heuristic agent implemented by `gym_simplifiedtetris.DellacherieAgent` selects the action with the highest heuristic score, based on the [Dellacherie feature set](https://arxiv.org/abs/1905.01652). 
+The heuristic agent implemented by `gym_simplifiedtetris.DellacherieAgent` selects the action with the highest heuristic score, based on the [Dellacherie feature set](https://arxiv.org/abs/1905.01652).
 
 The heuristic score for each possible action is computed using the following heuristic:
 

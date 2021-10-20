@@ -18,15 +18,8 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
     :param piece_size: the size of the pieces in use.
     """
 
-    def __init__(
-        self,
-        grid_dims: Sequence[int],
-        piece_size: int,
-    ):
-        super(SimplifiedTetrisBinaryShapedEnv, self).__init__(
-            grid_dims,
-            piece_size,
-        )
+    def __init__(self, grid_dims: Sequence[int], piece_size: int):
+        super(SimplifiedTetrisBinaryShapedEnv, self).__init__(grid_dims, piece_size)
         # Set the reward and heuristic ranges.
         self.reward_range = (-1, 5)
         self.heuristic_range = {"min": 1000, "max": -1}

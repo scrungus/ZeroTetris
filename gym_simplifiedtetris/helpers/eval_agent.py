@@ -6,10 +6,7 @@ import numpy as np
 
 
 def eval_agent(
-    agent: object,
-    env: gym.Env,
-    num_eval_episodes: int,
-    render: bool,
+    agent: object, env: gym.Env, num_eval_episodes: int, render: bool
 ) -> Tuple[float, float]:
     """
     Evaluates the agents performance on the game of SimplifiedTetris and returns the mean score.

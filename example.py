@@ -8,8 +8,7 @@ def run_example_2():
     Usage example 2.
     """
     env = gym_simplifiedtetris.envs.SimplifiedTetrisBinaryEnv(
-        grid_dims=(20, 10),
-        piece_size=4,
+        grid_dims=(20, 10), piece_size=4
     )
 
 

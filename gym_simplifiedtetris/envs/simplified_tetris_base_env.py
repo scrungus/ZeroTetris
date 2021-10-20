@@ -19,10 +19,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
     metadata = {"render.modes": ["human"]}
 
     def __init__(
-        self,
-        grid_dims: Sequence[int],
-        piece_size: int,
-        seed: Optional[int] = 8191,
+        self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
     ):
         assert piece_size in [
             1,

@@ -25,10 +25,7 @@ class QLearningAgent:
         self._q_table = np.zeros((q_table_dims), dtype="double")
         self._num_actions = q_table_dims[-1]
 
-    def predict(
-        self,
-        obs: np.array,
-    ) -> int:
+    def predict(self, obs: np.array) -> int:
         """
         Returns an action whilst following an epsilon-greedy policy.
 
@@ -45,11 +42,7 @@ class QLearningAgent:
         return np.argmax(self._q_table[tuple(obs)])
 
     def learn(
-        self,
-        reward: float,
-        obs: np.array,
-        next_obs: np.array,
-        action: int,
+        self, reward: float, obs: np.array, next_obs: np.array, action: int
     ) -> None:
         """
         Updates the Q-learning agent's Q-table.

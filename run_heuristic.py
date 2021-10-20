@@ -9,10 +9,7 @@ def main():
     ep_returns = np.zeros(num_episodes)
 
     agent = DellacherieAgent()
-    env = Tetris(
-        grid_dims=(6, 10),
-        piece_size=4,
-    )
+    env = Tetris(grid_dims=(6, 10), piece_size=4)
     obs = env.reset()
 
     episode_num = 0
