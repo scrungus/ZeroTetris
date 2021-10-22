@@ -38,7 +38,7 @@
 
 > 🟥 Research into AI using simplified Tetris environments compliant with OpenAI Gym's API
 
-_Gym-SimplifiedTetris_ is a pip installable package capable of creating simplified Tetris environments for AI research (more specifically reinforcement learning), which conform to [OpenAI Gym's API](https://github.com/openai/gym). The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
+_Gym-SimplifiedTetris_ is a pip installable package capable of creating simplified Tetris environments for AI research (more specifically reinforcement learning), which are compliant with [OpenAI Gym's API](https://github.com/openai/gym). The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
 
 This README provides some help with the setup, gives an overview of the environments and agents and how to use them, and describes how to build more environments.
 
