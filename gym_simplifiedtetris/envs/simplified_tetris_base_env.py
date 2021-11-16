@@ -1,8 +1,8 @@
 from abc import abstractmethod
 from typing import Any, Dict, Optional, Sequence, Tuple
 
-import numpy as np
 import gym
+import numpy as np
 from gym.utils import seeding
 
 
@@ -17,6 +17,41 @@ class SimplifiedTetrisBaseEnv(gym.Env):
     """
 
     metadata = {"render.modes": ["human"]}
+    reward_range = (0, 4)
+
+    @property
+    @abstractmethod
+    def action_space(self):
+        raise NotImplementedError()
+
+    @property
+    @abstractmethod
+    def observation_space(self):
+        raise NotImplementedError()
+
+    @abstractmethod
+    def _reset_(self):
+        raise NotImplementedError()
+
+    @abstractmethod
+    def _step_(self, action):
+        raise NotImplementedError()
+
+    @abstractmethod
+    def _render_(self, mode):
+        raise NotImplementedError()
+
+    @abstractmethod
+    def _close_(self):
+        raise NotImplementedError()
+
+    @abstractmethod
+    def _get_obs_(self):
+        raise NotImplementedError()
+
+    @abstractmethod
+    def _get_reward_(self):
+        raise NotImplementedError()
 
     def __init__(
         self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
@@ -43,7 +78,6 @@ class SimplifiedTetrisBaseEnv(gym.Env):
             3: (4 * grid_dims[1] - 4, 2),
             4: (4 * grid_dims[1] - 6, 7),
         }[piece_size]
-        self._REWARD_RANGE = (0, 4)
 
         # Seed the rng.
         self._seed(seed=seed)
@@ -62,37 +96,3 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     def _seed(self, seed: Optional[int] = 8191) -> None:
         self.np_random, _ = seeding.np_random(seed)
-
-    @property
-    @abstractmethod
-    def action_space(self):
-        raise NotImplementedError()
-
-    @property
-    @abstractmethod
-    def observation_space(self):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _get_obs_(self):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _get_reward_(self):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _close_(self):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _render_(self, mode):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _reset_(self):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _step_(self, action):
-        raise NotImplementedError()

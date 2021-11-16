@@ -2,9 +2,10 @@ from typing import Any, Dict, Sequence, Tuple
 
 import numpy as np
 from gym import spaces
-from gym_simplifiedtetris.envs.simplified_tetris_base_env import SimplifiedTetrisBaseEnv
-from gym_simplifiedtetris.envs.simplified_tetris_engine import SimplifiedTetrisEngine
-from gym_simplifiedtetris.register import register
+
+from ..register import register
+from .simplified_tetris_base_env import SimplifiedTetrisBaseEnv
+from .simplified_tetris_engine import SimplifiedTetrisEngine
 
 
 class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
@@ -15,18 +16,6 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
     :param grid_dims: the grid's dimensions.
     :param piece_size: the size of the pieces in use.
     """
-
-    def __init__(self, grid_dims: Sequence[int], piece_size: int):
-        super(SimplifiedTetrisBinaryEnv, self).__init__(
-            grid_dims=grid_dims, piece_size=piece_size
-        )
-
-        self._engine = SimplifiedTetrisEngine(
-            grid_dims=grid_dims,
-            piece_size=piece_size,
-            num_pieces=self._num_pieces_,
-            num_actions=self._num_actions_,
-        )
 
     @property
     def observation_space(self) -> spaces.Box:
@@ -41,6 +30,18 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
     @property
     def action_space(self) -> spaces.Discrete:
         return spaces.Discrete(self._num_actions_)
+
+    def __init__(self, grid_dims: Sequence[int], piece_size: int):
+        super(SimplifiedTetrisBinaryEnv, self).__init__(
+            grid_dims=grid_dims, piece_size=piece_size
+        )
+
+        self._engine = SimplifiedTetrisEngine(
+            grid_dims=grid_dims,
+            piece_size=piece_size,
+            num_pieces=self._num_pieces_,
+            num_actions=self._num_actions_,
+        )
 
     def _reset_(self) -> np.array:
         self._engine._reset()

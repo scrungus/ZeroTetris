@@ -1,19 +1,17 @@
-from typing import Dict
-
 import numpy as np
 
 
-class DellacherieAgent:
+class HeuristicAgent:
     """
-    A class representing Pierre Dellacherie's agent.
+    A class representing an agent that selects the action with the largest heurstic score.
     """
 
-    def predict(self, heuristic_scores: np.array) -> int:
+    @staticmethod
+    def predict(heuristic_scores: np.array) -> int:
         """
         Returns the action that yields the largest heuristic score.
 
         :param heuristic_scores: the heuristic scores for each action.
         :return: the action with the largest heuristic score.
         """
-        best_action = np.argmax(heuristic_scores)
-        return best_action
+        return np.argmax(heuristic_scores)

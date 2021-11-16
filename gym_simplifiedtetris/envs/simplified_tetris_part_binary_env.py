@@ -1,11 +1,8 @@
 import numpy as np
-
 from gym import spaces
 
-from gym_simplifiedtetris.envs.simplified_tetris_binary_env import (
-    SimplifiedTetrisBinaryEnv,
-)
-from gym_simplifiedtetris.register import register
+from ..register import register
+from .simplified_tetris_binary_env import SimplifiedTetrisBinaryEnv
 
 
 class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBinaryEnv):

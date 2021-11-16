@@ -10,8 +10,10 @@
   </a>
   <a href="https://github.com/psf/black">
     <img src="https://img.shields.io/badge/code%20style-black-000000.svg">
-  </a href="https://www.python.org/">
+  </a>
+  <a href="https://www.python.org/">
   <img src="https://img.shields.io/pypi/pyversions/gym-simplifiedtetris">
+  </a>
   <a href="/LICENSE.md">
     <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetris?color=red">
   </a>
@@ -243,7 +245,7 @@ The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects act
 
 ### 3.2. Q-learning
 
-The Q-learning agent implemented by `gym_simplifiedtetris.QLearningAgent` selects the action with the highest Q-value (state-action value). Note that this agent struggles to learn as the grid's dimensions are increased (the size of the state-action space becomes too large).
+The Q-learning agent implemented by `gym_simplifiedtetris.QLearningAgent` selects the action with the highest Q-value (state-action value). The exploration rate parameter, epsilon, is linearly annealed over the training period. Note that this agent struggles to learn as the grid's dimensions are increased (the size of the state-action space becomes too large).
 
 See [run_q_learning.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_q_learning.py) for an example of how to use the Q-learning agent.
 
@@ -253,7 +255,7 @@ See [run_q_learning.py](https://github.com/OliverOverend/gym-simplifiedtetris/bl
 
 ### 3.3. Heuristic
 
-The heuristic agent implemented by `gym_simplifiedtetris.DellacherieAgent` selects the action with the highest heuristic score, based on the [Dellacherie feature set](https://arxiv.org/abs/1905.01652).
+The heuristic agent implemented by `gym_simplifiedtetris.HeuristicAgent` selects the action with the highest heuristic score, based on the [Dellacherie feature set](https://arxiv.org/abs/1905.01652).
 
 The heuristic score for each possible action is computed using the following heuristic:
 

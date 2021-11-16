@@ -1,3 +1,4 @@
-from .utils import Pieces
-from .envs import SimplifiedTetrisBinaryEnv, SimplifiedTetrisPartBinaryEnv
-from .agents import UniformAgent
+from .utils import *
+from .envs import *
+from .agents import *
+from .helpers import *

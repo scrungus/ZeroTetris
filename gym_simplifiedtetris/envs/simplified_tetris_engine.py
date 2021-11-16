@@ -1,13 +1,14 @@
 import time
+from copy import deepcopy
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 
-from copy import deepcopy
 import cv2.cv2 as cv
 import imageio
 import numpy as np
-from gym_simplifiedtetris.utils.pieces import Pieces
 from matplotlib import colors
 from PIL import Image
+
+from ..utils.pieces import Pieces
 
 coords = Union[List[Tuple[int, int]], Dict[int, List[Tuple[int, int]]]]
 piece_info = Dict[str, Union[coords, str]]
@@ -43,6 +44,23 @@ class SimplifiedTetrisEngine:
             6: {"coords": [(0, 0), (-1, -1), (0, -1), (1, 0)], "name": "Z"},
         },
     }
+
+    @staticmethod
+    def _get_bgr_code(colour_name: str) -> Tuple[float, float, float]:
+        """
+        Gets the BGR code corresponding to the arg provided.
+
+        :param colour_name: a string of the colour name,
+        :return: an inverted RGB code of the inputted colour name.
+        """
+        return tuple(np.array([255, 255, 255]) * colors.to_rgb(colour_name))[::-1]
+
+    @staticmethod
+    def _close() -> None:
+        """Closes the open windows."""
+        cv.waitKey(1)
+        cv.destroyAllWindows()
+        cv.waitKey(1)
 
     def __init__(
         self,
@@ -86,7 +104,7 @@ class SimplifiedTetrisEngine:
         self._img = np.array([])
 
         # Initialise the piece coordinates.
-        pieces_dict_copy = deepcopy(self.PIECES_DICT)
+        pieces_dict_copy = deepcopy(SimplifiedTetrisEngine.PIECES_DICT)
         for size, piece_dict in pieces_dict_copy.items():
             for piece_id, _ in piece_dict.items():
                 if size > 2:
@@ -139,23 +157,6 @@ class SimplifiedTetrisEngine:
         self._image_lst = []
         self._save_frame = True
 
-    @staticmethod
-    def _get_bgr_code(colour_name: str) -> Tuple[float, float, float]:
-        """
-        Gets the BGR code corresponding to the arg provided.
-
-        :param colour_name: a string of the colour name,
-        :return: an inverted RGB code of the inputted colour name.
-        """
-        return tuple(np.array([255, 255, 255]) * colors.to_rgb(colour_name))[::-1]
-
-    @staticmethod
-    def _close() -> None:
-        """Closes the open windows."""
-        cv.waitKey(1)
-        cv.destroyAllWindows()
-        cv.waitKey(1)
-
     def _reset(self) -> None:
         """Resets the score, grid, piece coords, piece id and anchor."""
         self._score = 0
@@ -188,54 +189,53 @@ class SimplifiedTetrisEngine:
         # Draws a horizontal red line to indicate the top of the playfield.
         self._draw_boundary()
 
-        if mode == "human":
-            if self._show_agent_playing:
+        assert mode == "human" 'Mode should be "human".'
 
-                if self._save_frame:
-                    frame_rgb = cv.cvtColor(self._img, cv.COLOR_BGR2RGB)
-                    self._image_lst.append(frame_rgb)
+        if self._show_agent_playing:
 
-                    if self._score == 20:  # len(self._final_scores) == 4:
-                        imageio.mimsave(
-                            f"assets/{self._height}x{self._width}_{self._piece_size}_heuristic.gif",
-                            self._image_lst,
-                            fps=60,
-                            duration=0.5,
-                        )
-                        self._save_frame = False
+            if self._save_frame:
+                frame_rgb = cv.cvtColor(self._img, cv.COLOR_BGR2RGB)
+                self._image_lst.append(frame_rgb)
 
-                cv.imshow("Simplified Tetris", self._img)
-                k = cv.waitKey(self._sleep_time)
+                if self._score == 20:  # len(self._final_scores) == 4:
+                    imageio.mimsave(
+                        f"assets/{self._height}x{self._width}_{self._piece_size}_heuristic.gif",
+                        self._image_lst,
+                        fps=60,
+                        duration=0.5,
+                    )
+                    self._save_frame = False
 
-                # Escape to exit, spacebar to pause and resume.
-                if k == 3:  # right arrow
-                    self._sleep_time -= 100
+            cv.imshow("Simplified Tetris", self._img)
+            k = cv.waitKey(self._sleep_time)
 
-                    if self._sleep_time < 100:
-                        self._sleep_time = 1
+            # Escape to exit, spacebar to pause and resume.
+            if k == 3:  # right arrow
+                self._sleep_time -= 100
 
-                    time.sleep(self._sleep_time / 1000)
-                elif k == 2:  # Left arrow.
-                    self._sleep_time += 100
-                    time.sleep(self._sleep_time / 1000)
-                elif k == 27:  # Esc.
-                    self._show_agent_playing = False
-                    self._close()
-                elif k == 32:  # Spacebar.
-                    while True:
-                        j = cv.waitKey(30)
+                if self._sleep_time < 100:
+                    self._sleep_time = 1
 
-                        if j == 32:  # Spacebar.
-                            break
+                time.sleep(self._sleep_time / 1000)
+            elif k == 2:  # Left arrow.
+                self._sleep_time += 100
+                time.sleep(self._sleep_time / 1000)
+            elif k == 27:  # Esc.
+                self._show_agent_playing = False
+                self._close()
+            elif k == 32:  # Spacebar.
+                while True:
+                    j = cv.waitKey(30)
 
-                        if j == 27:  # Esc.
-                            self._show_agent_playing = False
-                            self._close()
-                            break
+                    if j == 32:  # Spacebar.
+                        break
 
-            return self._img
+                    if j == 27:  # Esc.
+                        self._show_agent_playing = False
+                        self._close()
+                        break
 
-        raise ValueError('Mode should be "human".')
+        return self._img
 
     def _draw_boundary(self) -> None:
         """Draws a horizontal red line to indicate the cut off point."""
