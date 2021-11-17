@@ -189,53 +189,54 @@ class SimplifiedTetrisEngine:
         # Draws a horizontal red line to indicate the top of the playfield.
         self._draw_boundary()
 
-        assert mode == "human" 'Mode should be "human".'
+        if mode == "human":
+            if self._show_agent_playing:
 
-        if self._show_agent_playing:
+                if self._save_frame:
+                    frame_rgb = cv.cvtColor(self._img, cv.COLOR_BGR2RGB)
+                    self._image_lst.append(frame_rgb)
 
-            if self._save_frame:
-                frame_rgb = cv.cvtColor(self._img, cv.COLOR_BGR2RGB)
-                self._image_lst.append(frame_rgb)
+                    if self._score == 20:  # len(self._final_scores) == 4:
+                        imageio.mimsave(
+                            f"assets/{self._height}x{self._width}_{self._piece_size}_heuristic.gif",
+                            self._image_lst,
+                            fps=60,
+                            duration=0.5,
+                        )
+                        self._save_frame = False
 
-                if self._score == 20:  # len(self._final_scores) == 4:
-                    imageio.mimsave(
-                        f"assets/{self._height}x{self._width}_{self._piece_size}_heuristic.gif",
-                        self._image_lst,
-                        fps=60,
-                        duration=0.5,
-                    )
-                    self._save_frame = False
+                cv.imshow("Simplified Tetris", self._img)
+                k = cv.waitKey(self._sleep_time)
 
-            cv.imshow("Simplified Tetris", self._img)
-            k = cv.waitKey(self._sleep_time)
+                # Escape to exit, spacebar to pause and resume.
+                if k == 3:  # right arrow
+                    self._sleep_time -= 100
 
-            # Escape to exit, spacebar to pause and resume.
-            if k == 3:  # right arrow
-                self._sleep_time -= 100
+                    if self._sleep_time < 100:
+                        self._sleep_time = 1
 
-                if self._sleep_time < 100:
-                    self._sleep_time = 1
+                    time.sleep(self._sleep_time / 1000)
+                elif k == 2:  # Left arrow.
+                    self._sleep_time += 100
+                    time.sleep(self._sleep_time / 1000)
+                elif k == 27:  # Esc.
+                    self._show_agent_playing = False
+                    self._close()
+                elif k == 32:  # Spacebar.
+                    while True:
+                        j = cv.waitKey(30)
 
-                time.sleep(self._sleep_time / 1000)
-            elif k == 2:  # Left arrow.
-                self._sleep_time += 100
-                time.sleep(self._sleep_time / 1000)
-            elif k == 27:  # Esc.
-                self._show_agent_playing = False
-                self._close()
-            elif k == 32:  # Spacebar.
-                while True:
-                    j = cv.waitKey(30)
+                        if j == 32:  # Spacebar.
+                            break
 
-                    if j == 32:  # Spacebar.
-                        break
-
-                    if j == 27:  # Esc.
-                        self._show_agent_playing = False
-                        self._close()
-                        break
-
-        return self._img
+                        if j == 27:  # Esc.
+                            self._show_agent_playing = False
+                            self._close()
+                            break
+        elif mode == "rgb_array":
+            return self._img
+        else:
+            raise ValueError('Mode should be "human".')
 
     def _draw_boundary(self) -> None:
         """Draws a horizontal red line to indicate the cut off point."""

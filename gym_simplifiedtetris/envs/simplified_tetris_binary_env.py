@@ -1,4 +1,4 @@
-from typing import Any, Dict, Sequence, Tuple
+from typing import Any, Dict, Optional, Sequence, Tuple
 
 import numpy as np
 from gym import spaces
@@ -18,6 +18,10 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
     """
 
     @property
+    def action_space(self) -> spaces.Discrete:
+        return spaces.Discrete(self._num_actions_)
+
+    @property
     def observation_space(self) -> spaces.Box:
         return spaces.Box(
             low=np.append(np.zeros(self._width_ * self._height_), 0),
@@ -26,10 +30,6 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
             ),
             dtype=np.int,
         )
-
-    @property
-    def action_space(self) -> spaces.Discrete:
-        return spaces.Discrete(self._num_actions_)
 
     def __init__(self, grid_dims: Sequence[int], piece_size: int):
         super(SimplifiedTetrisBinaryEnv, self).__init__(
@@ -43,11 +43,17 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
             num_actions=self._num_actions_,
         )
 
-    def _reset_(self) -> np.array:
-        self._engine._reset()
-        return self._get_obs_()
+    def __str__(self) -> str:
+        return np.array(self._engine._grid.T, dtype=int).__str__()
 
-    def _step_(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(({self._height_!r}, {self._width_!r}), {self._piece_size_!r})"
+
+    def reset(self) -> np.array:
+        self._engine._reset()
+        return self._get_obs()
+
+    def step(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
         """
         Hard drops the current piece according to the argument provided. Terminates
         the game if a condition is met. Otherwise, a new piece is selected, and the
@@ -60,7 +66,7 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
 
         # Get the translation and rotation.
         translation, self._engine._rotation = self._engine._all_available_actions[
-            self._get_obs_()[-1]
+            self._get_obs()[-1]
         ][action]
 
         # Set the anchor.
@@ -77,10 +83,10 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
             self._engine._final_scores = np.append(
                 self._engine._final_scores, self._engine._score
             )
-            return self._get_obs_(), 0.0, True, info
+            return self._get_obs(), self._get_terminal_reward(), True, info
 
         # Get the reward and update the score.
-        reward, num_rows_cleared = self._get_reward_()
+        reward, num_rows_cleared = self._get_reward()
         self._engine._score += num_rows_cleared
 
         # Get a new piece and update the anchor.
@@ -89,20 +95,23 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
         # Update the info.
         info["num_rows_cleared"] = num_rows_cleared
 
-        return self._get_obs_(), float(reward), False, info
+        return self._get_obs(), float(reward), False, info
 
-    def _render_(self, mode: str) -> np.ndarray:
+    def render(self, mode: Optional[str] = "human") -> np.ndarray:
         return self._engine._render(mode)
 
-    def _close_(self) -> None:
+    def close(self) -> None:
         return self._engine._close()
 
-    def _get_obs_(self) -> np.array:
+    def _get_obs(self) -> np.array:
         current_grid = self._engine._grid.flatten()
         return np.append(current_grid, self._engine._current_piece_id)
 
-    def _get_reward_(self) -> Tuple[float, int]:
+    def _get_reward(self) -> Tuple[float, int]:
         return self._engine._get_reward()
+
+    def _get_terminal_reward(self) -> float:
+        return 0.0
 
 
 register(

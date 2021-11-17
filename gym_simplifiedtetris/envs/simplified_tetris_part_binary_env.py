@@ -25,7 +25,7 @@ class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBinaryEnv):
             dtype=np.int,
         )
 
-    def _get_obs_(self) -> np.array:
+    def _get_obs(self) -> np.array:
         """
         Gets the current observation, which is the grid's binary representation excluding the
         top piece_size rows, plus the current piece's id.

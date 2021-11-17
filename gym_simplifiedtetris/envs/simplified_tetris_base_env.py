@@ -1,8 +1,7 @@
 from abc import abstractmethod
-from typing import Any, Dict, Optional, Sequence, Tuple
+from typing import Optional, Sequence
 
 import gym
-import numpy as np
 from gym.utils import seeding
 
 
@@ -16,7 +15,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
     :param seed: the rng seed.
     """
 
-    metadata = {"render.modes": ["human"]}
+    metadata = {"render.modes": ["human", "rgb_array"]}
     reward_range = (0, 4)
 
     @property
@@ -30,27 +29,19 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         raise NotImplementedError()
 
     @abstractmethod
-    def _reset_(self):
+    def reset(self):
         raise NotImplementedError()
 
     @abstractmethod
-    def _step_(self, action):
+    def step(self, action):
         raise NotImplementedError()
 
     @abstractmethod
-    def _render_(self, mode):
+    def render(self, mode):
         raise NotImplementedError()
 
     @abstractmethod
-    def _close_(self):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _get_obs_(self):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _get_reward_(self):
+    def close(self):
         raise NotImplementedError()
 
     def __init__(
@@ -81,18 +72,6 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
         # Seed the rng.
         self._seed(seed=seed)
-
-    def reset(self) -> np.array:
-        return self._reset_()
-
-    def step(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
-        return self._step_(action)
-
-    def render(self, mode: Optional[str] = "human") -> np.ndarray:
-        return self._render_(mode)
-
-    def close(self) -> None:
-        return self._close_()
 
     def _seed(self, seed: Optional[int] = 8191) -> None:
         self.np_random, _ = seeding.np_random(seed)
