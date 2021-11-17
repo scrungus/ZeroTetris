@@ -34,8 +34,8 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
         :return: the potential-based shaping reward and the number of lines cleared.
         """
         # Get the heuristic value.
-        holes = self._engine._get_num_holes()
-        num_lines_cleared = self._engine._clear_lines()
+        holes = self._engine._get_holes()
+        num_lines_cleared = self._engine._clear_rows()
         heuristic_value = holes
 
         # Update the heuristic range.
@@ -45,6 +45,8 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
         if heuristic_value < self.heuristic_range["min"]:
             self.heuristic_range["min"] = heuristic_value
 
+        # print(self.heuristic_range)
+
         # Calculate the new potential and the shaping reward.
         new_potential = np.clip(
             1
@@ -53,6 +55,8 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
             0,
             1,
         )
+        # print(new_potential)
+        # print(self.old_potential)
         shaping_reward = (new_potential - self.old_potential) + num_lines_cleared
 
         # Update the old potential
