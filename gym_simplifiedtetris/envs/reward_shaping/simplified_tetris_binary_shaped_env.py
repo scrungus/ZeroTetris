@@ -2,6 +2,8 @@ from typing import Sequence, Tuple
 
 import numpy as np
 
+from gym_simplifiedtetris.envs.simplified_tetris_base_env import SimplifiedTetrisBaseEnv
+
 from ...register import register
 from ..simplified_tetris_binary_env import SimplifiedTetrisBinaryEnv
 
@@ -19,11 +21,10 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
     reward_range = (-1, 5)
 
     def __init__(self, grid_dims: Sequence[int], piece_size: int):
-        super(SimplifiedTetrisBinaryShapedEnv, self).__init__(grid_dims, piece_size)
-        # Set the reward and heuristic ranges.
+        super().__init__(grid_dims, piece_size)
         self.heuristic_range = {"min": 1000, "max": -1}
 
-        # Set the old and initial potential.
+        # The old potential is 1 because there are no holes at the start.
         self.old_potential = 1
         self.initial_potential = self.old_potential
 
@@ -33,9 +34,9 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
 
         :return: the potential-based shaping reward and the number of lines cleared.
         """
-        # Get the heuristic value.
-        holes = self._engine._get_holes()
         num_lines_cleared = self._engine._clear_rows()
+
+        holes = self._engine._get_holes()
         heuristic_value = holes
 
         # Update the heuristic range.

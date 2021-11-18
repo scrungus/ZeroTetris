@@ -110,19 +110,19 @@ import gym
 
 import gym_simplifiedtetris
 
-env = gym.make('simplifiedtetris-binary-v0')
+env = gym.make("simplifiedtetris-binary-v0")
 obs = env.reset()
 
 # Run 10 games of Tetris, selecting actions uniformly at random.
-num_episodes = 0
-while num_episodes < 10:
+episode_num = 0
+while episode_num < 10:
     env.render()
     action = env.action_space.sample()
     obs, rwd, done, info = env.step(action)
 
     if done:
-        print(f"Episode {num_episodes + 1} has terminated.")
-        num_episodes += 1
+        print(f"Episode {episode_num + 1} has terminated.")
+        episode_num += 1
         obs = env.reset()
 
 env.close()
@@ -134,8 +134,7 @@ Alternatively, you can import the environment directly:
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
 env = Tetris(
-    grid_dims=(20, 10),
-    piece_size=4,
+    grid_dims=(20, 10), piece_size=4
 )
 ```
 

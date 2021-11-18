@@ -7,9 +7,8 @@ from .simplified_tetris_binary_env import SimplifiedTetrisBinaryEnv
 
 class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBinaryEnv):
     """
-    A class representing a Tetris environment, where observation space is the
-    grid's binary representation excluding the top piece_size rows, plus the
-    current piece's id.
+    A class representing a Tetris environment, where the observation space is a flattened NumPy array containing the
+    grid's binary representation excluding the top piece_size rows, plus the current piece's id.
     """
 
     @property
@@ -27,8 +26,8 @@ class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBinaryEnv):
 
     def _get_obs(self) -> np.array:
         """
-        Gets the current observation, which is the grid's binary representation excluding the
-        top piece_size rows, plus the current piece's id.
+        Gets the current observation, which is a flattened NumPy array containing the
+        grid's binary representation, excluding the top piece_size rows, plus the current piece's id.
 
         :return: the current observation.
         """

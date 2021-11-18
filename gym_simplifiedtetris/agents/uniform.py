@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class UniformAgent:
+class UniformAgent(object):
     """
     A class representing an agent that selects actions uniformly at random.
 

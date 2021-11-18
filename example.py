@@ -1,26 +1,13 @@
 import gym
 
-import gym_simplifiedtetris
-
-
-def run_example_2():
-    """
-    Usage example 2.
-    """
-    env = gym_simplifiedtetris.envs.SimplifiedTetrisBinaryEnv(
-        grid_dims=(20, 10), piece_size=4
-    )
+from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
 
 def run_example_1():
-    """
-    Usage example 1.
-    """
     env = gym.make("simplifiedtetris-binary-v0")
     obs = env.reset()
 
     # Run 10 games of Tetris, selecting actions uniformly at random.
-    num_episodes = 10
     episode_num = 0
     while episode_num < 10:
         env.render()
@@ -33,6 +20,10 @@ def run_example_1():
             obs = env.reset()
 
     env.close()
+
+
+def run_example_2():
+    env = Tetris(grid_dims=(20, 10), piece_size=4)
 
 
 def main():

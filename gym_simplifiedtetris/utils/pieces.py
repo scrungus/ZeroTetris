@@ -7,7 +7,7 @@ piece_info = Dict[str, Union[coords, str]]
 
 
 @dataclass
-class Pieces:
+class Pieces(object):
     _info: Dict[int, piece_info]
 
     def _get_piece_info_at_random(self) -> Tuple[coords, int]:

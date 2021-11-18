@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class HeuristicAgent:
+class HeuristicAgent(object):
     """
     A class representing an agent that selects the action with the largest heurstic score.
     """

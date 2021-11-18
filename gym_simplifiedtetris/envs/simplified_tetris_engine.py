@@ -14,7 +14,7 @@ coords = Union[List[Tuple[int, int]], Dict[int, List[Tuple[int, int]]]]
 piece_info = Dict[str, Union[coords, str]]
 
 
-class SimplifiedTetrisEngine:
+class SimplifiedTetrisEngine(object):
     """
     A class representing a simplified Tetris engine containing methods
     that retrieve the actions available for each of the pieces in use, drop
@@ -74,7 +74,6 @@ class SimplifiedTetrisEngine:
         self._num_pieces = num_pieces
         self._num_actions = num_actions
 
-        # Create empty grid and anchor.
         self._grid = np.zeros((grid_dims[1], grid_dims[0]), dtype="bool")
         self._colour_grid = np.zeros((grid_dims[1], grid_dims[0]), dtype="int")
         self._anchor = [grid_dims[1] / 2 - 1, piece_size - 1]
@@ -100,50 +99,38 @@ class SimplifiedTetrisEngine:
             self._RED,  # 'Z'.
         ]
 
-        # Initialise an empty _img array.
         self._img = np.array([])
 
         # Initialise the piece coordinates.
-        pieces_dict_copy = deepcopy(SimplifiedTetrisEngine.PIECES_DICT)
-        for size, piece_dict in pieces_dict_copy.items():
-            for piece_id, _ in piece_dict.items():
-                if size > 2:
-                    pieces_dict_copy[size][piece_id]["coords"] = {
-                        90
-                        * rot: [
-                            tuple(
-                                [((-1) ** rot) * coord[rot % 2], coord[(rot + 1) % 2]]
-                            )
-                            for coord in pieces_dict_copy[size][piece_id]["coords"]
-                        ]
-                        for rot in range(4)
-                    }
-                pieces_dict_copy[size][piece_id]["max_y_coord"] = {
-                    rot: np.max([coord[1] for coord in coords])
-                    for rot, coords in pieces_dict_copy[size][piece_id][
-                        "coords"
-                    ].items()
-                }
-                pieces_dict_copy[size][piece_id]["min_y_coord"] = {
-                    rot: np.min([coord[1] for coord in coords])
-                    for rot, coords in pieces_dict_copy[size][piece_id][
-                        "coords"
-                    ].items()
-                }
-                pieces_dict_copy[size][piece_id]["max_x_coord"] = {
-                    rot: np.max([coord[0] for coord in coords])
-                    for rot, coords in pieces_dict_copy[size][piece_id][
-                        "coords"
-                    ].items()
-                }
-                pieces_dict_copy[size][piece_id]["min_x_coord"] = {
-                    rot: np.min([coord[0] for coord in coords])
-                    for rot, coords in pieces_dict_copy[size][piece_id][
-                        "coords"
-                    ].items()
+        pieces_dict_copy = deepcopy(self.PIECES_DICT[piece_size])
+        for piece_id, piece_dict in pieces_dict_copy.items():
+
+            if piece_size > 2:
+                piece_dict["coords"] = {
+                    90
+                    * rot: [
+                        tuple([((-1) ** rot) * coord[rot % 2], coord[(rot + 1) % 2]])
+                        for coord in piece_dict["coords"]
+                    ]
+                    for rot in range(4)
                 }
 
-        self._all_pieces_info = Pieces(pieces_dict_copy[piece_size])
+            for count in range(4):
+                coord_string = [
+                    "max_y_coord",
+                    "min_y_coord",
+                    "max_x_coord",
+                    "min_x_coord",
+                ][count]
+                func = np.max if count % 2 == 0 else np.min
+                idx = 1 if count < 2 else 0
+
+                piece_dict[coord_string] = {
+                    rot: func([coord[idx] for coord in coords])
+                    for rot, coords in piece_dict["coords"].items()
+                }
+
+        self._all_pieces_info = Pieces(pieces_dict_copy)
         (
             self._current_piece_info,
             self._current_piece_id,

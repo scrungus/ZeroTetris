@@ -3,7 +3,7 @@ from typing import Optional
 import numpy as np
 
 
-class QLearningAgent:
+class QLearningAgent(object):
     """
     A class representing a Q-learning agent.
 
@@ -54,9 +54,10 @@ class QLearningAgent:
         :param action: the action taken that generated next_obs.
         """
 
-        # Update the Q-table.
         current_obs_action = tuple(list(obs) + [action])
         max_q_value = np.max(self._q_table[tuple(next_obs)])
+
+        # Update the Q-table.
         self._q_table[current_obs_action] += self.alpha * (
             reward + self.gamma * max_q_value - self._q_table[current_obs_action]
         )
