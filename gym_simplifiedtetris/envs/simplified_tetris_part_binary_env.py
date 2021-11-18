@@ -29,11 +29,6 @@ class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisStandardEnv):
             dtype=np.int,
         )
 
-    def __init__(
-        self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
-    ):
-        super().__init__(grid_dims, piece_size, seed)
-
     def _get_obs(self) -> np.array:
         """
         Gets the current observation, which is a flattened NumPy array containing the
