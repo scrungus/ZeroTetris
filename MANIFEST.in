@@ -8,4 +8,5 @@ include requirements.txt
 include run_heuristic.py
 include run_q_learning.py
 include run_uniform.py
+include run_tests.py
 include setup.py

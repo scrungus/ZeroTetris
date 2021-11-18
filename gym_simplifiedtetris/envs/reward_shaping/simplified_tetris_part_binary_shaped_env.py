@@ -4,7 +4,7 @@ from .simplified_tetris_binary_shaped_env import SimplifiedTetrisBinaryShapedEnv
 
 
 class SimplifiedTetrisPartBinaryShapedEnv(
-    SimplifiedTetrisBinaryShapedEnv, SimplifiedTetrisPartBinaryEnv
+    SimplifiedTetrisPartBinaryEnv, SimplifiedTetrisBinaryShapedEnv
 ):
     """
     A class representing a SimplifiedTetris env where the reward function is a

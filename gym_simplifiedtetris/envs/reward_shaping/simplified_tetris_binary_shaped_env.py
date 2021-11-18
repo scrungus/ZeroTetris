@@ -1,4 +1,4 @@
-from typing import Sequence, Tuple
+from typing import Optional, Sequence, Tuple
 
 import numpy as np
 
@@ -19,7 +19,9 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
 
     reward_range = (-1, 5)
 
-    def __init__(self, grid_dims: Sequence[int], piece_size: int, seed: int):
+    def __init__(
+        self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
+    ):
         super().__init__(grid_dims, piece_size, seed)
         self.heuristic_range = {"min": 1000, "max": -1}
 
