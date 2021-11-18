@@ -10,15 +10,15 @@ from PIL import Image
 
 from ..utils.pieces import Pieces
 
-coords = Union[List[Tuple[int, int]], Dict[int, List[Tuple[int, int]]]]
-piece_info = Dict[str, Union[coords, str]]
+Coords = Union[List[Tuple[int, int]], Dict[int, List[Tuple[int, int]]]]
+PieceInfo = Dict[str, Union[Coords, str]]
 
 
 class SimplifiedTetrisEngine(object):
     """
     A class representing a simplified Tetris engine containing methods
     that retrieve the actions available for each of the pieces in use, drop
-    pieces vertically downwards, having identified the correct location to
+    pieces vertically downwards having identified the correct location to
     drop them, clear full rows, and render a game of Tetris.
 
     :param grid_dims: the grid dimensions (height and width).
@@ -27,7 +27,7 @@ class SimplifiedTetrisEngine(object):
     :param num_actions: the number of available actions in each state.
     """
 
-    PIECES_DICT: Dict[int, Dict[int, piece_info]] = {
+    PIECES_DICT: Dict[int, Dict[int, PieceInfo]] = {
         1: {0: {"coords": {0: [(0, 0)]}, "name": "O"}},
         2: {0: {"coords": {0: [(0, 0), (0, -1)], 90: [(0, 0), (1, 0)]}, "name": "I"}},
         3: {
@@ -83,19 +83,19 @@ class SimplifiedTetrisEngine(object):
         self._sleep_time = 500
         self._show_agent_playing = True
         self._cell_size = int(min(0.8 * 1000 / grid_dims[0], 0.8 * 2000 / grid_dims[1]))
-        self._LEFT_SPACE = 400
-        self._BLACK: tuple = self._get_bgr_code("black")
-        self._WHITE: tuple = self._get_bgr_code("white")
-        self._RED: tuple = self._get_bgr_code("red")
-        self._GRID_COLOURS: list = [
-            self._WHITE,  # Empty.
+        self._left_space = 400
+        self._black: tuple = self._get_bgr_code("black")
+        self._white: tuple = self._get_bgr_code("white")
+        self._red: tuple = self._get_bgr_code("red")
+        self._grid_colours: list = [
+            self._white,  # Empty.
             self._get_bgr_code("cyan"),  # 'I'.
             self._get_bgr_code("orange"),  # 'L'.
             self._get_bgr_code("yellow"),  #  'O'.
             self._get_bgr_code("purple"),  # 'T'.
             self._get_bgr_code("blue"),  # 'J'.
             self._get_bgr_code("green"),  # 'S'.
-            self._RED,  # 'Z'.
+            self._red,  # 'Z'.
         ]
 
         self._img = np.array([])
@@ -221,9 +221,9 @@ class SimplifiedTetrisEngine(object):
             - int(self._cell_size / 40) : vertical_position
             + int(self._cell_size / 40)
             + 1,
-            self._LEFT_SPACE :,
+            self._left_space :,
             :,
-        ] = self._RED
+        ] = self._red
 
     def _get_grid(self) -> np.ndarray:
         """
@@ -232,7 +232,7 @@ class SimplifiedTetrisEngine(object):
         :return: the array of the current grid.
         """
         grid = [
-            [self._GRID_COLOURS[self._colour_grid[j][i]] for j in range(self._width)]
+            [self._grid_colours[self._colour_grid[j][i]] for j in range(self._width)]
             for i in range(self._height)
         ]
         return np.array(grid)
@@ -252,21 +252,23 @@ class SimplifiedTetrisEngine(object):
         self._img = np.array(self._img)
 
     def _draw_separating_lines(self) -> None:
-        """Draws the horizontal and vertical _BLACK lines to separate the grid's cells."""
+        """
+        Draws the horizontal and vertical _black lines to separate the grid's cells.
+        """
         for j in range(-int(self._cell_size / 40), int(self._cell_size / 40) + 1):
             self._img[
                 [i * self._cell_size + j for i in range(self._height)], :, :
-            ] = self._BLACK
+            ] = self._black
             self._img[
                 :, [i * self._cell_size + j for i in range(self._width)], :
-            ] = self._BLACK
+            ] = self._black
 
     def _add_img_left(self) -> None:
         """
         Adds the image that will appear to the left of the grid.
         """
         img_array = np.zeros(
-            (self._height * self._cell_size, self._LEFT_SPACE, 3)
+            (self._height * self._cell_size, self._left_space, 3)
         ).astype(np.uint8)
         mean_score = (
             0.0 if len(self._final_scores) == 0 else np.mean(self._final_scores)
@@ -316,7 +318,7 @@ class SimplifiedTetrisEngine(object):
                     (x_offsets[i], 60 * (count + 1)),
                     cv.FONT_HERSHEY_SIMPLEX,
                     1,
-                    self._WHITE,
+                    self._white,
                     2,
                     cv.LINE_AA,
                 )
@@ -340,7 +342,7 @@ class SimplifiedTetrisEngine(object):
         > https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/
         engine.py
 
-        :return: whether the piece's current position is legal.
+        :return: whether the piece's current position is illegal.
         """
 
         # Loop over each of the piece's blocks.
@@ -518,7 +520,7 @@ class SimplifiedTetrisEngine(object):
         :return: a list of the Dellacherie feature values.
         """
         weights = np.array([-1, 1, -1, -1, -4, -1], dtype="double")
-        all_scores = np.empty((self._num_actions), dtype="double")
+        dellacherie_scores = np.empty((self._num_actions), dtype="double")
 
         for action, (translation, self._rotation) in self._all_available_actions[
             self._current_piece_id
@@ -535,13 +537,13 @@ class SimplifiedTetrisEngine(object):
             for count, feature_func in enumerate(self._get_dellacherie_funcs()):
                 scores[count] = feature_func()
 
-            all_scores[action] = np.dot(scores, weights)
+            dellacherie_scores[action] = np.dot(scores, weights)
 
             self._update_grid(False)
             self._anchor = deepcopy(old_anchor)
             self._grid = deepcopy(old_grid)
 
-        return all_scores
+        return dellacherie_scores
 
     def _get_dellacherie_funcs(self) -> list:
         """
@@ -636,11 +638,9 @@ class SimplifiedTetrisEngine(object):
         """
         Cumulative wells is defined here: https://arxiv.org/abs/1905.01652.
 
-        For each well, find the depth of the well, d(w), then calculate the sum from i=1
-        to d(w) of i. Lastly, sum the well sums.
+        For each well, find the depth of the well, d(w), then calculate the sum from i=1 to d(w) of i. Lastly, sum the well sums.
 
-        A block is part of a well if the cells directly on either side are full,
-        and the block can be reached from above (there are no full cells directly above it).
+        A block is part of a well if the cells directly on either side are full, and the block can be reached from above (there are no full cells directly above it).
 
         :return: cumulative wells.
         """

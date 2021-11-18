@@ -5,7 +5,7 @@ class UniformAgent(object):
     """
     A class representing an agent that selects actions uniformly at random.
 
-    :param num_actions: the number of actions available to the agent in each state.
+    :param _num_actions: the number of actions available to the agent in each state.
     """
 
     def __init__(self, num_actions: int):

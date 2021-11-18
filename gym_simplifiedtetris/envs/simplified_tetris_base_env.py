@@ -9,7 +9,7 @@ from gym.utils import seeding
 class SimplifiedTetrisBaseEnv(gym.Env):
     """
     A class representing a simplified Tetris base environment, which ensures that all
-    custom envs inherit from gym.Env and implement the required methods and spaces.
+    custom envs inherit from gym.Env and implement the essential methods and spaces.
 
     :param grid_dims: the grid dimensions.
     :param piece_size: the size of every piece.
@@ -73,11 +73,6 @@ class SimplifiedTetrisBaseEnv(gym.Env):
     def action_space(self):
         raise NotImplementedError()
 
-    @property
-    @abstractmethod
-    def observation_space(self):
-        raise NotImplementedError()
-
     @abstractmethod
     def _reset_(self):
         raise NotImplementedError()
@@ -92,10 +87,6 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     @abstractmethod
     def _close_(self):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _get_obs(self):
         raise NotImplementedError()
 
     @abstractmethod

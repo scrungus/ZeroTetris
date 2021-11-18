@@ -14,7 +14,7 @@ def eval_agent(
     :param agent: the agent to evaluate on the env.
     :param env: the env to evaluate the agent on.
     :param num_episodes: the number of games to evaluate the trained agent.
-    :param render: a boolean that if True renders the agent playing SimplifiedTetris after training.
+    :param render: renders the agent playing SimplifiedTetris after training.
     :return: the mean and std score obtained from letting the agent play num_episodes games.
     """
     ep_returns = np.zeros(num_episodes, dtype=int)

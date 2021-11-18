@@ -1,6 +1,6 @@
+from abc import abstractmethod
 from typing import Any, Dict, Optional, Sequence, Tuple
 
-import gym
 import numpy as np
 from gym import spaces
 
@@ -10,8 +10,7 @@ from .simplified_tetris_base_env import SimplifiedTetrisBaseEnv
 
 class SimplifiedTetrisStandardEnv(SimplifiedTetrisBaseEnv):
     """
-    A class representing a simplified Tetris environment, which implements the standard
-    methods and action space.
+    A class representing a simplified Tetris environment, which implements the standard methods and action space.
 
     :param grid_dims: the grid dimensions.
     :param piece_size: the size of every piece.
@@ -21,6 +20,11 @@ class SimplifiedTetrisStandardEnv(SimplifiedTetrisBaseEnv):
     @property
     def action_space(self) -> spaces.Discrete:
         return spaces.Discrete(self._num_actions_)
+
+    @property
+    @abstractmethod
+    def observation_space(self):
+        raise NotImplementedError()
 
     def __init__(
         self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
@@ -46,9 +50,7 @@ class SimplifiedTetrisStandardEnv(SimplifiedTetrisBaseEnv):
 
     def _step_(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
         """
-        Hard drops the current piece according to the argument provided. Terminates
-        the game if a condition is met. Otherwise, a new piece is selected, and the
-        anchor is reset.
+        Hard drops the current piece according to the argument provided. Terminates the game if a condition is met. Otherwise, a new piece is selected, and the anchor is reset.
 
         :param action: the action to be taken.
         :return: the next observation, reward, game termination indicator, and env info.
@@ -64,8 +66,7 @@ class SimplifiedTetrisStandardEnv(SimplifiedTetrisBaseEnv):
         self._engine._hard_drop()
         self._engine._update_grid(True)
 
-        # The game terminates when any of the dropped piece's blocks occupies any of the
-        # top 'piece_size' rows, before any full rows are cleared.
+        # The game terminates when any of the dropped piece's blocks occupies any of the top 'piece_size' rows, before any full rows are cleared.
         if np.any(self._engine._grid[:, : self._piece_size_]):
             info["num_rows_cleared"] = 0
             self._engine._final_scores = np.append(
@@ -91,3 +92,7 @@ class SimplifiedTetrisStandardEnv(SimplifiedTetrisBaseEnv):
 
     def _get_terminal_reward(self) -> float:
         return 0.0
+
+    @abstractmethod
+    def _get_obs(self):
+        raise NotImplementedError()

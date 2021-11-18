@@ -4,10 +4,7 @@ env_list: list = []
 
 
 def register(idx: str, entry_point: str) -> None:
-    """
-    Performs some checks on the arguments provided, and then
-    registers the custom environments in Gym.
-    """
+    """Performs some checks on the arguments provided, and then registers the custom environments in Gym."""
     assert idx.startswith(
         "simplifiedtetris-"
     ), 'Env ID should start with "simplifiedtetris-".'

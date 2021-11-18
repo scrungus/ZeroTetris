@@ -10,8 +10,7 @@ class SimplifiedTetrisPartBinaryShapedEnv(
 ):
     """
     A class representing a SimplifiedTetris env where the reward function is a
-    scaled heuristic score and the obs space is the grid's part binary representation
-    plus the current piece's id.
+    scaled heuristic score and the obs space is the grid's part binary representation plus the current piece's id.
 
     :param grid_dims: the grid's dimensions.
     :param piece_size: the size of the pieces in use.
@@ -22,7 +21,7 @@ class SimplifiedTetrisPartBinaryShapedEnv(
         self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
     ):
         super().__init__()
-        super(SimplifiedTetrisPartBinaryEnv, self).__init__(grid_dims, piece_size, seed)
+        SimplifiedTetrisPartBinaryEnv.__init__(self, grid_dims, piece_size, seed)
 
 
 register(

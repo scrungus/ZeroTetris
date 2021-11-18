@@ -30,9 +30,8 @@ class QLearningAgent(object):
         """
         Returns an action whilst following an epsilon-greedy policy.
 
-        :param available_actions: the actions available to the agent.
         :param obs: a NumPy array containing the observation given to the agent by the env.
-        :return: an integer correspoding to the action chosen by the Q-learning agent.
+        :return: an integer corresponding to the action chosen by the Q-learning agent.
         """
 
         # Choose an action at random with probability epsilon.

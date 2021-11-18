@@ -5,7 +5,7 @@ import numpy as np
 
 class SimplifiedTetrisShapingReward(object):
     """
-    A class representing a shaping reward.
+    A class representing a potential-based shaping reward.
     """
 
     reward_range = (-1, 5)
@@ -15,6 +15,7 @@ class SimplifiedTetrisShapingReward(object):
 
         # The old potential is 1 because there are no holes at the start of a game.
         self.old_potential = 1
+
         self.initial_potential = self.old_potential
 
     def _get_reward(self) -> Tuple[float, int]:
@@ -24,9 +25,7 @@ class SimplifiedTetrisShapingReward(object):
         :return: the potential-based shaping reward and the number of lines cleared.
         """
         num_lines_cleared = self._engine._clear_rows()
-
-        holes = self._engine._get_holes()
-        heuristic_value = holes
+        heuristic_value = self._engine._get_holes()
 
         if heuristic_value > self.heuristic_range["max"]:
             self.heuristic_range["max"] = heuristic_value

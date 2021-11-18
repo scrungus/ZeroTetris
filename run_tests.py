@@ -21,10 +21,9 @@ def main() -> None:
         check_env(env)
 
         obs = env.reset()
-        print(f"First observation given: {obs}")
-        print(f"Representation: {repr(env)}")
-        print(f"String: {str(env)}")
-
+        print(
+            f"\nFirst observation given: {obs}\nRepresentation: {repr(env)}\nString: {str(env)}\n"
+        )
         agent = UniformAgent(env._num_actions_)
 
         num_episodes = 0
