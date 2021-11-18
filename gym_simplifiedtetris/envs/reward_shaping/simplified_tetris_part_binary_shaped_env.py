@@ -1,10 +1,12 @@
+from typing import Optional, Sequence
+
 from ...register import register
 from ..simplified_tetris_part_binary_env import SimplifiedTetrisPartBinaryEnv
-from .simplified_tetris_binary_shaped_env import SimplifiedTetrisBinaryShapedEnv
+from .simplified_tetris_shaping_reward import SimplifiedTetrisShapingReward
 
 
 class SimplifiedTetrisPartBinaryShapedEnv(
-    SimplifiedTetrisPartBinaryEnv, SimplifiedTetrisBinaryShapedEnv
+    SimplifiedTetrisShapingReward, SimplifiedTetrisPartBinaryEnv
 ):
     """
     A class representing a SimplifiedTetris env where the reward function is a
@@ -16,7 +18,11 @@ class SimplifiedTetrisPartBinaryShapedEnv(
     :param seed: the rng seed.
     """
 
-    pass
+    def __init__(
+        self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
+    ):
+        super().__init__()
+        super(SimplifiedTetrisPartBinaryEnv, self).__init__(grid_dims, piece_size, seed)
 
 
 register(

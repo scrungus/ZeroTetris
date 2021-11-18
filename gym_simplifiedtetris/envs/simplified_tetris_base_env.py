@@ -41,6 +41,8 @@ class SimplifiedTetrisBaseEnv(gym.Env):
             range(piece_size, 11)
         ), "Width must be an integer in the interval [piece_size, 10]."
 
+        super().__init__()
+
         self._height_, self._width_ = grid_dims
         self._piece_size_ = piece_size
 

@@ -27,6 +27,11 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisStandardEnv):
             dtype=np.int,
         )
 
+    def __init__(
+        self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
+    ):
+        super().__init__(grid_dims, piece_size, seed)
+
     def _get_obs(self) -> np.array:
         current_grid = self._engine._grid.flatten()
         return np.append(current_grid, self._engine._current_piece_id)
