@@ -79,7 +79,6 @@ class SimplifiedTetrisEngine(object):
         self._anchor = [grid_dims[1] / 2 - 1, piece_size - 1]
         self._rotation = 0
 
-        # Initialise render attributes.
         self._final_scores = np.array([], dtype=int)
         self._sleep_time = 500
         self._show_agent_playing = True
@@ -140,7 +139,6 @@ class SimplifiedTetrisEngine(object):
         self._get_all_available_actions()
         self._reset()
 
-        # Initialise attributes for saving GIFs.
         self._image_lst = []
         self._save_frame = True
 
@@ -161,19 +159,10 @@ class SimplifiedTetrisEngine(object):
         :return: the image pixel values.
         """
 
-        # Get the grid after dropping the current piece.
         grid = self._get_grid()
-
-        # Convert grid into Image object then into an array.
         self._resize_grid(grid)
-
-        # Draw horizontal and vertical lines between the cells.
         self._draw_separating_lines()
-
-        # Add image to the left.
         self._add_img_left()
-
-        # Draws a horizontal red line to indicate the top of the playfield.
         self._draw_boundary()
 
         if mode == "human":
@@ -183,7 +172,7 @@ class SimplifiedTetrisEngine(object):
                     frame_rgb = cv.cvtColor(self._img, cv.COLOR_BGR2RGB)
                     self._image_lst.append(frame_rgb)
 
-                    if self._score == 20:  # len(self._final_scores) == 4:
+                    if self._score == 20:
                         imageio.mimsave(
                             f"assets/{self._height}x{self._width}_{self._piece_size}_heuristic.gif",
                             self._image_lst,
@@ -195,7 +184,6 @@ class SimplifiedTetrisEngine(object):
                 cv.imshow("Simplified Tetris", self._img)
                 k = cv.waitKey(self._sleep_time)
 
-                # Escape to exit, spacebar to pause and resume.
                 if k == 3:  # right arrow
                     self._sleep_time -= 100
 
@@ -280,13 +268,10 @@ class SimplifiedTetrisEngine(object):
         img_array = np.zeros(
             (self._height * self._cell_size, self._LEFT_SPACE, 3)
         ).astype(np.uint8)
-
-        # Calculate the mean score.
         mean_score = (
             0.0 if len(self._final_scores) == 0 else np.mean(self._final_scores)
         )
 
-        # Add statistics.
         self._add_statistics(
             img_array=img_array,
             items=[
@@ -362,11 +347,11 @@ class SimplifiedTetrisEngine(object):
         for i, j in self._current_piece_info["coords"][self._rotation]:
             x_pos, y_pos = self._anchor[0] + i, self._anchor[1] + j
 
-            # Don't check if illegal move if block is too high.
+            # Don't check if the move is illegal when the block is too high.
             if y_pos < 0:
                 continue
 
-            # Check if illegal move. Last condition must come after previous conditions.
+            # Check if the move is illegal. The last condition must come after the previous conditions.
             if (
                 x_pos < 0
                 or x_pos >= self._width
@@ -418,10 +403,9 @@ class SimplifiedTetrisEngine(object):
 
         self._last_move_info["eliminated_num_blocks"] = 0
 
-        # Starts from bottom row.
         for row_num in range(self._height - 1, self._piece_size - 1, -1):
 
-            if not can_clear[row_num - self._piece_size]:  # Unable to clear.
+            if not can_clear[row_num - self._piece_size]:
                 new_grid[:, col] = self._grid[:, row_num]
                 new_colour_grid[:, col] = self._colour_grid[:, row_num]
                 col -= 1
@@ -432,10 +416,7 @@ class SimplifiedTetrisEngine(object):
 
         self._grid = new_grid
         self._colour_grid = new_colour_grid
-
         num_rows_cleared = sum(can_clear)
-
-        # Update the last move info.
         self._last_move_info["num_rows_cleared"] = num_rows_cleared
 
         return num_rows_cleared
@@ -516,18 +497,14 @@ class SimplifiedTetrisEngine(object):
 
             for translation in range(abs(min_x_coord), self._width - max_x_coord):
 
-                # This ensures that no more than self._num_actions are returned.
                 if count == self._num_actions:
                     return available_actions
 
                 self._anchor = [translation, 0]
-
                 self._hard_drop()
+
                 self._update_grid(True)
-
-                # Update available_actions with translation/rotation tuple.
                 available_actions[count] = (translation, self._rotation)
-
                 self._update_grid(False)
 
                 count += 1
@@ -540,15 +517,12 @@ class SimplifiedTetrisEngine(object):
 
         :return: a list of the Dellacherie feature values.
         """
-        # Initialise the arrays of weights and scores.
         weights = np.array([-1, 1, -1, -1, -4, -1], dtype="double")
         all_scores = np.empty((self._num_actions), dtype="double")
 
-        # Loop over every available action.
         for action, (translation, self._rotation) in self._all_available_actions[
             self._current_piece_id
         ].items():
-            # Create a copy to revert back to.
             old_grid = deepcopy(self._grid)
             old_anchor = deepcopy(self._anchor)
 
@@ -557,15 +531,12 @@ class SimplifiedTetrisEngine(object):
             self._hard_drop()
             self._update_grid(True)
 
-            # Find the six feature values.
             scores = np.empty((6), dtype="double")
             for count, feature_func in enumerate(self._get_dellacherie_funcs()):
                 scores[count] = feature_func()
 
-            # Compute the heuristic score.
             all_scores[action] = np.dot(scores, weights)
 
-            # Revert back.
             self._update_grid(False)
             self._anchor = deepcopy(old_anchor)
             self._grid = deepcopy(old_grid)
@@ -678,18 +649,18 @@ class SimplifiedTetrisEngine(object):
         new_grid = np.ones((self._width + 2, self._height + 1), dtype="bool")
         new_grid[1:-1, :-1] = self._grid
 
-        for col in range(1, self._width + 1):  # Iterate over the columns.
+        for col in range(1, self._width + 1):
 
             depth = 1
             well_complete = False
 
-            for row in range(self._height):  # Iterate over the rows.
+            for row in range(self._height):
 
                 cell_mid = new_grid[col][row]
                 cell_right = new_grid[col + 1][row]
                 cell_left = new_grid[col - 1][row]
 
-                if cell_mid >= 1:  # Full cell.
+                if cell_mid >= 1:
                     well_complete = True
 
                 # Checks either side to see if the cells are occupied.

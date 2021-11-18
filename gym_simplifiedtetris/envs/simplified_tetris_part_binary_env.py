@@ -9,6 +9,10 @@ class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBinaryEnv):
     """
     A class representing a Tetris environment, where the observation space is a flattened NumPy array containing the
     grid's binary representation excluding the top piece_size rows, plus the current piece's id.
+
+    :param grid_dims: the grid dimensions.
+    :param piece_size: the size of every piece.
+    :param seed: the rng seed.
     """
 
     @property

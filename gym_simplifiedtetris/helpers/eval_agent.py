@@ -17,10 +17,7 @@ def eval_agent(
     :param render: a boolean that if True renders the agent playing SimplifiedTetris after training.
     :return: the mean and std score obtained from letting the agent play num_episodes games.
     """
-
     ep_returns = np.zeros(num_episodes, dtype=int)
-
-    # Reset the game scores.
     env._engine._final_scores = np.array([], dtype=int)
 
     for episode_id in tqdm(range(num_episodes), desc="No. of episodes completed"):

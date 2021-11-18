@@ -22,23 +22,26 @@ def main() -> None:
 
         obs = env.reset()
         print(f"First observation given: {obs}")
-
         print(f"Representation: {repr(env)}")
         print(f"String: {str(env)}")
 
         agent = UniformAgent(env._num_actions_)
 
         num_episodes = 0
+        is_first_move = True
         while num_episodes < 10:
             env.render()
-
             action = agent.predict()
-
             obs, reward, done, _ = env.step(action)
 
             assert (
                 env.reward_range[0] <= reward <= env.reward_range[1]
             ), f"Reward seen: {reward}"
+
+            if num_episodes == 0 and is_first_move:
+                print(f"First reward seen: {reward}")
+                print(f"Second observation given: {obs}")
+                is_first_move = False
 
             if done:
                 num_episodes += 1

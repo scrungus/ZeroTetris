@@ -2,8 +2,6 @@ from typing import Sequence, Tuple
 
 import numpy as np
 
-from gym_simplifiedtetris.envs.simplified_tetris_base_env import SimplifiedTetrisBaseEnv
-
 from ...register import register
 from ..simplified_tetris_binary_env import SimplifiedTetrisBinaryEnv
 
@@ -16,15 +14,16 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
 
     :param grid_dims: the grid's dimensions.
     :param piece_size: the size of the pieces in use.
+    :param seed: the rng seed.
     """
 
     reward_range = (-1, 5)
 
-    def __init__(self, grid_dims: Sequence[int], piece_size: int):
-        super().__init__(grid_dims, piece_size)
+    def __init__(self, grid_dims: Sequence[int], piece_size: int, seed: int):
+        super().__init__(grid_dims, piece_size, seed)
         self.heuristic_range = {"min": 1000, "max": -1}
 
-        # The old potential is 1 because there are no holes at the start.
+        # The old potential is 1 because there are no holes at the start of a game.
         self.old_potential = 1
         self.initial_potential = self.old_potential
 
@@ -39,16 +38,12 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
         holes = self._engine._get_holes()
         heuristic_value = holes
 
-        # Update the heuristic range.
         if heuristic_value > self.heuristic_range["max"]:
             self.heuristic_range["max"] = heuristic_value
 
         if heuristic_value < self.heuristic_range["min"]:
             self.heuristic_range["min"] = heuristic_value
 
-        # print(self.heuristic_range)
-
-        # Calculate the new potential and the shaping reward.
         new_potential = np.clip(
             1
             - (heuristic_value - self.heuristic_range["min"])
@@ -56,13 +51,8 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
             0,
             1,
         )
-        # print(new_potential)
-        # print(self.old_potential)
         shaping_reward = (new_potential - self.old_potential) + num_lines_cleared
-
-        # Update the old potential
         self.old_potential = new_potential
-
         return shaping_reward, num_lines_cleared
 
     def _get_terminal_reward(self) -> float:
@@ -72,8 +62,6 @@ class SimplifiedTetrisBinaryShapedEnv(SimplifiedTetrisBinaryEnv):
         :return: the terminal potential-based shaping reward.
         """
         terminal_shaping_reward = -self.old_potential
-
-        # Reset the old potential.
         self.old_potential = self.initial_potential
         return terminal_shaping_reward
 

@@ -103,7 +103,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         self._engine._update_grid(True)
 
         # The game terminates when any of the dropped piece's blocks occupies any of the
-        # top piece_size rows, before any full rows are cleared.
+        # top 'piece_size' rows, before any full rows are cleared.
         if np.any(self._engine._grid[:, : self._piece_size_]):
             info["num_rows_cleared"] = 0
             self._engine._final_scores = np.append(
