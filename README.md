@@ -142,11 +142,12 @@ env = Tetris(
 
 ### 2.1. Available environments
 
-There are three environments provided:
+There are four environments provided:
 
 - `simplifiedtetris-binary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID. A reward of +1 is given for each line cleared, and 0 otherwise
 - `simplifiedtetris-partbinary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID. A reward of +1 is given for each line cleared, and 0 otherwise
 - `simplifiedtetris-binary-shaped-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID. The reward function is a potential-based reward function based on the _holes_ feature
+- `simplifiedtetris-partbinary-shaped-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID. The reward function is a potential-based reward function based on the _holes_ feature
 
 ### 2.2. Methods
 
@@ -223,7 +224,7 @@ Each game of Tetris terminates if the following condition is satisfied: any of t
 
 ### 2.6. Building more environments
 
-The user can implement more custom Gym environments with different observation spaces and reward functions easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBinaryEnv` and are registered using:
+The user can implement more custom Gym environments with different observation spaces and reward functions easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBaseEnv` and are registered using:
 
 ```python
 >>> register(
