@@ -1,23 +1,24 @@
 import time
+from copy import deepcopy
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 
-from copy import deepcopy
 import cv2.cv2 as cv
 import imageio
 import numpy as np
-from gym_simplifiedtetris.utils.pieces import Pieces
 from matplotlib import colors
 from PIL import Image
 
-coords = Union[List[Tuple[int, int]], Dict[int, List[Tuple[int, int]]]]
-piece_info = Dict[str, Union[coords, str]]
+from ..utils.pieces import Pieces
+
+Coords = Union[List[Tuple[int, int]], Dict[int, List[Tuple[int, int]]]]
+PieceInfo = Dict[str, Union[Coords, str]]
 
 
-class SimplifiedTetrisEngine:
+class SimplifiedTetrisEngine(object):
     """
     A class representing a simplified Tetris engine containing methods
     that retrieve the actions available for each of the pieces in use, drop
-    pieces vertically downwards, having identified the correct location to
+    pieces vertically downwards having identified the correct location to
     drop them, clear full rows, and render a game of Tetris.
 
     :param grid_dims: the grid dimensions (height and width).
@@ -26,158 +27,23 @@ class SimplifiedTetrisEngine:
     :param num_actions: the number of available actions in each state.
     """
 
-    PIECES_DICT: Dict[int, Dict[int, piece_info]] = {
-        1: {
-            0: {
-                "coords": {0: [(0, 0)]},
-                "name": "O",
-            }
-        },
-        2: {
-            0: {
-                "coords": {
-                    0: [(0, 0), (0, -1)],
-                    90: [(0, 0), (1, 0)],
-                },
-                "name": "I",
-            }
-        },
+    PIECES_DICT: Dict[int, Dict[int, PieceInfo]] = {
+        1: {0: {"coords": {0: [(0, 0)]}, "name": "O"}},
+        2: {0: {"coords": {0: [(0, 0), (0, -1)], 90: [(0, 0), (1, 0)]}, "name": "I"}},
         3: {
-            0: {
-                "coords": [(0, 0), (0, -1), (0, -2)],
-                "name": "I",
-            },
-            1: {
-                "coords": [(0, 0), (1, 0), (0, -1)],
-                "name": "L",
-            },
+            0: {"coords": [(0, 0), (0, -1), (0, -2)], "name": "I"},
+            1: {"coords": [(0, 0), (1, 0), (0, -1)], "name": "L"},
         },
         4: {
-            0: {
-                "coords": [(0, 0), (0, -1), (0, -2), (0, -3)],
-                "name": "I",
-            },
-            1: {
-                "coords": [(0, 0), (1, 0), (0, -1), (0, -2)],
-                "name": "L",
-            },
-            2: {
-                "coords": [(0, 0), (0, -1), (-1, 0), (-1, -1)],
-                "name": "O",
-            },
-            3: {
-                "coords": [(0, 0), (-1, 0), (1, 0), (0, 1)],
-                "name": "T",
-            },
-            4: {
-                "coords": [(0, 0), (-1, 0), (0, -1), (0, -2)],
-                "name": "J",
-            },
-            5: {
-                "coords": [(0, 0), (-1, 0), (0, -1), (1, -1)],
-                "name": "S",
-            },
-            6: {
-                "coords": [(0, 0), (-1, -1), (0, -1), (1, 0)],
-                "name": "Z",
-            },
+            0: {"coords": [(0, 0), (0, -1), (0, -2), (0, -3)], "name": "I"},
+            1: {"coords": [(0, 0), (1, 0), (0, -1), (0, -2)], "name": "L"},
+            2: {"coords": [(0, 0), (0, -1), (-1, 0), (-1, -1)], "name": "O"},
+            3: {"coords": [(0, 0), (-1, 0), (1, 0), (0, 1)], "name": "T"},
+            4: {"coords": [(0, 0), (-1, 0), (0, -1), (0, -2)], "name": "J"},
+            5: {"coords": [(0, 0), (-1, 0), (0, -1), (1, -1)], "name": "S"},
+            6: {"coords": [(0, 0), (-1, -1), (0, -1), (1, 0)], "name": "Z"},
         },
     }
-
-    def __init__(
-        self,
-        grid_dims: Sequence[int],
-        piece_size: int,
-        num_pieces: int,
-        num_actions: int,
-    ):
-        self._height, self._width = grid_dims
-        self._piece_size = piece_size
-        self._num_pieces = num_pieces
-        self._num_actions = num_actions
-
-        # Create empty grid and anchor.
-        self._grid = np.zeros((grid_dims[1], grid_dims[0]), dtype="bool")
-        self._colour_grid = np.zeros((grid_dims[1], grid_dims[0]), dtype="int")
-        self._anchor = [grid_dims[1] / 2 - 1, piece_size - 1]
-        self._rotation = 0
-
-        # Initialise render attributes.
-        self._final_scores = np.array([], dtype=int)
-        self._sleep_time = 500
-        self._show_agent_playing = True
-        self._cell_size = int(min(0.8 * 1000 / grid_dims[0], 0.8 * 2000 / grid_dims[1]))
-        self._LEFT_SPACE = 400
-        self._BLACK: tuple = self._get_bgr_code("black")
-        self._WHITE: tuple = self._get_bgr_code("white")
-        self._RED: tuple = self._get_bgr_code("red")
-        self._GRID_COLOURS: list = [
-            self._WHITE,  # Empty.
-            self._get_bgr_code("cyan"),  # 'I'.
-            self._get_bgr_code("orange"),  # 'L'.
-            self._get_bgr_code("yellow"),  #  'O'.
-            self._get_bgr_code("purple"),  # 'T'.
-            self._get_bgr_code("blue"),  # 'J'.
-            self._get_bgr_code("green"),  # 'S'.
-            self._RED,  # 'Z'.
-        ]
-
-        # Initialise an empty _img array.
-        self._img = np.array([])
-
-        # Initialise the piece coordinates.
-        pieces_dict_copy = deepcopy(self.PIECES_DICT)
-        for size, piece_dict in pieces_dict_copy.items():
-            for piece_id, _ in piece_dict.items():
-                if size > 2:
-                    pieces_dict_copy[size][piece_id]["coords"] = {
-                        90
-                        * rot: [
-                            tuple(
-                                [((-1) ** rot) * coord[rot % 2], coord[(rot + 1) % 2]]
-                            )
-                            for coord in pieces_dict_copy[size][piece_id]["coords"]
-                        ]
-                        for rot in range(4)
-                    }
-                pieces_dict_copy[size][piece_id]["max_y_coord"] = {
-                    rot: np.max([coord[1] for coord in coords])
-                    for rot, coords in pieces_dict_copy[size][piece_id][
-                        "coords"
-                    ].items()
-                }
-                pieces_dict_copy[size][piece_id]["min_y_coord"] = {
-                    rot: np.min([coord[1] for coord in coords])
-                    for rot, coords in pieces_dict_copy[size][piece_id][
-                        "coords"
-                    ].items()
-                }
-                pieces_dict_copy[size][piece_id]["max_x_coord"] = {
-                    rot: np.max([coord[0] for coord in coords])
-                    for rot, coords in pieces_dict_copy[size][piece_id][
-                        "coords"
-                    ].items()
-                }
-                pieces_dict_copy[size][piece_id]["min_x_coord"] = {
-                    rot: np.min([coord[0] for coord in coords])
-                    for rot, coords in pieces_dict_copy[size][piece_id][
-                        "coords"
-                    ].items()
-                }
-
-        self._all_pieces_info = Pieces(pieces_dict_copy[piece_size])
-        (
-            self._current_piece_info,
-            self._current_piece_id,
-        ) = self._all_pieces_info._get_piece_info_at_random()
-        self._last_move_info = {}
-
-        self._get_all_available_actions()
-        self._reset()
-
-        # Initialise attributes for saving GIFs.
-        self._image_lst = []
-        self._save_frame = True
 
     @staticmethod
     def _get_bgr_code(colour_name: str) -> Tuple[float, float, float]:
@@ -196,6 +62,86 @@ class SimplifiedTetrisEngine:
         cv.destroyAllWindows()
         cv.waitKey(1)
 
+    def __init__(
+        self,
+        grid_dims: Sequence[int],
+        piece_size: int,
+        num_pieces: int,
+        num_actions: int,
+    ):
+        self._height, self._width = grid_dims
+        self._piece_size = piece_size
+        self._num_pieces = num_pieces
+        self._num_actions = num_actions
+
+        self._grid = np.zeros((grid_dims[1], grid_dims[0]), dtype="bool")
+        self._colour_grid = np.zeros((grid_dims[1], grid_dims[0]), dtype="int")
+        self._anchor = [grid_dims[1] / 2 - 1, piece_size - 1]
+        self._rotation = 0
+
+        self._final_scores = np.array([], dtype=int)
+        self._sleep_time = 500
+        self._show_agent_playing = True
+        self._cell_size = int(min(0.8 * 1000 / grid_dims[0], 0.8 * 2000 / grid_dims[1]))
+        self._left_space = 400
+        self._black: tuple = self._get_bgr_code("black")
+        self._white: tuple = self._get_bgr_code("white")
+        self._red: tuple = self._get_bgr_code("red")
+        self._grid_colours: list = [
+            self._white,  # Empty.
+            self._get_bgr_code("cyan"),  # 'I'.
+            self._get_bgr_code("orange"),  # 'L'.
+            self._get_bgr_code("yellow"),  #  'O'.
+            self._get_bgr_code("purple"),  # 'T'.
+            self._get_bgr_code("blue"),  # 'J'.
+            self._get_bgr_code("green"),  # 'S'.
+            self._red,  # 'Z'.
+        ]
+
+        self._img = np.array([])
+
+        # Initialise the piece coordinates.
+        pieces_dict_copy = deepcopy(self.PIECES_DICT[piece_size])
+        for piece_id, piece_dict in pieces_dict_copy.items():
+
+            if piece_size > 2:
+                piece_dict["coords"] = {
+                    90
+                    * rot: [
+                        tuple([((-1) ** rot) * coord[rot % 2], coord[(rot + 1) % 2]])
+                        for coord in piece_dict["coords"]
+                    ]
+                    for rot in range(4)
+                }
+
+            for count in range(4):
+                coord_string = [
+                    "max_y_coord",
+                    "min_y_coord",
+                    "max_x_coord",
+                    "min_x_coord",
+                ][count]
+                func = np.max if count % 2 == 0 else np.min
+                idx = 1 if count < 2 else 0
+
+                piece_dict[coord_string] = {
+                    rot: func([coord[idx] for coord in coords])
+                    for rot, coords in piece_dict["coords"].items()
+                }
+
+        self._all_pieces_info = Pieces(pieces_dict_copy)
+        (
+            self._current_piece_info,
+            self._current_piece_id,
+        ) = self._all_pieces_info._get_piece_info_at_random()
+        self._last_move_info = {}
+
+        self._get_all_available_actions()
+        self._reset()
+
+        self._image_lst = []
+        self._save_frame = True
+
     def _reset(self) -> None:
         """Resets the score, grid, piece coords, piece id and anchor."""
         self._score = 0
@@ -213,19 +159,10 @@ class SimplifiedTetrisEngine:
         :return: the image pixel values.
         """
 
-        # Get the grid after dropping the current piece.
         grid = self._get_grid()
-
-        # Convert grid into Image object then into an array.
         self._resize_grid(grid)
-
-        # Draw horizontal and vertical lines between the cells.
         self._draw_separating_lines()
-
-        # Add image to the left.
         self._add_img_left()
-
-        # Draws a horizontal red line to indicate the top of the playfield.
         self._draw_boundary()
 
         if mode == "human":
@@ -235,7 +172,7 @@ class SimplifiedTetrisEngine:
                     frame_rgb = cv.cvtColor(self._img, cv.COLOR_BGR2RGB)
                     self._image_lst.append(frame_rgb)
 
-                    if self._score == 20:  # len(self._final_scores) == 4:
+                    if self._score == 20:
                         imageio.mimsave(
                             f"assets/{self._height}x{self._width}_{self._piece_size}_heuristic.gif",
                             self._image_lst,
@@ -247,7 +184,6 @@ class SimplifiedTetrisEngine:
                 cv.imshow("Simplified Tetris", self._img)
                 k = cv.waitKey(self._sleep_time)
 
-                # Escape to exit, spacebar to pause and resume.
                 if k == 3:  # right arrow
                     self._sleep_time -= 100
 
@@ -272,10 +208,10 @@ class SimplifiedTetrisEngine:
                             self._show_agent_playing = False
                             self._close()
                             break
-
+        elif mode == "rgb_array":
             return self._img
-
-        raise ValueError('Mode should be "human".')
+        else:
+            raise ValueError('Mode should be "human".')
 
     def _draw_boundary(self) -> None:
         """Draws a horizontal red line to indicate the cut off point."""
@@ -285,9 +221,9 @@ class SimplifiedTetrisEngine:
             - int(self._cell_size / 40) : vertical_position
             + int(self._cell_size / 40)
             + 1,
-            self._LEFT_SPACE :,
+            self._left_space :,
             :,
-        ] = self._RED
+        ] = self._red
 
     def _get_grid(self) -> np.ndarray:
         """
@@ -296,7 +232,7 @@ class SimplifiedTetrisEngine:
         :return: the array of the current grid.
         """
         grid = [
-            [self._GRID_COLOURS[self._colour_grid[j][i]] for j in range(self._width)]
+            [self._grid_colours[self._colour_grid[j][i]] for j in range(self._width)]
             for i in range(self._height)
         ]
         return np.array(grid)
@@ -316,29 +252,28 @@ class SimplifiedTetrisEngine:
         self._img = np.array(self._img)
 
     def _draw_separating_lines(self) -> None:
-        """Draws the horizontal and vertical _BLACK lines to separate the grid's cells."""
+        """
+        Draws the horizontal and vertical _black lines to separate the grid's cells.
+        """
         for j in range(-int(self._cell_size / 40), int(self._cell_size / 40) + 1):
             self._img[
                 [i * self._cell_size + j for i in range(self._height)], :, :
-            ] = self._BLACK
+            ] = self._black
             self._img[
                 :, [i * self._cell_size + j for i in range(self._width)], :
-            ] = self._BLACK
+            ] = self._black
 
     def _add_img_left(self) -> None:
         """
         Adds the image that will appear to the left of the grid.
         """
         img_array = np.zeros(
-            (self._height * self._cell_size, self._LEFT_SPACE, 3)
+            (self._height * self._cell_size, self._left_space, 3)
         ).astype(np.uint8)
-
-        # Calculate the mean score.
         mean_score = (
             0.0 if len(self._final_scores) == 0 else np.mean(self._final_scores)
         )
 
-        # Add statistics.
         self._add_statistics(
             img_array=img_array,
             items=[
@@ -366,10 +301,7 @@ class SimplifiedTetrisEngine:
         self._img = np.concatenate((img_array, self._img), axis=1)
 
     def _add_statistics(
-        self,
-        img_array: np.ndarray,
-        items: List[List[str]],
-        x_offsets: List[int],
+        self, img_array: np.ndarray, items: List[List[str]], x_offsets: List[int]
     ) -> None:
         """
         Adds statistics to the array provided.
@@ -386,7 +318,7 @@ class SimplifiedTetrisEngine:
                     (x_offsets[i], 60 * (count + 1)),
                     cv.FONT_HERSHEY_SIMPLEX,
                     1,
-                    self._WHITE,
+                    self._white,
                     2,
                     cv.LINE_AA,
                 )
@@ -410,18 +342,18 @@ class SimplifiedTetrisEngine:
         > https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/
         engine.py
 
-        :return: whether the piece's current position is legal.
+        :return: whether the piece's current position is illegal.
         """
 
         # Loop over each of the piece's blocks.
         for i, j in self._current_piece_info["coords"][self._rotation]:
             x_pos, y_pos = self._anchor[0] + i, self._anchor[1] + j
 
-            # Don't check if illegal move if block is too high.
+            # Don't check if the move is illegal when the block is too high.
             if y_pos < 0:
                 continue
 
-            # Check if illegal move. Last condition must come after previous conditions.
+            # Check if the move is illegal. The last condition must come after the previous conditions.
             if (
                 x_pos < 0
                 or x_pos >= self._width
@@ -473,10 +405,9 @@ class SimplifiedTetrisEngine:
 
         self._last_move_info["eliminated_num_blocks"] = 0
 
-        # Starts from bottom row.
         for row_num in range(self._height - 1, self._piece_size - 1, -1):
 
-            if not can_clear[row_num - self._piece_size]:  # Unable to clear.
+            if not can_clear[row_num - self._piece_size]:
                 new_grid[:, col] = self._grid[:, row_num]
                 new_colour_grid[:, col] = self._colour_grid[:, row_num]
                 col -= 1
@@ -487,10 +418,7 @@ class SimplifiedTetrisEngine:
 
         self._grid = new_grid
         self._colour_grid = new_colour_grid
-
         num_rows_cleared = sum(can_clear)
-
-        # Update the last move info.
         self._last_move_info["num_rows_cleared"] = num_rows_cleared
 
         return num_rows_cleared
@@ -571,18 +499,14 @@ class SimplifiedTetrisEngine:
 
             for translation in range(abs(min_x_coord), self._width - max_x_coord):
 
-                # This ensures that no more than self._num_actions are returned.
                 if count == self._num_actions:
                     return available_actions
 
                 self._anchor = [translation, 0]
-
                 self._hard_drop()
+
                 self._update_grid(True)
-
-                # Update available_actions with translation/rotation tuple.
                 available_actions[count] = (translation, self._rotation)
-
                 self._update_grid(False)
 
                 count += 1
@@ -595,15 +519,12 @@ class SimplifiedTetrisEngine:
 
         :return: a list of the Dellacherie feature values.
         """
-        # Initialise the arrays of weights and scores.
         weights = np.array([-1, 1, -1, -1, -4, -1], dtype="double")
-        all_scores = np.empty((self._num_actions), dtype="double")
+        dellacherie_scores = np.empty((self._num_actions), dtype="double")
 
-        # Loop over every available action.
         for action, (translation, self._rotation) in self._all_available_actions[
             self._current_piece_id
         ].items():
-            # Create a copy to revert back to.
             old_grid = deepcopy(self._grid)
             old_anchor = deepcopy(self._anchor)
 
@@ -612,20 +533,17 @@ class SimplifiedTetrisEngine:
             self._hard_drop()
             self._update_grid(True)
 
-            # Find the six feature values.
             scores = np.empty((6), dtype="double")
             for count, feature_func in enumerate(self._get_dellacherie_funcs()):
                 scores[count] = feature_func()
 
-            # Compute the heuristic score.
-            all_scores[action] = np.dot(scores, weights)
+            dellacherie_scores[action] = np.dot(scores, weights)
 
-            # Revert back.
             self._update_grid(False)
             self._anchor = deepcopy(old_anchor)
             self._grid = deepcopy(old_grid)
 
-        return all_scores
+        return dellacherie_scores
 
     def _get_dellacherie_funcs(self) -> list:
         """
@@ -720,11 +638,9 @@ class SimplifiedTetrisEngine:
         """
         Cumulative wells is defined here: https://arxiv.org/abs/1905.01652.
 
-        For each well, find the depth of the well, d(w), then calculate the sum from i=1
-        to d(w) of i. Lastly, sum the well sums.
+        For each well, find the depth of the well, d(w), then calculate the sum from i=1 to d(w) of i. Lastly, sum the well sums.
 
-        A block is part of a well if the cells directly on either side are full,
-        and the block can be reached from above (there are no full cells directly above it).
+        A block is part of a well if the cells directly on either side are full, and the block can be reached from above (there are no full cells directly above it).
 
         :return: cumulative wells.
         """
@@ -733,18 +649,18 @@ class SimplifiedTetrisEngine:
         new_grid = np.ones((self._width + 2, self._height + 1), dtype="bool")
         new_grid[1:-1, :-1] = self._grid
 
-        for col in range(1, self._width + 1):  # Iterate over the columns.
+        for col in range(1, self._width + 1):
 
             depth = 1
             well_complete = False
 
-            for row in range(self._height):  # Iterate over the rows.
+            for row in range(self._height):
 
                 cell_mid = new_grid[col][row]
                 cell_right = new_grid[col + 1][row]
                 cell_left = new_grid[col - 1][row]
 
-                if cell_mid >= 1:  # Full cell.
+                if cell_mid >= 1:
                     well_complete = True
 
                 # Checks either side to see if the cells are occupied.

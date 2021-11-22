@@ -1,13 +1,12 @@
-from tqdm import tqdm
-import numpy as np
 import gym
-from gym_simplifiedtetris.agents.q_learning import QLearningAgent
+import numpy as np
+from tqdm import tqdm
+
+from ..agents.q_learning import QLearningAgent
 
 
 def train_q_learning(
-    env: gym.Env,
-    agent: QLearningAgent,
-    num_eval_timesteps: int,
+    env: gym.Env, agent: QLearningAgent, num_eval_timesteps: int
 ) -> QLearningAgent:
     """
     Trains and evaluates a Q-learning agent on the SimplifiedTetris environment.
@@ -23,23 +22,16 @@ def train_q_learning(
 
     obs = env.reset()
 
-    for time_step in tqdm(
-        range(num_eval_timesteps), desc="No. of time steps completed"
-    ):
+    for _ in tqdm(range(num_eval_timesteps), desc="No. of time steps completed"):
 
         action = agent.predict(obs)
 
         next_obs, reward, done, info = env.step(action)
 
-        agent.learn(
-            reward=reward,
-            obs=obs,
-            next_obs=next_obs,
-            action=action,
-        )
+        agent.learn(reward=reward, obs=obs, next_obs=next_obs, action=action)
         ep_return += info["num_rows_cleared"]
 
-        # Epislon annealing.
+        # Epsilon annealing.
         agent.epsilon -= 1 / (num_eval_timesteps)
 
         if done:

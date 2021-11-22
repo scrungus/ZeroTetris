@@ -9,27 +9,31 @@ from gym.utils import seeding
 class SimplifiedTetrisBaseEnv(gym.Env):
     """
     A class representing a simplified Tetris base environment, which ensures that all
-    custom envs inherit from gym.Env and implement the required methods and spaces.
+    custom envs inherit from gym.Env and implement the essential methods and spaces.
 
     :param grid_dims: the grid dimensions.
     :param piece_size: the size of every piece.
     :param seed: the rng seed.
     """
 
-    metadata = {"render.modes": ["human"]}
+    metadata = {"render.modes": ["human", "rgb_array"]}
+    reward_range = (0, 4)
 
     def __init__(
-        self,
-        grid_dims: Sequence[int],
-        piece_size: int,
-        seed: Optional[int] = 8191,
+        self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
     ):
+        if not isinstance(grid_dims, (list, tuple)) or len(grid_dims) != 2:
+            raise TypeError(
+                "Inappropriate format provided for grid_dims. It should be [int, int] or (int, int)."
+            )
+
         assert piece_size in [
             1,
             2,
             3,
             4,
-        ], "Size of piece should be either 1, 2, 3, or 4."
+        ], "piece_size should be either 1, 2, 3, or 4."
+
         assert grid_dims[0] in list(
             range(piece_size + 1, 21)
         ), "Height must be an integer in the interval [piece_size + 1, 20]"
@@ -46,9 +50,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
             3: (4 * grid_dims[1] - 4, 2),
             4: (4 * grid_dims[1] - 6, 7),
         }[piece_size]
-        self._REWARD_RANGE = (0, 4)
 
-        # Seed the rng.
         self._seed(seed=seed)
 
     def reset(self) -> np.array:
@@ -71,21 +73,12 @@ class SimplifiedTetrisBaseEnv(gym.Env):
     def action_space(self):
         raise NotImplementedError()
 
-    @property
     @abstractmethod
-    def observation_space(self):
+    def _reset_(self):
         raise NotImplementedError()
 
     @abstractmethod
-    def _get_obs_(self):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _get_reward_(self):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _close_(self):
+    def _step_(self, action):
         raise NotImplementedError()
 
     @abstractmethod
@@ -93,9 +86,13 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         raise NotImplementedError()
 
     @abstractmethod
-    def _reset_(self):
+    def _close_(self):
         raise NotImplementedError()
 
     @abstractmethod
-    def _step_(self, action):
+    def _get_reward(self):
+        raise NotImplementedError()
+
+    @abstractmethod
+    def _get_terminal_reward(self):
         raise NotImplementedError()

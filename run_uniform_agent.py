@@ -1,18 +1,20 @@
 import numpy as np
 import gym
 
-import gym_simplifiedtetris
+from gym_simplifiedtetris.agents import UniformAgent
 
 
 def main():
+    """
+    Run 10 games, selections actions uniformly at random.
+    """
     ep_returns = np.zeros(10)
 
     env = gym.make("simplifiedtetris-binary-v0")
-    agent = gym_simplifiedtetris.agents.UniformAgent(env._num_actions_)
+    agent = UniformAgent(env._num_actions_)
 
     obs = env.reset()
 
-    # Run 10 games of Tetris, selecting actions uniformly at random.
     num_episodes = 0
     while num_episodes < 10:
         env.render()
@@ -28,8 +30,7 @@ def main():
     env.close()
 
     print(
-        f"\nScore obtained from averaging over {num_episodes} "
-        f"games: {np.mean(ep_returns):.1f} +/- {np.std(ep_returns):.1f}"
+        f"""\nScore obtained from averaging over {num_episodes} games:\nMean = {np.mean(ep_returns):.1f}\nStandard deviation = {np.std(ep_returns):.1f}"""
     )
 
 

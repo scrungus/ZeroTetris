@@ -1,8 +1,9 @@
 from typing import Optional
+
 import numpy as np
 
 
-class QLearningAgent:
+class QLearningAgent(object):
     """
     A class representing a Q-learning agent.
 
@@ -25,16 +26,12 @@ class QLearningAgent:
         self._q_table = np.zeros((q_table_dims), dtype="double")
         self._num_actions = q_table_dims[-1]
 
-    def predict(
-        self,
-        obs: np.array,
-    ) -> int:
+    def predict(self, obs: np.array) -> int:
         """
         Returns an action whilst following an epsilon-greedy policy.
 
-        :param available_actions: the actions available to the agent.
         :param obs: a NumPy array containing the observation given to the agent by the env.
-        :return: an integer correspoding to the action chosen by the Q-learning agent.
+        :return: an integer corresponding to the action chosen by the Q-learning agent.
         """
 
         # Choose an action at random with probability epsilon.
@@ -45,11 +42,7 @@ class QLearningAgent:
         return np.argmax(self._q_table[tuple(obs)])
 
     def learn(
-        self,
-        reward: float,
-        obs: np.array,
-        next_obs: np.array,
-        action: int,
+        self, reward: float, obs: np.array, next_obs: np.array, action: int
     ) -> None:
         """
         Updates the Q-learning agent's Q-table.
@@ -60,9 +53,10 @@ class QLearningAgent:
         :param action: the action taken that generated next_obs.
         """
 
-        # Update the Q-table.
         current_obs_action = tuple(list(obs) + [action])
         max_q_value = np.max(self._q_table[tuple(next_obs)])
+
+        # Update the Q-table using the stored Q-value.
         self._q_table[current_obs_action] += self.alpha * (
             reward + self.gamma * max_q_value - self._q_table[current_obs_action]
         )

@@ -1,18 +1,17 @@
 import numpy as np
-
 from gym import spaces
 
-from gym_simplifiedtetris.envs.simplified_tetris_binary_env import (
-    SimplifiedTetrisBinaryEnv,
-)
-from gym_simplifiedtetris.register import register
+from ..register import register
+from .simplified_tetris_standard_env import SimplifiedTetrisStandardEnv
 
 
-class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBinaryEnv):
+class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisStandardEnv):
     """
-    A class representing a Tetris environment, where observation space is the
-    grid's binary representation excluding the top piece_size rows, plus the
-    current piece's id.
+    A class representing a Tetris environment, where the observation space is a flattened NumPy array containing the grid's binary representation excluding the top piece_size rows, plus the current piece's id.
+
+    :param grid_dims: the grid dimensions.
+    :param piece_size: the size of every piece.
+    :param seed: the rng seed.
     """
 
     @property
@@ -28,10 +27,9 @@ class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBinaryEnv):
             dtype=np.int,
         )
 
-    def _get_obs_(self) -> np.array:
+    def _get_obs(self) -> np.array:
         """
-        Gets the current observation, which is the grid's binary representation excluding the
-        top piece_size rows, plus the current piece's id.
+        Gets the current observation, which is a flattened NumPy array containing the grid's binary representation excluding the top piece_size rows, plus the current piece's id.
 
         :return: the current observation.
         """

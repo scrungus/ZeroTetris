@@ -10,8 +10,10 @@
   </a>
   <a href="https://github.com/psf/black">
     <img src="https://img.shields.io/badge/code%20style-black-000000.svg">
-  </a href="https://www.python.org/">
+  </a>
+  <a href="https://www.python.org/">
   <img src="https://img.shields.io/pypi/pyversions/gym-simplifiedtetris">
+  </a>
   <a href="/LICENSE.md">
     <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetris?color=red">
   </a>
@@ -23,7 +25,7 @@
   </a>
   <a href="https://twitter.com/intent/tweet?text=Conduct%20AI%20research%20using%20simplified%20Tetris%20environments%20conforming%20to%20OpenAI%20Gym's%20API&url=https://github.com/OliverOverend/gym-simplifiedtetris&via=OllyOverend10&hashtags=tetris,reinforcementlearning,openaigym">
   <img src="https://img.shields.io/twitter/url/http/shields.io.svg?style=social">
-  </a> 
+  </a>
 </p>
 
 <p align="center">
@@ -36,9 +38,9 @@
 
 ---
 
-> 🟥 Research into AI using simplified Tetris environments conforming to OpenAI Gym's API
+> 🟥 Research into AI using simplified Tetris environments compliant with OpenAI Gym's API
 
-_Gym-SimplifiedTetris_ is a pip installable package capable of creating simplified Tetris environments for AI research (more specifically reinforcement learning), which conform to the [OpenAI Gym](https://github.com/openai/gym) API. The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
+_Gym-SimplifiedTetris_ is a pip installable package capable of creating simplified Tetris environments for AI research (more specifically reinforcement learning), which are compliant with [OpenAI Gym's API](https://github.com/openai/gym). The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
 
 This README provides some help with the setup, gives an overview of the environments and agents and how to use them, and describes how to build more environments.
 
@@ -101,26 +103,26 @@ Here is a list of dependencies:
 
 ### 1.2. Usage
 
-The file [example.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/example.py) shows an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
+The file [examples.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/examples.py) shows two examples of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
 
 ```python
 import gym
 
 import gym_simplifiedtetris
 
-env = gym.make('simplifiedtetris-binary-v0')
+env = gym.make("simplifiedtetris-binary-v0")
 obs = env.reset()
 
 # Run 10 games of Tetris, selecting actions uniformly at random.
-num_episodes = 0
-while num_episodes < 10:
+episode_num = 0
+while episode_num < 10:
     env.render()
     action = env.action_space.sample()
     obs, rwd, done, info = env.step(action)
 
     if done:
-        print(f"Episode {num_episodes + 1} has terminated.")
-        num_episodes += 1
+        print(f"Episode {episode_num + 1} has terminated.")
+        episode_num += 1
         obs = env.reset()
 
 env.close()
@@ -132,8 +134,7 @@ Alternatively, you can import the environment directly:
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
 env = Tetris(
-    grid_dims=(20, 10),
-    piece_size=4,
+    grid_dims=(20, 10), piece_size=4
 )
 ```
 
@@ -141,11 +142,12 @@ env = Tetris(
 
 ### 2.1. Available environments
 
-There are three environments provided:
+There are four environments provided:
 
 - `simplifiedtetris-binary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID. A reward of +1 is given for each line cleared, and 0 otherwise
 - `simplifiedtetris-partbinary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID. A reward of +1 is given for each line cleared, and 0 otherwise
 - `simplifiedtetris-binary-shaped-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID. The reward function is a potential-based reward function based on the _holes_ feature
+- `simplifiedtetris-partbinary-shaped-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID. The reward function is a potential-based reward function based on the _holes_ feature
 
 ### 2.2. Methods
 
@@ -222,7 +224,7 @@ Each game of Tetris terminates if the following condition is satisfied: any of t
 
 ### 2.6. Building more environments
 
-The user can implement more custom Gym environments with different observation spaces and reward functions easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBinaryEnv` and are registered using:
+The user can implement more custom Gym environments with different observation spaces and reward functions easily. To add more environments to `gym_simplifiedtetris.register.env_list`, ensure that they inherit from `SimplifiedTetrisBaseEnv` and are registered using:
 
 ```python
 >>> register(
@@ -235,7 +237,7 @@ The user can implement more custom Gym environments with different observation s
 
 ### 3.1. Uniform
 
-The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects actions uniformly at random. See [run_uniform.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_uniform.py) for an example of how to use the uniform agent.
+The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects actions uniformly at random. See [run_uniform_agent.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_uniform_agent.py) for an example of how to use the uniform agent.
 
 <p align="center">
     <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/20x10_4.gif" width="500">
@@ -243,9 +245,9 @@ The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects act
 
 ### 3.2. Q-learning
 
-The Q-learning agent implemented by `gym_simplifiedtetris.QLearningAgent` selects the action with the highest Q-value (state-action value). Note that this agent struggles to learn as the grid's dimensions are increased (the size of the state-action space becomes too large).
+The Q-learning agent implemented by `gym_simplifiedtetris.QLearningAgent` selects the action with the highest Q-value (state-action value). The exploration rate parameter, epsilon, is linearly annealed over the training period. Note that this agent struggles to learn as the grid's dimensions are increased (the size of the state-action space becomes too large).
 
-See [run_q_learning.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_q_learning.py) for an example of how to use the Q-learning agent.
+See [run_q_learning_agent.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_q_learning_agent.py) for an example of how to use the Q-learning agent.
 
 <p align="center">
     <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/7x4_3_q_learning.gif" width="500">
@@ -253,13 +255,13 @@ See [run_q_learning.py](https://github.com/OliverOverend/gym-simplifiedtetris/bl
 
 ### 3.3. Heuristic
 
-The heuristic agent implemented by `gym_simplifiedtetris.DellacherieAgent` selects the action with the highest heuristic score, based on the [Dellacherie feature set](https://arxiv.org/abs/1905.01652). 
+The heuristic agent implemented by `gym_simplifiedtetris.HeuristicAgent` selects the action with the highest heuristic score, based on the [Dellacherie feature set](https://arxiv.org/abs/1905.01652).
 
 The heuristic score for each possible action is computed using the following heuristic:
 
 ***- landing height + eroded cells - row transitions - column transitions -4 x holes - cumulative wells***
 
-See [run_heuristic.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_heuristic.py) for an example of how to use the heuristic agent.
+See [run_heuristic_agent.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_heuristic_agent.py) for an example of how to use the heuristic agent.
 
 <p align="center">
     <img src="assets/20x10_4_heuristic.gif" width="500">

@@ -3,9 +3,9 @@
 Here are some ways you can contribute:
 - Submitting bug reports and feature requests
 - Improving documentation
-- Contributing code to fix issues or implement requested features. 
+- Contributing code to fix issues or implement requested features.
 
-If you are unsure how to start, please refer to [this][Getting started] helpful guide. Please ensure that all contributions follow the code of conduct laid out in [```CODE_OF_CONDUCT.md```][CODE_OF_CONDUCT]. Questions should be submitted [here](https://github.com/OliverOverend/gym-simplifiedtetris/discussions/new).
+Please ensure that all contributions follow the code of conduct laid out in [```CODE_OF_CONDUCT.md```][CODE_OF_CONDUCT]. Questions should be submitted [here](https://github.com/OliverOverend/gym-simplifiedtetris/discussions/new).
 
 ## Feature requests
 

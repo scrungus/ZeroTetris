@@ -1,18 +1,18 @@
 import numpy as np
 
-from gym_simplifiedtetris.agents import DellacherieAgent
+from gym_simplifiedtetris.agents.heuristic import HeuristicAgent
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
 
 def main():
+    """
+    Evaluates an agents that selects action according to a heuristic.
+    """
     num_episodes = 10
     ep_returns = np.zeros(num_episodes)
 
-    agent = DellacherieAgent()
-    env = Tetris(
-        grid_dims=(6, 10),
-        piece_size=4,
-    )
+    agent = HeuristicAgent()
+    env = Tetris(grid_dims=(6, 10), piece_size=4)
     obs = env.reset()
 
     episode_num = 0
@@ -33,8 +33,7 @@ def main():
     env.close()
 
     print(
-        f"\nScore obtained from averaging over {num_episodes} "
-        f"games: {np.mean(ep_returns):.1f} +/- {np.std(ep_returns):.1f}"
+        f"""\nScore obtained from averaging over {num_episodes} games:\nMean = {np.mean(ep_returns):.1f}\nStandard deviation = {np.std(ep_returns):.1f}"""
     )
 
 
