@@ -103,7 +103,7 @@ Here is a list of dependencies:
 
 ### 1.2. Usage
 
-The file [example.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/example.py) shows an example of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
+The file [examples.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/examples.py) shows two examples of using an instance of the `simplifiedtetris-binary-v0` environment for ten games:
 
 ```python
 import gym
@@ -237,7 +237,7 @@ The user can implement more custom Gym environments with different observation s
 
 ### 3.1. Uniform
 
-The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects actions uniformly at random. See [run_uniform.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_uniform.py) for an example of how to use the uniform agent.
+The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects actions uniformly at random. See [run_uniform_agent.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_uniform_agent.py) for an example of how to use the uniform agent.
 
 <p align="center">
     <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/20x10_4.gif" width="500">
@@ -247,7 +247,7 @@ The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects act
 
 The Q-learning agent implemented by `gym_simplifiedtetris.QLearningAgent` selects the action with the highest Q-value (state-action value). The exploration rate parameter, epsilon, is linearly annealed over the training period. Note that this agent struggles to learn as the grid's dimensions are increased (the size of the state-action space becomes too large).
 
-See [run_q_learning.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_q_learning.py) for an example of how to use the Q-learning agent.
+See [run_q_learning_agent.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_q_learning_agent.py) for an example of how to use the Q-learning agent.
 
 <p align="center">
     <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/7x4_3_q_learning.gif" width="500">
@@ -261,7 +261,7 @@ The heuristic score for each possible action is computed using the following heu
 
 ***- landing height + eroded cells - row transitions - column transitions -4 x holes - cumulative wells***
 
-See [run_heuristic.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_heuristic.py) for an example of how to use the heuristic agent.
+See [run_heuristic_agent.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_heuristic_agent.py) for an example of how to use the heuristic agent.
 
 <p align="center">
     <img src="assets/20x10_4_heuristic.gif" width="500">
