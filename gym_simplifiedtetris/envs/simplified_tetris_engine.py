@@ -139,9 +139,6 @@ class SimplifiedTetrisEngine(object):
         self._get_all_available_actions()
         self._reset()
 
-        self._image_lst = []
-        self._save_frame = True
-
     def _reset(self) -> None:
         """Resets the score, grid, piece coords, piece id and anchor."""
         self._score = 0
@@ -167,19 +164,6 @@ class SimplifiedTetrisEngine(object):
 
         if mode == "human":
             if self._show_agent_playing:
-
-                if self._save_frame:
-                    frame_rgb = cv.cvtColor(self._img, cv.COLOR_BGR2RGB)
-                    self._image_lst.append(frame_rgb)
-
-                    if self._score == 20:
-                        imageio.mimsave(
-                            f"assets/{self._height}x{self._width}_{self._piece_size}_heuristic.gif",
-                            self._image_lst,
-                            fps=60,
-                            duration=0.5,
-                        )
-                        self._save_frame = False
 
                 cv.imshow("Simplified Tetris", self._img)
                 k = cv.waitKey(self._sleep_time)

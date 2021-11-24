@@ -8,8 +8,7 @@ from gym.utils import seeding
 
 class SimplifiedTetrisBaseEnv(gym.Env):
     """
-    A class representing a simplified Tetris base environment, which ensures that all
-    custom envs inherit from gym.Env and implement the essential methods and spaces.
+    A class representing a simplified Tetris base environment, which ensures that all custom envs inherit from gym.Env and implement the essential methods and spaces.
 
     :param grid_dims: the grid dimensions.
     :param piece_size: the size of every piece.

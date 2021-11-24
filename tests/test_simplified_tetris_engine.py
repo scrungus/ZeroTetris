@@ -6,39 +6,53 @@ import numpy as np
 from gym_simplifiedtetris.envs import SimplifiedTetrisEngine as Engine
 
 
-class SimplifiedTetrisEngineTrominoesTest(unittest.TestCase):
+class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
     def setUp(self) -> None:
         self._I_piece_ = {
             "coords": {
-                0: [(0, 0), (0, -1), (0, -2)],
-                90: [(0, 0), (1, 0), (2, 0)],
-                180: [(0, 0), (0, -1), (0, -2)],
-                270: [(0, 0), (1, 0), (2, 0)],
+                0: [(0, 0), (0, -1), (0, -2), (0, -3)],
+                90: [(0, 0), (1, 0), (2, 0), (3, 0)],
+                180: [(0, 0), (0, -1), (0, -2), (0, -3)],
+                270: [(0, 0), (1, 0), (2, 0), (3, 0)],
             },
             "max_y_coord": {0: 0, 90: 0, 180: 0, 270: 0},
-            "min_y_coord": {0: -2, 90: 0, 180: -2, 270: 0},
-            "max_x_coord": {0: 0, 90: 2, 180: 0, 270: 2},
+            "min_y_coord": {0: -3, 90: 0, 180: -3, 270: 0},
+            "max_x_coord": {0: 0, 90: 3, 180: 0, 270: 3},
             "min_x_coord": {0: 0, 90: 0, 180: 0, 270: 0},
             "name": "I",
         }
 
+        self._O_piece_ = {
+            "coords": {
+                0: [(0, 0), (0, -1), (-1, 0), (-1, -1)],
+                90: [(0, 0), (1, 0), (0, -1), (1, -1)],
+                180: [(0, 0), (0, 1), (1, 0), (1, 1)],
+                270: [(0, 0), (-1, 0), (0, 1), (-1, 1)],
+            },
+            "max_y_coord": {0: 0, 90: 0, 180: 1, 270: 1},
+            "min_y_coord": {0: -1, 90: -1, 180: 0, 270: 0},
+            "max_x_coord": {0: 0, 90: 1, 180: 1, 270: 0},
+            "min_x_coord": {0: -1, 90: 0, 180: 0, 270: -1},
+            "name": "O",
+        }
+
         self._L_piece_ = {
             "coords": {
-                0: [(0, 0), (1, 0), (0, -1)],
-                90: [(0, 0), (0, 1), (1, 0)],
-                180: [(0, 0), (-1, 0), (0, 1)],
-                270: [(0, 0), (0, -1), (-1, 0)],
+                0: [(0, 0), (1, 0), (0, -1), (0, -2)],
+                90: [(0, 0), (0, 1), (1, 0), (2, 0)],
+                180: [(0, 0), (-1, 0), (0, 1), (0, 2)],
+                270: [(0, 0), (0, -1), (-1, 0), (-2, 0)],
             },
-            "max_y_coord": {0: 0, 90: 1, 180: 1, 270: 0},
-            "min_y_coord": {0: -1, 90: 0, 180: 0, 270: -1},
-            "max_x_coord": {0: 1, 90: 1, 180: 0, 270: 0},
-            "min_x_coord": {0: 0, 90: 0, 180: -1, 270: -1},
+            "max_y_coord": {0: 0, 90: 1, 180: 2, 270: 0},
+            "min_y_coord": {0: -2, 90: 0, 180: 0, 270: -1},
+            "max_x_coord": {0: 1, 90: 2, 180: 0, 270: 0},
+            "min_x_coord": {0: 0, 90: 0, 180: -1, 270: -2},
             "name": "L",
         }
         self._height_ = 20
         self._width_ = 10
-        self._piece_size_ = 3
-        self._num_actions_, self._num_pieces_ = (4 * self._width_ - 4, 2)
+        self._piece_size_ = 4
+        self._num_actions_, self._num_pieces_ = (4 * self._width_ - 6, 7)
 
         self._engine = Engine(
             grid_dims=(self._height_, self._width_),
@@ -53,12 +67,10 @@ class SimplifiedTetrisEngineTrominoesTest(unittest.TestCase):
 
     def test__get_bgr_code_orange(self) -> None:
         bgr_code_orange = self._engine._get_bgr_code("orange")
-
         self.assertEqual(bgr_code_orange, (0.0, 165.0, 255.0))
 
     def test__get_bgr_code_coral(self) -> None:
         bgr_code_coral = self._engine._get_bgr_code("coral")
-
         self.assertEqual(bgr_code_coral, (80.0, 127.0, 255.0))
 
     def test__is_illegal_L_piece_off_top(self) -> None:
@@ -88,7 +100,7 @@ class SimplifiedTetrisEngineTrominoesTest(unittest.TestCase):
 
     def test__is_illegal_L_piece_off_left(self) -> None:
         self._engine._current_piece_info = deepcopy(self._L_piece_)
-        self._engine._rotation = 90
+        self._engine._rotation = 180  # 'L' piece rotated 180
         self._engine._anchor = [0, self._engine._height - 1]  # Bottom left.
 
         self.assertEqual(self._engine._is_illegal(), True)
@@ -129,6 +141,7 @@ class SimplifiedTetrisEngineTrominoesTest(unittest.TestCase):
         self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
         self._engine._anchor = [0, 0]  # Top left.
+
         self._engine._grid[0, self._engine._height - 1] = 1  # Bottom left.
 
         self._engine._hard_drop()
@@ -140,6 +153,7 @@ class SimplifiedTetrisEngineTrominoesTest(unittest.TestCase):
 
     def test__clear_rows_empty_grid_after(self) -> None:
         self._engine._clear_rows()
+
         grid_after = np.zeros((self._engine._width, self._engine._height), dtype="bool")
 
         np.testing.assert_array_equal(self._engine._grid, grid_after)
@@ -151,7 +165,9 @@ class SimplifiedTetrisEngineTrominoesTest(unittest.TestCase):
 
     def test__clear_rows_one_full_row_grid_after(self) -> None:
         self._engine._grid[:, self._engine._height - 1 :] = 1
+
         self._engine._clear_rows()
+
         grid_after = np.zeros((self._engine._width, self._engine._height), dtype="bool")
 
         np.testing.assert_array_equal(self._engine._grid, grid_after)
@@ -163,7 +179,9 @@ class SimplifiedTetrisEngineTrominoesTest(unittest.TestCase):
 
     def test__clear_rows_two_full_rows_grid_after(self) -> None:
         self._engine._grid[:, self._engine._height - 2 :] = 1
+
         self._engine._clear_rows()
+
         grid_after = np.zeros((self._engine._width, self._engine._height), dtype="bool")
 
         np.testing.assert_array_equal(self._engine._grid, grid_after)
@@ -195,7 +213,7 @@ class SimplifiedTetrisEngineTrominoesTest(unittest.TestCase):
         grid_to_compare = np.zeros(
             (self._engine._width, self._engine._height), dtype="bool"
         )
-        grid_to_compare[0, self._engine._height - 3 :] = 1
+        grid_to_compare[0, self._engine._height - 4 :] = 1
 
         self._engine._update_grid(True)
 
@@ -220,7 +238,7 @@ class SimplifiedTetrisEngineTrominoesTest(unittest.TestCase):
         self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
 
-        self._engine._grid[0, self._engine._height - 3 :] = 1
+        self._engine._grid[0, self._engine._height - 4 :] = 1
         self._engine._anchor = [0, self._engine._height - 1]  # Bottom left.
         self._engine._current_piece_id = 0
 
@@ -233,23 +251,12 @@ class SimplifiedTetrisEngineTrominoesTest(unittest.TestCase):
         np.testing.assert_array_equal(self._engine._grid, grid_to_compare)
 
     def test__compute_available_actions(self) -> None:
-        self._engine._current_piece_info = deepcopy(self._I_piece_)
-        self._engine._rotation = 0
+        self._engine._current_piece_info = deepcopy(self._O_piece_)
         available_actions = self._engine._compute_available_actions()
-
-        # w actions
-        values = [(j, 0) for j in range(self._engine._width)]
-
-        # w-2 actions
-        values.extend([(j, 90) for j in range(self._engine._width - 2)])
-
-        # w actions
-        values.extend([(j, 180) for j in range(self._engine._width)])
-
-        # w-2 actions
-        values.extend([(j, 270) for j in range(self._engine._width - 2)])
-
-        # In total, there are 4w-4 actions
+        values = [(j, 0) for j in range(1, self._engine._width)]
+        values.extend([(j, 90) for j in range(self._engine._width - 1)])
+        values.extend([(j, 180) for j in range(self._engine._width - 1)])
+        values.extend([(j, 270) for j in range(1, self._engine._width)])
         dict_to_compare = {i: values[i] for i in range(self._engine._num_actions)}
 
         self.assertDictEqual(available_actions, dict_to_compare)
@@ -261,31 +268,9 @@ class SimplifiedTetrisEngineTrominoesTest(unittest.TestCase):
             self.assertEqual(self._engine._num_actions, len(value))
 
     def test__get_dellacherie_funcs(self) -> None:
-        """
-        0000000000
-        0000000000
-        0000000000
-        0000000000
-        0000000000
-        0000000000
-        0000000000
-        0000000000
-        0000000000
-        0000000000
-        0000000000
-        0000000000
-        1000000000
-        1000000000
-        1000000001
-        1011111111
-        1011111111
-        1011111011
-        1011111110
-        1111111101
-        """
         self._engine._grid[:, -5:] = True
         self._engine._grid[
-            1, self._engine._height - 5 : self._engine._height - 1
+            1:2, self._engine._height - 5 : self._engine._height - 1
         ] = False
         self._engine._grid[self._engine._width - 1, self._engine._height - 2] = False
         self._engine._grid[self._engine._width - 2, self._engine._height - 1] = False
@@ -306,10 +291,10 @@ class SimplifiedTetrisEngineTrominoesTest(unittest.TestCase):
             [func() for func in self._engine._get_dellacherie_funcs()]
         )
         np.testing.assert_array_equal(
-            array_to_compare, np.array([7, 0, 44, 16, 3, 10], dtype="double")
+            array_to_compare, np.array([7.5, 0, 44, 16, 3, 10], dtype="double")
         )
 
-    def test__get_landing_height_I_piece(self) -> None:
+    def test__get_landing_height_I_piece_(self) -> None:
         # 'I' piece vertical.
         self._engine._current_piece_info = deepcopy(self._I_piece_)
         self._engine._rotation = 0
@@ -318,30 +303,28 @@ class SimplifiedTetrisEngineTrominoesTest(unittest.TestCase):
 
         self._engine._update_grid(True)
 
-        self.assertEqual(self._engine._get_landing_height(), 2)
+        self.assertEqual(self._engine._get_landing_height(), 2.5)
 
     def test__get_landing_height_L_piece_(self) -> None:
-        # 'L' piece rotated 180
         self._engine._current_piece_info = deepcopy(self._L_piece_)
-        self._engine._rotation = 180
-        self._engine._anchor = [0, self._engine._height - 2]  # Bottom left.
+        self._engine._rotation = 180  # 'L' piece rotated 180
+        self._engine._anchor = [0, self._engine._height - 3]  # Bottom left.
         self._engine._current_piece_id = 1
 
         self._engine._update_grid(True)
 
-        self.assertEqual(self._engine._get_landing_height(), 1.5)
+        self.assertEqual(self._engine._get_landing_height(), 2)
 
     def test__get_landing_height_populated_grid(self) -> None:
-        # 'L' piece rotated 180
         self._engine._current_piece_info = deepcopy(self._L_piece_)
-        self._engine._rotation = 180
+        self._engine._rotation = 180  # 'L' piece rotated 180
         self._engine._grid[:, -1:] = 1
         self._engine._current_piece_id = 1
-        self._engine._anchor = [0, self._engine._height - 3]
+        self._engine._anchor = [0, self._engine._height - 4]
 
         self._engine._update_grid(True)
 
-        self.assertEqual(self._engine._get_landing_height(), 2.5)
+        self.assertEqual(self._engine._get_landing_height(), 3)
 
     def test__get_eroded_cells_empty(self) -> None:
         self.assertEqual(self._engine._get_eroded_cells(), 0)
