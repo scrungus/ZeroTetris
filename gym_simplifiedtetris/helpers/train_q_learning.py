@@ -17,7 +17,7 @@ def train_q_learning(
     """
 
     ep_return = 0
-    returns = np.array([], dtype=int)
+    ep_returns = np.array([], dtype=int)
     done = False
 
     obs = env.reset()
@@ -36,7 +36,7 @@ def train_q_learning(
 
         if done:
             obs = env.reset()
-            returns = np.append(returns, ep_return)
+            ep_returns = np.append(ep_returns, ep_return)
             done = False
             ep_return = 0
         else:

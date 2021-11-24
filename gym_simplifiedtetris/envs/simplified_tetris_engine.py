@@ -61,11 +61,12 @@ class SimplifiedTetrisEngine(object):
         self._sleep_time = 500
         self._show_agent_playing = True
         self._cell_size = int(min(0.8 * 1000 / grid_dims[0], 0.8 * 2000 / grid_dims[1]))
-        self._left_space = 400
-        self._black: tuple = self._get_bgr_code("black")
-        self._white: tuple = self._get_bgr_code("white")
-        self._red: tuple = self._get_bgr_code("red")
-        self._grid_colours: list = [
+        self._img = np.array([])
+        self._last_move_info = {}
+
+        self._black = self._get_bgr_code("black")
+        self._white = self._get_bgr_code("white")
+        self._grid_colours = [
             self._white,  # Empty.
             self._get_bgr_code("cyan"),  # 'I'.
             self._get_bgr_code("orange"),  # 'L'.
@@ -73,22 +74,23 @@ class SimplifiedTetrisEngine(object):
             self._get_bgr_code("purple"),  # 'T'.
             self._get_bgr_code("blue"),  # 'J'.
             self._get_bgr_code("green"),  # 'S'.
-            self._red,  # 'Z'.
+            self._get_bgr_code("red"),  # 'Z'.
         ]
 
-        self._pieces = {}
-        for idx in range(self._num_pieces):
-            self._pieces[idx] = Piece(piece_size, idx)
-
-        self._img = np.array([])
-        self._last_move_info = {}
-
+        self._initialise_pieces()
         self._update_coords_and_anchor()
         self._get_all_available_actions()
         self._reset()
 
-    def _generate_id_randomly(self):
+    def _generate_id_randomly(self) -> int:
+        """Randomly generates an id."""
         return random.randint(0, self._num_pieces - 1)
+
+    def _initialise_pieces(self) -> None:
+        """Creates a dictionary containing the pieces."""
+        self._pieces = {}
+        for idx in range(self._num_pieces):
+            self._pieces[idx] = Piece(self._piece_size, idx)
 
     def _reset(self) -> None:
         """Resets the score, grid, piece coords, piece id and anchor."""
@@ -156,9 +158,9 @@ class SimplifiedTetrisEngine(object):
             - int(self._cell_size / 40) : vertical_position
             + int(self._cell_size / 40)
             + 1,
-            self._left_space :,
+            400:,
             :,
-        ] = self._red
+        ] = self._get_bgr_code("red")
 
     def _get_grid(self) -> np.ndarray:
         """
@@ -202,9 +204,7 @@ class SimplifiedTetrisEngine(object):
         """
         Adds the image that will appear to the left of the grid.
         """
-        img_array = np.zeros(
-            (self._height * self._cell_size, self._left_space, 3)
-        ).astype(np.uint8)
+        img_array = np.zeros((self._height * self._cell_size, 400, 3)).astype(np.uint8)
         mean_score = (
             0.0 if len(self._final_scores) == 0 else np.mean(self._final_scores)
         )
@@ -268,11 +268,8 @@ class SimplifiedTetrisEngine(object):
         Checks if the piece's current position is illegal by looping over each
         of its square blocks.
 
-        Author:
-        > Andrean Lay
-        Source:
-        > https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/
-        engine.py
+        Author: Andrean Lay
+        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
 
         :return: whether the piece's current position is illegal.
         """
@@ -300,11 +297,8 @@ class SimplifiedTetrisEngine(object):
         """
         Finds the position to place the piece (the anchor) by hard dropping the current piece.
 
-        Author:
-        > Andrean Lay
-        Source:
-        > https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/
-        engine.py
+        Author: Andrean Lay
+        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
         """
         while True:
             # Keep going until current piece occupies a full cell, then backtrack once.
@@ -316,13 +310,10 @@ class SimplifiedTetrisEngine(object):
 
     def _clear_rows(self) -> int:
         """
-        Removes blocks from all rows that are full.
+        Removes blocks from every full row.
 
-        Author:
-        > Andrean Lay
-        Source:
-        > https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/
-        engine.py
+        Author: Andrean Lay
+        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
 
         :return: the number of rows cleared.
         """
@@ -359,11 +350,8 @@ class SimplifiedTetrisEngine(object):
         """
         Sets the current piece using the anchor.
 
-        Author:
-        > Andrean Lay
-        Source:
-        > https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/
-        engine.py
+        Author: Andrean Lay
+        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
 
         :param set_piece: whether to set the piece.
         """
@@ -410,11 +398,8 @@ class SimplifiedTetrisEngine(object):
         """
         Computes the actions that are available with the current piece.
 
-        Author:
-        > Andrean Lay
-        Source:
-        > https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/
-        engine.py
+        Author: Andrean Lay
+        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
 
         :return: the available actions.
         """
@@ -560,7 +545,7 @@ class SimplifiedTetrisEngine(object):
             while row < self._height and col[row] == 0:
                 row += 1
 
-            # Count the number of empty cells, below the first full cell.
+            # Count the number of empty cells below the first full cell.
             holes += len([x for x in col[row + 1 :] if x == 0])
 
         return holes
