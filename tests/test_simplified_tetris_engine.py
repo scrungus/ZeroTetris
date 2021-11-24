@@ -37,23 +37,11 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
         bgr_code_coral = self._engine._get_bgr_code("coral")
         self.assertEqual(bgr_code_coral, (80.0, 127.0, 255.0))
 
-    def test__is_illegal_L_piece_off_top(self) -> None:
-        self._engine._piece = Piece(self._piece_size_, 0)
-        self._engine._anchor = [0, 0]  # Top left.
-        self.assertEqual(self._engine._is_illegal(), False)
-
     def test__is_illegal_non_empty_overlapping(self) -> None:
         self._engine._piece = Piece(self._piece_size_, 0)
         self._engine._anchor = [0, self._engine._height - 1]  # Bottom left.
         self._engine._grid[0, self._engine._height - 1] = 1  # Bottom left
         self.assertEqual(self._engine._is_illegal(), True)
-
-    def test__is_illegal_L_piece_not_empty(self) -> None:
-        self._engine._piece = Piece(self._piece_size_, 0)
-        self._engine._anchor = [0, self._engine._height - 1]  # Bottom left.
-        # Second col from left
-        self._engine._grid[1, : self._engine._height - 1] = 1
-        self.assertEqual(self._engine._is_illegal(), False)
 
     def test__hard_drop_empty_grid(self) -> None:
         self._engine._piece = Piece(self._piece_size_, 0)
