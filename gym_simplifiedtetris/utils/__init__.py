@@ -1,3 +1,3 @@
-from .pieces import Pieces
+from .pieces import Piece
 
-__all__ = ["Pieces"]
+__all__ = ["Piece"]

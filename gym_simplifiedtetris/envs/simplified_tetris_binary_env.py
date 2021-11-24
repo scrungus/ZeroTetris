@@ -27,7 +27,7 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisStandardEnv):
 
     def _get_obs(self) -> np.array:
         current_grid = self._engine._grid.flatten()
-        return np.append(current_grid, self._engine._current_piece_id)
+        return np.append(current_grid, self._engine._piece._idx)
 
 
 register(

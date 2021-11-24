@@ -57,10 +57,11 @@ class SimplifiedTetrisStandardEnv(SimplifiedTetrisBaseEnv):
         """
         info = {}
 
-        translation, self._engine._rotation = self._engine._all_available_actions[
+        translation, rotation = self._engine._all_available_actions[
             self._get_obs()[-1]
         ][action]
 
+        self._engine._rotate_piece(rotation)
         self._engine._anchor = [translation, self._piece_size_ - 1]
 
         self._engine._hard_drop()
