@@ -37,5 +37,5 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     package_dir={"": "gym_simplifiedtetris"},
-    keywords="tetris, gym, openai-gym, reinforcement-learning, research",
+    keywords="tetris, gym, openai-gym, reinforcement-learning, research, reward-shaping",
 )

@@ -4,11 +4,14 @@ from typing import Dict, List, Tuple, Union
 
 import numpy as np
 
-PieceCoords = Union[List[Tuple[int, int]], Dict[int, List[Tuple[int, int]]]]
+PieceCoord = List[Tuple[int, int]]
+Rotation = int
+PieceCoords = Dict[Rotation, PieceCoord]
 PieceInfo = Dict[str, Union[PieceCoords, str]]
 PieceID = int
 PiecesInfo = Dict[PieceID, PieceInfo]
 PieceSize = int
+
 
 PIECES_DICT: Dict[PieceSize, PiecesInfo] = {
     1: {0: {"coords": {0: [(0, 0)]}, "name": "O"}},
@@ -101,7 +104,7 @@ PIECES_DICT: Dict[PieceSize, PiecesInfo] = {
 }
 
 
-def _generate_max_min(coord_string, coords):
+def _generate_max_min(coord_string: str, coords: PieceCoords):
     coord_strings = {
         "max_y_coord": {"func": np.max, "index": 1},
         "min_y_coord": {"func": np.min, "index": 1},
@@ -121,13 +124,13 @@ class Piece(object):
     _size: int
     _idx: int
     _rotation: int = 0
-    _all_coords: dict = field(init=False)
-    _coords: list = field(init=False)
+    _all_coords: PieceCoords = field(init=False)
+    _coords: PieceCoord = field(init=False)
     _name: str = field(init=False)
-    _max_y_coord: dict = field(init=False)
-    _min_y_coord: dict = field(init=False)
-    _max_x_coord: dict = field(init=False)
-    _min_x_coord: dict = field(init=False)
+    _max_y_coord: Dict[int, int] = field(init=False)
+    _min_y_coord: Dict[int, int] = field(init=False)
+    _max_x_coord: Dict[int, int] = field(init=False)
+    _min_x_coord: Dict[int, int] = field(init=False)
 
     def __post_init__(self):
         self._all_coords = deepcopy(PIECES_DICT[self._size][self._idx]["coords"])

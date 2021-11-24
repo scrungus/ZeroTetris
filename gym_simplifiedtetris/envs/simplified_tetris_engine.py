@@ -1,6 +1,6 @@
 import time
 from copy import deepcopy
-from typing import Dict, List, Optional, Sequence, Tuple, Union
+from typing import Dict, List, Optional, Sequence, Tuple
 
 import cv2.cv2 as cv
 import random
@@ -601,6 +601,7 @@ class SimplifiedTetrisEngine(object):
 
         return cumulative_wells
 
-    def _rotate_piece(self, rotation: int):
+    def _rotate_piece(self, rotation: int) -> None:
+        """Sets the piece's rotation and rotates the current piece."""
         self._piece._rotation = rotation
         self._piece._coords = self._piece._all_coords[self._piece._rotation]

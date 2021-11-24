@@ -15,7 +15,6 @@ class SimplifiedTetrisShapingReward(object):
 
         # The old potential is 1 because there are no holes at the start of a game.
         self.old_potential = 1
-
         self.initial_potential = self.old_potential
 
     def _get_reward(self) -> Tuple[float, int]:
@@ -26,12 +25,7 @@ class SimplifiedTetrisShapingReward(object):
         """
         num_lines_cleared = self._engine._clear_rows()
         heuristic_value = self._engine._get_holes()
-
-        if heuristic_value > self.heuristic_range["max"]:
-            self.heuristic_range["max"] = heuristic_value
-
-        if heuristic_value < self.heuristic_range["min"]:
-            self.heuristic_range["min"] = heuristic_value
+        self._update_range(heuristic_value)
 
         new_potential = np.clip(
             1
@@ -53,3 +47,12 @@ class SimplifiedTetrisShapingReward(object):
         terminal_shaping_reward = -self.old_potential
         self.old_potential = self.initial_potential
         return terminal_shaping_reward
+
+    def _update_range(self, heuristic_value: int) -> None:
+        """Update the heuristic range."""
+
+        if heuristic_value > self.heuristic_range["max"]:
+            self.heuristic_range["max"] = heuristic_value
+
+        if heuristic_value < self.heuristic_range["min"]:
+            self.heuristic_range["min"] = heuristic_value

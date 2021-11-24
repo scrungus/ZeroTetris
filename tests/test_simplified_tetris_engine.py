@@ -26,6 +26,7 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
         self._engine._reset()
 
     def tearDown(self) -> None:
+        self._engine._close()
         del self._engine
 
     def test__get_bgr_code_orange(self) -> None:
