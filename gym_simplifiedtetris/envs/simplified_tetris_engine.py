@@ -269,7 +269,7 @@ class SimplifiedTetrisEngine(object):
         of its square blocks.
 
         Author: Andrean Lay
-        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
+        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/42e11e98573edf0c5270d0cc33f1cf1bae3d9d49/src/engine.py#L23
 
         :return: whether the piece's current position is illegal.
         """
@@ -296,9 +296,6 @@ class SimplifiedTetrisEngine(object):
     def _hard_drop(self) -> None:
         """
         Finds the position to place the piece (the anchor) by hard dropping the current piece.
-
-        Author: Andrean Lay
-        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
         """
         while True:
             # Keep going until current piece occupies a full cell, then backtrack once.
@@ -313,24 +310,21 @@ class SimplifiedTetrisEngine(object):
         Removes blocks from every full row.
 
         Author: Andrean Lay
-        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
+        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/42e11e98573edf0c5270d0cc33f1cf1bae3d9d49/src/engine.py#L83
 
         :return: the number of rows cleared.
         """
 
-        can_clear = [
-            (self._grid[:, i + self._piece_size] != 0).all()
-            for i in range(self._height - self._piece_size)
-        ]
+        can_clear = np.all(self._grid, axis=0)
         new_grid = np.zeros_like(self._grid)
         new_colour_grid = np.zeros_like(self._colour_grid)
         col = self._height - 1
 
         self._last_move_info["eliminated_num_blocks"] = 0
 
-        for row_num in range(self._height - 1, self._piece_size - 1, -1):
+        for row_num in range(self._height - 1, -1, -1):
 
-            if not can_clear[row_num - self._piece_size]:
+            if not can_clear[row_num]:
                 new_grid[:, col] = self._grid[:, row_num]
                 new_colour_grid[:, col] = self._colour_grid[:, row_num]
                 col -= 1
@@ -341,6 +335,7 @@ class SimplifiedTetrisEngine(object):
 
         self._grid = new_grid
         self._colour_grid = new_colour_grid
+
         num_rows_cleared = sum(can_clear)
         self._last_move_info["num_rows_cleared"] = num_rows_cleared
 
@@ -350,26 +345,24 @@ class SimplifiedTetrisEngine(object):
         """
         Sets the current piece using the anchor.
 
-        Author: Andrean Lay
-        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
-
         :param set_piece: whether to set the piece.
         """
         self._last_move_info["rows_added_to"] = {
             row_num: 0 for row_num in range(self._height)
         }
         # Loop over each block.
-        for i, j in self._piece._coords:
-            y_coord = j + self._anchor[1]
+        for piece_x_coord, piece_y_coord in self._piece._coords:
+            x_coord, y_coord = (
+                piece_x_coord + self._anchor[0],
+                piece_y_coord + self._anchor[1],
+            )
             if set_piece:
                 self._last_move_info["rows_added_to"][y_coord] += 1
-                self._grid[self._anchor[0] + i, self._anchor[1] + j] = 1
-                self._colour_grid[self._anchor[0] + i, self._anchor[1] + j] = (
-                    self._piece._idx + 1
-                )
+                self._grid[x_coord, y_coord] = 1
+                self._colour_grid[x_coord, y_coord] = self._piece._idx + 1
             else:
-                self._grid[self._anchor[0] + i, self._anchor[1] + j] = 0
-                self._colour_grid[self._anchor[0] + i, self._anchor[1] + j] = 0
+                self._grid[x_coord, y_coord] = 0
+                self._colour_grid[x_coord, y_coord] = 0
 
         anchor_height = self._height - self._anchor[1]
         max_y_coord = self._piece._max_y_coord[self._piece._rotation]
@@ -399,7 +392,7 @@ class SimplifiedTetrisEngine(object):
         Computes the actions that are available with the current piece.
 
         Author: Andrean Lay
-        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
+        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/42e11e98573edf0c5270d0cc33f1cf1bae3d9d49/src/engine.py#L196
 
         :return: the available actions.
         """
@@ -537,7 +530,7 @@ class SimplifiedTetrisEngine(object):
         Row transitions = # transitions from empty to full (or vice versa), examining
         each row one at a time.
 
-        Source: https://github.com/Benjscho/gym-mdptetris/blob/main/gym_mdptetris/envs/feature_functions.py
+        Source: https://github.com/Benjscho/gym-mdptetris/blob/1a47edc33330deb638a03275e484c3e26932d802/gym_mdptetris/envs/feature_functions.py#L45
 
         :return: row transitions.
         """
@@ -551,7 +544,7 @@ class SimplifiedTetrisEngine(object):
         Column transitions = # transitions from empty to full (or vice versa), examining
         each column one at a time.
 
-        Source: https://github.com/Benjscho/gym-mdptetris/blob/main/gym_mdptetris/envs/feature_functions.py
+        Source: https://github.com/Benjscho/gym-mdptetris/blob/1a47edc33330deb638a03275e484c3e26932d802/gym_mdptetris/envs/feature_functions.py#L60
 
         :return: column transitions.
         """
@@ -562,10 +555,7 @@ class SimplifiedTetrisEngine(object):
 
     def _get_holes(self) -> int:
         """
-        Gets the number of holes present in the current grid.
-
-        Author: andreanlay
-        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
+        Gets the number of holes present in the current grid. A hole is an empty cell with at least one full cell above it in the same column.
 
         :return: holes.
         """
