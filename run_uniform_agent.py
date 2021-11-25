@@ -10,7 +10,7 @@ def main():
     """
     ep_returns = np.zeros(10)
 
-    env = gym.make("simplifiedtetris-binary-v0")
+    env = gym.make("simplifiedtetris-binary-20x10-4-v0")
     agent = UniformAgent(env.action_space.n)
 
     obs = env.reset()
