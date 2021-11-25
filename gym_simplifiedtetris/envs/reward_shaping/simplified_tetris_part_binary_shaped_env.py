@@ -1,5 +1,3 @@
-from typing import Optional, Sequence
-
 from ...register import register
 from ..simplified_tetris_part_binary_env import SimplifiedTetrisPartBinaryEnv
 from .simplified_tetris_shaping_reward import SimplifiedTetrisShapingReward

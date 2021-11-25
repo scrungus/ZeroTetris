@@ -1,9 +1,9 @@
+import random
 import time
 from copy import deepcopy
 from typing import Dict, List, Optional, Sequence, Tuple
 
 import cv2.cv2 as cv
-import random
 import numpy as np
 from matplotlib import colors
 from PIL import Image

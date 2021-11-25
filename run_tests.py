@@ -1,7 +1,6 @@
 import gym
 from stable_baselines3.common.env_checker import check_env
 
-from gym_simplifiedtetris.agents import UniformAgent
 from gym_simplifiedtetris.register import env_list
 
 

@@ -6,7 +6,7 @@ import numpy as np
 from gym import spaces
 from gym.utils import seeding
 
-from gym_simplifiedtetris.envs.simplified_tetris_engine import SimplifiedTetrisEngine
+from .simplified_tetris_engine import SimplifiedTetrisEngine
 
 
 class SimplifiedTetrisBaseEnv(gym.Env):

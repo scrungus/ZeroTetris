@@ -1,6 +1,6 @@
-from gym_simplifiedtetris.helpers import train_q_learning
-from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 from gym_simplifiedtetris.agents import QLearningAgent
+from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
+from gym_simplifiedtetris.helpers import train_q_learning
 from gym_simplifiedtetris.helpers.eval_agent import eval_agent
 
 

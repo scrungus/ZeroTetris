@@ -1,5 +1,5 @@
-import numpy as np
 import gym
+import numpy as np
 
 from gym_simplifiedtetris.agents import UniformAgent
 
