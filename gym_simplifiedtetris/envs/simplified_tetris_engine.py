@@ -539,6 +539,9 @@ class SimplifiedTetrisEngine(object):
 
         :return: holes.
         """
+        return np.count_nonzero((self._grid).cumsum(axis=1) * ~self._grid)
+
+    def _old_get_holes(self):
         holes = 0
 
         for col in zip(*self._grid.T):

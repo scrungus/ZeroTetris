@@ -136,13 +136,12 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
 
     def test__get_dellacherie_funcs(self) -> None:
         self.engine._grid[:, -5:] = True
-        self.engine._grid[
-            1:2, self.engine._height - 5 : self.engine._height - 1
-        ] = False
+        self.engine._grid[1, self.engine._height - 5 : self.engine._height - 1] = False
         self.engine._grid[self.engine._width - 1, self.engine._height - 2] = False
         self.engine._grid[self.engine._width - 2, self.engine._height - 1] = False
         self.engine._grid[self.engine._width - 3, self.engine._height - 3] = False
         self.engine._grid[self.engine._width - 1, self.engine._height - 6] = True
+        self.engine._grid[3, self.engine._height - 3 : self.engine._height - 1] = False
         self.engine._piece = Piece(self.piece_size, 0)
         self.engine._anchor = [0, 0]
         self.engine._hard_drop()
@@ -153,7 +152,7 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
         )
         np.testing.assert_array_equal(
             array_to_compare,
-            np.array([5.5 + 0.5 * self.piece_size, 0, 44, 16, 3, 10], dtype="double"),
+            np.array([5.5 + 0.5 * self.piece_size, 0, 48, 18, 5, 10], dtype="double"),
         )
 
     def test__get_landing_height_I_piece_(self) -> None:

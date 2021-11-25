@@ -21,13 +21,11 @@ def main() -> None:
         # print(
         #    f"\nFirst observation given: {obs}\nRepresentation: {repr(env)}\nString: {str(env)}\n"
         # )
-        agent = lambda obs: env.action_space.sample()
-
         num_episodes = 0
         is_first_move = True
         while num_episodes < 3:
             # env.render()
-            action = agent(obs)
+            action = env.action_space.sample()
             obs, reward, done, _ = env.step(action)
 
             assert (

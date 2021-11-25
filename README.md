@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/20x10_4_heuristic.gif" width="500">
+  <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/20x10_4_heuristic.gif" width="500">
 </p>
 
 <h1 align="center">Gym-SimplifiedTetris </h1>
@@ -9,7 +9,10 @@
     <img src="https://img.shields.io/codefactor/grade/github/OliverOverend/gym-simplifiedtetris?color=ff69b4&style=for-the-badge">
   </a>
   <a href="https://pypi.org/">
-  <img src="https://img.shields.io/pypi/v/gym-simplifiedtetris?style=for-the-badge">
+    <img src="https://img.shields.io/pypi/v/gym-simplifiedtetris?style=for-the-badge">
+  </a>
+  <a href="https://pypi.org/project/gym-simplifiedtetris/">
+    <img src="https://img.shields.io/pypi/pyversions/gym-simplifiedtetris?style=for-the-badge">
   </a>
   <a href="/LICENSE.md">
     <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetris?color=red&style=for-the-badge">
@@ -18,31 +21,31 @@
     <img src="https://img.shields.io/github/last-commit/OliverOverend/gym-simplifiedtetris/dev?style=for-the-badge">
   </a>
   <a href="https://github.com/OliverOverend/gym-simplifiedtetris/releases">
-    <img src="https://img.shields.io/github/release-date/OliverOverend/gym-simplifiedtetris?color=informational&style=for-the-badge">
+    <img src="https://img.shields.io/github/release-date/OliverOverend/gym-simplifiedtetris?color=yellow  &style=for-the-badge">
   </a>
-  <a href="https://github.com/XAMPPRocky/tokei#excluding-folders">
-    <img src="https://img.shields.io/tokei/lines/github/OliverOverend/gym-simplifiedtetris?color=blueviolet&style=for-the-badge">
-  </a>
-    <a href="https://github.com/OliverOverend/gym-simplifiedtetris/issues">
-    <img src="https://img.shields.io/github/issues-raw/OliverOverend/gym-simplifiedtetris?style=for-the-badge">
+  <a href="https://github.com/OliverOverend/gym-simplifiedtetris/issues">
+    <img src="https://img.shields.io/github/issues-raw/OliverOverend/gym-simplifiedtetris?color=blueviolet&style=for-the-badge">
   </a>
 </p>
 
 
 
 <p align="center">
-    <a href="https://github.com/OliverOverend/gym-simplifiedtetris/issues/new?assignees=OliverOverend&labels=bug&late=BUG_REPORT.md&title=%5BBUG%5D%3A">Report Bug</a>
-    ·
-    <a href="https://github.com/OliverOverend/gym-simplifiedtetris/issues/new?assignees=OliverOverend&labels=enhancement&late=FEATURE_REQUEST.md&title=%5BFEATURE%5D%3A">Request Feature</a>
-    ·
-    <a href="https://github.com/OliverOverend/gym-simplifiedtetris/discussions/new">Suggestions</a>
+  <a href="https://github.com/OliverOverend/gym-simplifiedtetris/issues/new?assignees=OliverOverend&labels=bug&late=BUG_REPORT.md&title=%5BBUG%5D%3A">Report Bug
+  </a>
+  ·
+  <a href="https://github.com/OliverOverend/gym-simplifiedtetris/issues/new?assignees=OliverOverend&labels=enhancement&late=FEATURE_REQUEST.md&title=%5BFEATURE%5D%3A">Request Feature
+  </a>
+  ·
+  <a href="https://github.com/OliverOverend/gym-simplifiedtetris/discussions/new">Suggestions
+  </a>
 </p>
 
 ---
 
-> 🟥 Research into AI using simplified Tetris environments compliant with OpenAI Gym's API
+> 🟥 Simplified Tetris environments compliant with OpenAI Gym's API
 
-_Gym-SimplifiedTetris_ is a pip installable package capable of creating simplified Tetris environments for AI research (more specifically reinforcement learning), which are compliant with [OpenAI Gym's API](https://github.com/openai/gym). The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
+Gym-SimplifiedTetris is a pip installable package that creates simplified Tetris environments compliant with [OpenAI Gym's API](https://github.com/openai/gym). The environments are simplified because the artificial agent must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
 
 This README provides some help with the setup, gives an overview of the environments and agents and how to use them, and describes how to build more environments.
 
@@ -205,7 +208,7 @@ The user can close all open windows using:
 
 ### 2.3. Variable dimensions and piece size
 
-If you are not importing the environment directly, the user can deviate from the standard grid dimensions and Tetriminos by editing the `gym_register` keyword arguments. The user can choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. The user can select a height in the interval [`piece_size`+1, 20] and a width in the interval [`piece_size`, 10]. Below is a GIF showing games being played on a 8 x 6 grid with trominoes as the pieces.
+The user can choose from four different sets of pieces: monominos, dominos, trominoes & Tetriminos. The user can select a height in the interval [`piece_size`+1, 20] and a width in the interval [`piece_size`, 10]. Below is a GIF showing games being played on a 8 x 6 grid with trominoes as the pieces.
 
 <p align="center">
     <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/8x6_3.gif" width="500">
@@ -213,14 +216,14 @@ If you are not importing the environment directly, the user can deviate from the
 
 ### 2.4. Action and observation spaces
 
-Each environment comes with an `observation_space` that is a `Box` space and an `action_space` that is a `Discrete` space. At each time step, the artificial agent must choose an action (an integer from a particular range). Each action maps to a translation/rotation tuple that specifies the column to drop the piece and its rotation. The ranges for the four different piece sizes are:
+Each environment comes with an `observation_space` that is a `Box` space and an `action_space` that is a `Discrete` space. At each time step, the artificial agent must choose an action (an integer from a particular range). Each action maps to a translation/rotation tuple that specifies the column to drop the piece and its rotation. The number of actions available for each of the pieces is below:
 
-- Monominos: [0, w - 1]
-- Dominos: [0, 2w - 2]
-- Trominoes: [0, 4w - 5]
-- Tetriminos: [0, 4w  - 7]
+- Monominos: w
+- Dominos: 2w - 1
+- Trominoes: 4w - 4
+- Tetriminos: 4w - 6
 
-where w is the grid width.
+where w is the grid width. With this action space, some actions have the same effect on the grid as others. When actions are selected uniformly at random, and the current piece is the 'O' Tetrimino, two actions are chosen with a higher probability than the other actions.
 
 ### 2.5. Game ending
 
@@ -249,7 +252,7 @@ The uniform agent implemented by `gym_simplifiedtetris.UniformAgent` selects act
 
 ### 3.2. Q-learning
 
-The Q-learning agent implemented by `gym_simplifiedtetris.QLearningAgent` selects the action with the highest Q-value (state-action value). The exploration rate parameter, epsilon, is linearly annealed over the training period. Note that this agent struggles to learn as the grid's dimensions are increased (the size of the state-action space becomes too large).
+The Q-learning agent implemented by `gym_simplifiedtetris.QLearningAgent` selects the action with the highest Q-value (state-action value). Note that this agent struggles to learn as the grid's dimensions are increased (the size of the state-action space becomes too large). The exploration rate parameter, epsilon, is linearly annealed over the training period.
 
 See [run_q_learning_agent.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_q_learning_agent.py) for an example of how to use the Q-learning agent.
 
