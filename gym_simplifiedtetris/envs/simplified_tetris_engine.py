@@ -438,11 +438,13 @@ class SimplifiedTetrisEngine(object):
         weights = np.array([-1, 1, -1, -1, -4, -1], dtype="double")
         dellacherie_scores = np.empty((self._num_actions), dtype="double")
 
-        for action, (translation, self._piece._rotation) in self._all_available_actions[
+        for action, (translation, rotation) in self._all_available_actions[
             self._piece._idx
         ].items():
             old_grid = deepcopy(self._grid)
             old_anchor = deepcopy(self._anchor)
+
+            self._rotate_piece(rotation)
 
             self._anchor = [translation, 0]
 
