@@ -1,11 +1,13 @@
 from setuptools import find_packages, setup
 
+from version import VERSION
+
 with open("README.md", "r", encoding="utf-8") as file:
     long_description = file.read()
 
 setup(
     name="gym_simplifiedtetris",
-    version="0.1.7",
+    version=VERSION,
     author="Oliver Overend",
     author_email="ollyoverend10@gmail.com",
     url="https://github.com/OliverOverend/gym-simplifiedtetris",
