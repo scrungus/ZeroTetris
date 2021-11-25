@@ -1,17 +1,14 @@
+import random
 import time
 from copy import deepcopy
-from typing import Dict, List, Optional, Sequence, Tuple, Union
+from typing import Dict, List, Optional, Sequence, Tuple
 
 import cv2.cv2 as cv
-import imageio
 import numpy as np
 from matplotlib import colors
 from PIL import Image
 
-from ..utils.pieces import Pieces
-
-Coords = Union[List[Tuple[int, int]], Dict[int, List[Tuple[int, int]]]]
-PieceInfo = Dict[str, Union[Coords, str]]
+from ..utils.piece import Piece
 
 
 class SimplifiedTetrisEngine(object):
@@ -26,24 +23,6 @@ class SimplifiedTetrisEngine(object):
     :param num_pieces: the number of pieces in use.
     :param num_actions: the number of available actions in each state.
     """
-
-    PIECES_DICT: Dict[int, Dict[int, PieceInfo]] = {
-        1: {0: {"coords": {0: [(0, 0)]}, "name": "O"}},
-        2: {0: {"coords": {0: [(0, 0), (0, -1)], 90: [(0, 0), (1, 0)]}, "name": "I"}},
-        3: {
-            0: {"coords": [(0, 0), (0, -1), (0, -2)], "name": "I"},
-            1: {"coords": [(0, 0), (1, 0), (0, -1)], "name": "L"},
-        },
-        4: {
-            0: {"coords": [(0, 0), (0, -1), (0, -2), (0, -3)], "name": "I"},
-            1: {"coords": [(0, 0), (1, 0), (0, -1), (0, -2)], "name": "L"},
-            2: {"coords": [(0, 0), (0, -1), (-1, 0), (-1, -1)], "name": "O"},
-            3: {"coords": [(0, 0), (-1, 0), (1, 0), (0, 1)], "name": "T"},
-            4: {"coords": [(0, 0), (-1, 0), (0, -1), (0, -2)], "name": "J"},
-            5: {"coords": [(0, 0), (-1, 0), (0, -1), (1, -1)], "name": "S"},
-            6: {"coords": [(0, 0), (-1, -1), (0, -1), (1, 0)], "name": "Z"},
-        },
-    }
 
     @staticmethod
     def _get_bgr_code(colour_name: str) -> Tuple[float, float, float]:
@@ -77,17 +56,17 @@ class SimplifiedTetrisEngine(object):
         self._grid = np.zeros((grid_dims[1], grid_dims[0]), dtype="bool")
         self._colour_grid = np.zeros((grid_dims[1], grid_dims[0]), dtype="int")
         self._anchor = [grid_dims[1] / 2 - 1, piece_size - 1]
-        self._rotation = 0
 
         self._final_scores = np.array([], dtype=int)
         self._sleep_time = 500
         self._show_agent_playing = True
         self._cell_size = int(min(0.8 * 1000 / grid_dims[0], 0.8 * 2000 / grid_dims[1]))
-        self._left_space = 400
-        self._black: tuple = self._get_bgr_code("black")
-        self._white: tuple = self._get_bgr_code("white")
-        self._red: tuple = self._get_bgr_code("red")
-        self._grid_colours: list = [
+        self._img = np.array([])
+        self._last_move_info = {}
+
+        self._black = self._get_bgr_code("black")
+        self._white = self._get_bgr_code("white")
+        self._grid_colours = [
             self._white,  # Empty.
             self._get_bgr_code("cyan"),  # 'I'.
             self._get_bgr_code("orange"),  # 'L'.
@@ -95,52 +74,23 @@ class SimplifiedTetrisEngine(object):
             self._get_bgr_code("purple"),  # 'T'.
             self._get_bgr_code("blue"),  # 'J'.
             self._get_bgr_code("green"),  # 'S'.
-            self._red,  # 'Z'.
+            self._get_bgr_code("red"),  # 'Z'.
         ]
 
-        self._img = np.array([])
-
-        # Initialise the piece coordinates.
-        pieces_dict_copy = deepcopy(self.PIECES_DICT[piece_size])
-        for piece_id, piece_dict in pieces_dict_copy.items():
-
-            if piece_size > 2:
-                piece_dict["coords"] = {
-                    90
-                    * rot: [
-                        tuple([((-1) ** rot) * coord[rot % 2], coord[(rot + 1) % 2]])
-                        for coord in piece_dict["coords"]
-                    ]
-                    for rot in range(4)
-                }
-
-            for count in range(4):
-                coord_string = [
-                    "max_y_coord",
-                    "min_y_coord",
-                    "max_x_coord",
-                    "min_x_coord",
-                ][count]
-                func = np.max if count % 2 == 0 else np.min
-                idx = 1 if count < 2 else 0
-
-                piece_dict[coord_string] = {
-                    rot: func([coord[idx] for coord in coords])
-                    for rot, coords in piece_dict["coords"].items()
-                }
-
-        self._all_pieces_info = Pieces(pieces_dict_copy)
-        (
-            self._current_piece_info,
-            self._current_piece_id,
-        ) = self._all_pieces_info._get_piece_info_at_random()
-        self._last_move_info = {}
-
+        self._initialise_pieces()
+        self._update_coords_and_anchor()
         self._get_all_available_actions()
         self._reset()
 
-        self._image_lst = []
-        self._save_frame = True
+    def _generate_id_randomly(self) -> int:
+        """Randomly generates an id."""
+        return random.randint(0, self._num_pieces - 1)
+
+    def _initialise_pieces(self) -> None:
+        """Creates a dictionary containing the pieces."""
+        self._pieces = {}
+        for idx in range(self._num_pieces):
+            self._pieces[idx] = Piece(self._piece_size, idx)
 
     def _reset(self) -> None:
         """Resets the score, grid, piece coords, piece id and anchor."""
@@ -167,19 +117,6 @@ class SimplifiedTetrisEngine(object):
 
         if mode == "human":
             if self._show_agent_playing:
-
-                if self._save_frame:
-                    frame_rgb = cv.cvtColor(self._img, cv.COLOR_BGR2RGB)
-                    self._image_lst.append(frame_rgb)
-
-                    if self._score == 20:
-                        imageio.mimsave(
-                            f"assets/{self._height}x{self._width}_{self._piece_size}_heuristic.gif",
-                            self._image_lst,
-                            fps=60,
-                            duration=0.5,
-                        )
-                        self._save_frame = False
 
                 cv.imshow("Simplified Tetris", self._img)
                 k = cv.waitKey(self._sleep_time)
@@ -221,9 +158,9 @@ class SimplifiedTetrisEngine(object):
             - int(self._cell_size / 40) : vertical_position
             + int(self._cell_size / 40)
             + 1,
-            self._left_space :,
+            400:,
             :,
-        ] = self._red
+        ] = self._get_bgr_code("red")
 
     def _get_grid(self) -> np.ndarray:
         """
@@ -267,9 +204,7 @@ class SimplifiedTetrisEngine(object):
         """
         Adds the image that will appear to the left of the grid.
         """
-        img_array = np.zeros(
-            (self._height * self._cell_size, self._left_space, 3)
-        ).astype(np.uint8)
+        img_array = np.zeros((self._height * self._cell_size, 400, 3)).astype(np.uint8)
         mean_score = (
             0.0 if len(self._final_scores) == 0 else np.mean(self._final_scores)
         )
@@ -293,7 +228,7 @@ class SimplifiedTetrisEngine(object):
                     f"{self._score}",
                     f"{mean_score:.1f}",
                     "",
-                    f"{self._all_pieces_info._info[self._current_piece_id]['name']}",
+                    f"{self._piece._name}",
                 ],
             ],
             x_offsets=[50, 300],
@@ -324,11 +259,8 @@ class SimplifiedTetrisEngine(object):
                 )
 
     def _update_coords_and_anchor(self) -> None:
-        """Updates the current piece's coords and ID, and resets the anchor."""
-        (
-            self._current_piece_info,
-            self._current_piece_id,
-        ) = self._all_pieces_info._get_piece_info_at_random()
+        """Updates the current piece, and resets the anchor."""
+        self._piece = self._pieces[self._generate_id_randomly()]
         self._anchor = [self._width / 2 - 1, self._piece_size - 1]
 
     def _is_illegal(self) -> bool:
@@ -336,17 +268,14 @@ class SimplifiedTetrisEngine(object):
         Checks if the piece's current position is illegal by looping over each
         of its square blocks.
 
-        Author:
-        > Andrean Lay
-        Source:
-        > https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/
-        engine.py
+        Author: Andrean Lay
+        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
 
         :return: whether the piece's current position is illegal.
         """
 
         # Loop over each of the piece's blocks.
-        for i, j in self._current_piece_info["coords"][self._rotation]:
+        for i, j in self._piece._coords:
             x_pos, y_pos = self._anchor[0] + i, self._anchor[1] + j
 
             # Don't check if the move is illegal when the block is too high.
@@ -368,11 +297,8 @@ class SimplifiedTetrisEngine(object):
         """
         Finds the position to place the piece (the anchor) by hard dropping the current piece.
 
-        Author:
-        > Andrean Lay
-        Source:
-        > https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/
-        engine.py
+        Author: Andrean Lay
+        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
         """
         while True:
             # Keep going until current piece occupies a full cell, then backtrack once.
@@ -384,13 +310,10 @@ class SimplifiedTetrisEngine(object):
 
     def _clear_rows(self) -> int:
         """
-        Removes blocks from all rows that are full.
+        Removes blocks from every full row.
 
-        Author:
-        > Andrean Lay
-        Source:
-        > https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/
-        engine.py
+        Author: Andrean Lay
+        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
 
         :return: the number of rows cleared.
         """
@@ -427,11 +350,8 @@ class SimplifiedTetrisEngine(object):
         """
         Sets the current piece using the anchor.
 
-        Author:
-        > Andrean Lay
-        Source:
-        > https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/
-        engine.py
+        Author: Andrean Lay
+        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
 
         :param set_piece: whether to set the piece.
         """
@@ -439,21 +359,21 @@ class SimplifiedTetrisEngine(object):
             row_num: 0 for row_num in range(self._height)
         }
         # Loop over each block.
-        for i, j in self._current_piece_info["coords"][self._rotation]:
+        for i, j in self._piece._coords:
             y_coord = j + self._anchor[1]
             if set_piece:
                 self._last_move_info["rows_added_to"][y_coord] += 1
                 self._grid[self._anchor[0] + i, self._anchor[1] + j] = 1
                 self._colour_grid[self._anchor[0] + i, self._anchor[1] + j] = (
-                    self._current_piece_id + 1
+                    self._piece._idx + 1
                 )
             else:
                 self._grid[self._anchor[0] + i, self._anchor[1] + j] = 0
                 self._colour_grid[self._anchor[0] + i, self._anchor[1] + j] = 0
 
         anchor_height = self._height - self._anchor[1]
-        max_y_coord = self._current_piece_info["max_y_coord"][self._rotation]
-        min_y_coord = self._current_piece_info["min_y_coord"][self._rotation]
+        max_y_coord = self._piece._max_y_coord[self._piece._rotation]
+        min_y_coord = self._piece._min_y_coord[self._piece._rotation]
         self._last_move_info["landing_height"] = anchor_height - 0.5 * (
             min_y_coord + max_y_coord
         )
@@ -470,20 +390,16 @@ class SimplifiedTetrisEngine(object):
     def _get_all_available_actions(self) -> None:
         """Gets the actions available for each of the pieces in use."""
         self._all_available_actions = {}
-        for idx in range(self._num_pieces):
-            self._current_piece_info = self._all_pieces_info._select_piece_info(idx)
-            self._current_piece_id = idx
+        for idx, piece in self._pieces.items():
+            self._piece = piece
             self._all_available_actions[idx] = self._compute_available_actions()
 
     def _compute_available_actions(self) -> Dict[int, Tuple[int, int]]:
         """
         Computes the actions that are available with the current piece.
 
-        Author:
-        > Andrean Lay
-        Source:
-        > https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/
-        engine.py
+        Author: Andrean Lay
+        Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/master/src/engine.py
 
         :return: the available actions.
         """
@@ -491,11 +407,11 @@ class SimplifiedTetrisEngine(object):
         available_actions = {}
         count = 0
 
-        for rotation, _ in self._current_piece_info["coords"].items():
-            self._rotation = rotation
+        for rotation in self._piece._all_coords.keys():
+            self._rotate_piece(rotation)
 
-            max_x_coord = self._current_piece_info["max_x_coord"][self._rotation]
-            min_x_coord = self._current_piece_info["min_x_coord"][self._rotation]
+            max_x_coord = self._piece._max_x_coord[rotation]
+            min_x_coord = self._piece._min_x_coord[rotation]
 
             for translation in range(abs(min_x_coord), self._width - max_x_coord):
 
@@ -506,7 +422,7 @@ class SimplifiedTetrisEngine(object):
                 self._hard_drop()
 
                 self._update_grid(True)
-                available_actions[count] = (translation, self._rotation)
+                available_actions[count] = (translation, rotation)
                 self._update_grid(False)
 
                 count += 1
@@ -522,11 +438,13 @@ class SimplifiedTetrisEngine(object):
         weights = np.array([-1, 1, -1, -1, -4, -1], dtype="double")
         dellacherie_scores = np.empty((self._num_actions), dtype="double")
 
-        for action, (translation, self._rotation) in self._all_available_actions[
-            self._current_piece_id
+        for action, (translation, rotation) in self._all_available_actions[
+            self._piece._idx
         ].items():
             old_grid = deepcopy(self._grid)
             old_anchor = deepcopy(self._anchor)
+
+            self._rotate_piece(rotation)
 
             self._anchor = [translation, 0]
 
@@ -629,7 +547,7 @@ class SimplifiedTetrisEngine(object):
             while row < self._height and col[row] == 0:
                 row += 1
 
-            # Count the number of empty cells, below the first full cell.
+            # Count the number of empty cells below the first full cell.
             holes += len([x for x in col[row + 1 :] if x == 0])
 
         return holes
@@ -669,3 +587,8 @@ class SimplifiedTetrisEngine(object):
                     depth += 1
 
         return cumulative_wells
+
+    def _rotate_piece(self, rotation: int) -> None:
+        """Sets the piece's rotation and rotates the current piece."""
+        self._piece._rotation = rotation
+        self._piece._coords = self._piece._all_coords[self._piece._rotation]

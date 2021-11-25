@@ -1,5 +1,3 @@
-from typing import Optional, Sequence
-
 from ...register import register
 from ..simplified_tetris_binary_env import SimplifiedTetrisBinaryEnv
 from .simplified_tetris_shaping_reward import SimplifiedTetrisShapingReward
@@ -17,14 +15,12 @@ class SimplifiedTetrisBinaryShapedEnv(
     :param seed: the rng seed.
     """
 
-    def __init__(
-        self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
-    ):
+    def __init__(self, **kwargs):
         super().__init__()
-        SimplifiedTetrisBinaryEnv.__init__(self, grid_dims, piece_size, seed)
+        SimplifiedTetrisBinaryEnv.__init__(self, **kwargs)
 
 
 register(
-    idx="simplifiedtetris-binary-shaped-v0",
+    incomplete_id="simplifiedtetris-binary-shaped",
     entry_point="gym_simplifiedtetris.envs:SimplifiedTetrisBinaryShapedEnv",
 )

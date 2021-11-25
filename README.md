@@ -6,27 +6,29 @@
 
 <p align="center">
   <a href="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetris">
-    <img src="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetris/badge">
+    <img src="https://img.shields.io/codefactor/grade/github/OliverOverend/gym-simplifiedtetris?color=ff69b4&style=for-the-badge">
   </a>
-  <a href="https://github.com/psf/black">
-    <img src="https://img.shields.io/badge/code%20style-black-000000.svg">
-  </a>
-  <a href="https://www.python.org/">
-  <img src="https://img.shields.io/pypi/pyversions/gym-simplifiedtetris">
+  <a href="https://pypi.org/">
+  <img src="https://img.shields.io/pypi/v/gym-simplifiedtetris?style=for-the-badge">
   </a>
   <a href="/LICENSE.md">
-    <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetris?color=red">
+    <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetris?color=red&style=for-the-badge">
   </a>
-  <a href="https://github.com/OliverOverend/gym-simplifiedtetris/compare">
-    <img src="https://img.shields.io/badge/PRs-welcome-success.svg?style=flat">
+  <a href="https://github.com/OliverOverend/gym-simplifiedtetris/commits/dev">
+    <img src="https://img.shields.io/github/last-commit/OliverOverend/gym-simplifiedtetris/dev?style=for-the-badge">
   </a>
-  <a href="https://github.com/OliverOverend/gym-simplifiedtetris/issues/new/choose">
-    <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat">
+  <a href="https://github.com/OliverOverend/gym-simplifiedtetris/releases">
+    <img src="https://img.shields.io/github/release-date/OliverOverend/gym-simplifiedtetris?color=informational&style=for-the-badge">
   </a>
-  <a href="https://twitter.com/intent/tweet?text=Conduct%20AI%20research%20using%20simplified%20Tetris%20environments%20conforming%20to%20OpenAI%20Gym's%20API&url=https://github.com/OliverOverend/gym-simplifiedtetris&via=OllyOverend10&hashtags=tetris,reinforcementlearning,openaigym">
-  <img src="https://img.shields.io/twitter/url/http/shields.io.svg?style=social">
+  <a href="https://github.com/XAMPPRocky/tokei#excluding-folders">
+    <img src="https://img.shields.io/tokei/lines/github/OliverOverend/gym-simplifiedtetris?color=blueviolet&style=for-the-badge">
+  </a>
+    <a href="https://github.com/OliverOverend/gym-simplifiedtetris/issues">
+    <img src="https://img.shields.io/github/issues-raw/OliverOverend/gym-simplifiedtetris?style=for-the-badge">
   </a>
 </p>
+
+
 
 <p align="center">
     <a href="https://github.com/OliverOverend/gym-simplifiedtetris/issues/new?assignees=OliverOverend&labels=bug&late=BUG_REPORT.md&title=%5BBUG%5D%3A">Report Bug</a>
@@ -142,12 +144,14 @@ env = Tetris(
 
 ### 2.1. Available environments
 
-There are four environments provided:
+There are currently 64 environments provided:
 
-- `simplifiedtetris-binary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID. A reward of +1 is given for each line cleared, and 0 otherwise
-- `simplifiedtetris-partbinary-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID. A reward of +1 is given for each line cleared, and 0 otherwise
-- `simplifiedtetris-binary-shaped-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID. The reward function is a potential-based reward function based on the _holes_ feature
-- `simplifiedtetris-partbinary-shaped-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID. The reward function is a potential-based reward function based on the _holes_ feature
+- `simplifiedtetris-binary-{height}x{width}-{piece_size}-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID. A reward of +1 is given for each line cleared, and 0 otherwise
+- `simplifiedtetris-partbinary-{height}x{width}-{piece_size}-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID. A reward of +1 is given for each line cleared, and 0 otherwise
+- `simplifiedtetris-binary-shaped-{height}x{width}-{piece_size}-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID. The reward function is a potential-based reward function based on the _holes_ feature
+- `simplifiedtetris-partbinary-shaped-{height}x{width}-{piece_size}-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID. The reward function is a potential-based shaping reward based on the _holes_ feature
+
+where (height, width) are either (20, 10), (10, 10), (8, 6), or (7, 4), and the piece size is either 1, 2, 3, or 4.
 
 ### 2.2. Methods
 
@@ -269,13 +273,13 @@ See [run_heuristic_agent.py](https://github.com/OliverOverend/gym-simplifiedtetr
 
 ## 4. Future work
 
-- Environments with alternative:
-  - Observation spaces (normalised)
-  - Action spaces (non-terminal actions only)
+- Normalise the observation spaces
+- Implement an action space that only allows non-terminal actions
+- Implement more shaping rewards, e.g., potential-style, potential-based, dynamic potential-based, non-potential, and optimise their weights using an optimisation algorithm
 
 ## 5. Acknowledgements
 
-This package utilises several methods from the [codebase](https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning) developed by andreanlay (2020) and the [codebase](https://github.com/Benjscho/gym-mdptetris) developed by Benjscho (2021). The class hierarchy design was inspired by a [codebase](https://github.com/Hewiiitt/Gym-Circuitboard) developed by Hewiiitt (2020).
+This package utilises several methods from the [codebase](https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning) developed by andreanlay (2020) and the [codebase](https://github.com/Benjscho/gym-mdptetris) developed by Benjscho (2021).
 
 ## 6. Citing the project
 

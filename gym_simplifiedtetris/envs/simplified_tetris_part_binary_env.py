@@ -2,10 +2,10 @@ import numpy as np
 from gym import spaces
 
 from ..register import register
-from .simplified_tetris_standard_env import SimplifiedTetrisStandardEnv
+from .simplified_tetris_base_env import SimplifiedTetrisBaseEnv
 
 
-class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisStandardEnv):
+class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBaseEnv):
     """
     A class representing a Tetris environment, where the observation space is a flattened NumPy array containing the grid's binary representation excluding the top piece_size rows, plus the current piece's id.
 
@@ -34,10 +34,10 @@ class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisStandardEnv):
         :return: the current observation.
         """
         current_grid = self._engine._grid[:, self._piece_size_ :].flatten()
-        return np.append(current_grid, self._engine._current_piece_id)
+        return np.append(current_grid, self._engine._piece._idx)
 
 
 register(
-    idx="simplifiedtetris-partbinary-v0",
+    incomplete_id="simplifiedtetris-partbinary",
     entry_point="gym_simplifiedtetris.envs:SimplifiedTetrisPartBinaryEnv",
 )

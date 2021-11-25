@@ -1,5 +1,5 @@
-import numpy as np
 import gym
+import numpy as np
 
 from gym_simplifiedtetris.agents import UniformAgent
 
@@ -11,7 +11,7 @@ def main():
     ep_returns = np.zeros(10)
 
     env = gym.make("simplifiedtetris-binary-v0")
-    agent = UniformAgent(env._num_actions_)
+    agent = UniformAgent(env.action_space.n)
 
     obs = env.reset()
 
