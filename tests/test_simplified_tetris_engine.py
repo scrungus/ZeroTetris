@@ -134,7 +134,58 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
         for value in self.engine._all_available_actions.values():
             self.assertEqual(self.engine._num_actions, len(value))
 
-    def test__get_dellacherie_funcs(self) -> None:
+    def test__get_dellacherie_scores_empty_grid(self) -> None:
+        self.engine._piece = Piece(self.piece_size, 0)
+        print(self.engine._all_available_actions[self.engine._piece._idx])
+        array_to_compare = np.array(
+            [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                614.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                4.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                312.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                302.0,
+            ]
+        )
+        array_to_compare = np.zeros(self.engine._num_actions)
+        array_to_compare[10] = abs(0 - 6) * 100 + 10 - (90 / 90) + 5  # (0, 90)
+        array_to_compare[16] = abs(6 - 6) * 100 + 0 - (90 / 90) + 5  # (6, 90)
+        array_to_compare[27] = abs(3 - 6) * 100 + 10 - (270 / 90) + 5  # (3, 270)
+        array_to_compare[33] = abs(9 - 6) * 100 + 0 - (270 / 90) + 5  # (9, 270)
+        np.testing.assert_array_equal(
+            self.engine._get_dellacherie_scores(),
+            array_to_compare,
+        )
+
+    def test__get_dellacherie_funcs_populated_grid(self) -> None:
         self.engine._grid[:, -5:] = True
         self.engine._grid[1, self.engine._height - 5 : self.engine._height - 1] = False
         self.engine._grid[self.engine._width - 1, self.engine._height - 2] = False

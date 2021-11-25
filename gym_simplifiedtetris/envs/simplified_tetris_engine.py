@@ -436,32 +436,62 @@ class SimplifiedTetrisEngine(object):
         :return: a list of the Dellacherie feature values.
         """
         weights = np.array([-1, 1, -1, -1, -4, -1], dtype="double")
-        dellacherie_scores = np.empty((self._num_actions), dtype="double")
+        ratings = np.empty((self._num_actions), dtype="double")
 
         for action, (translation, rotation) in self._all_available_actions[
             self._piece._idx
         ].items():
             old_grid = deepcopy(self._grid)
             old_anchor = deepcopy(self._anchor)
+            old_colour_grid = deepcopy(self._colour_grid)
 
             self._rotate_piece(rotation)
-
             self._anchor = [translation, 0]
-
             self._hard_drop()
             self._update_grid(True)
+            self._clear_rows()
 
-            scores = np.empty((6), dtype="double")
+            feature_values = np.empty((6), dtype="double")
             for count, feature_func in enumerate(self._get_dellacherie_funcs()):
-                scores[count] = feature_func()
+                feature_values[count] = feature_func()
 
-            dellacherie_scores[action] = np.dot(scores, weights)
-
+            ratings[action] = np.dot(feature_values, weights)
             self._update_grid(False)
             self._anchor = deepcopy(old_anchor)
             self._grid = deepcopy(old_grid)
+            self._colour_grid = deepcopy(old_colour_grid)
 
-        return dellacherie_scores
+        max_indices = np.argwhere(ratings == np.amax(ratings)).flatten()
+
+        if len(max_indices) == 1:
+            return ratings
+
+        return self._get_priorities(max_indices)
+
+    def _get_priorities(self, max_indices) -> np.array:
+        """
+        Calculates the priorites of the available actions.
+
+        :param max_indices: the actions with the maximum ratings.
+        :return: the priorities.
+        """
+        priorities = np.zeros((self._num_actions), dtype="double")
+
+        for action in max_indices:
+            translation, rotation = self._all_available_actions[self._piece._idx][
+                action
+            ]
+            x_spawn_pos = (self._width / 2) + 1
+            priorities[action] += 100 * abs(translation - x_spawn_pos)
+
+            if translation < x_spawn_pos:
+                priorities[action] += 10
+
+            priorities[action] -= rotation / 90
+
+            # Ensure that the priority of the best actions is never negative.
+            priorities[action] += 5  # 5 is always greater than rotation / 90.
+        return priorities
 
     def _get_dellacherie_funcs(self) -> list:
         """
@@ -540,20 +570,6 @@ class SimplifiedTetrisEngine(object):
         :return: holes.
         """
         return np.count_nonzero((self._grid).cumsum(axis=1) * ~self._grid)
-
-    def _old_get_holes(self):
-        holes = 0
-
-        for col in zip(*self._grid.T):
-            # Find the first full cell, starting from the top row below the cut off.
-            row = self._piece_size
-            while row < self._height and col[row] == 0:
-                row += 1
-
-            # Count the number of empty cells below the first full cell.
-            holes += len([x for x in col[row + 1 :] if x == 0])
-
-        return holes
 
     def _get_cumulative_wells(self) -> int:
         """
