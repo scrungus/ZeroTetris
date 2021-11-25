@@ -1,4 +1,5 @@
 from abc import abstractmethod
+import itertools
 from typing import Any, Dict, Optional, Sequence, Tuple
 
 import gym
@@ -35,7 +36,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
     ):
         if not isinstance(grid_dims, (list, tuple)) or len(grid_dims) != 2:
             raise TypeError(
-                "Inappropriate format provided for grid_dims. It should be [int, int] or (int, int)."
+                "Inappropriate format provided for grid_dims. It should be [height(int), width(int)] or (height(int), width(int))."
             )
 
         assert piece_size in [
@@ -45,12 +46,10 @@ class SimplifiedTetrisBaseEnv(gym.Env):
             4,
         ], "piece_size should be either 1, 2, 3, or 4."
 
-        assert grid_dims[0] in list(
-            range(piece_size + 1, 21)
-        ), "Height must be an integer in the interval [piece_size + 1, 20]"
-        assert grid_dims[1] in list(
-            range(piece_size, 11)
-        ), "Width must be an integer in the interval [piece_size, 10]."
+        possible_grid_dims = [[20, 10], [10, 10], [8, 6], [7, 4]]
+        assert (
+            list(grid_dims) in possible_grid_dims
+        ), f"Grid dimensions must be one of {possible_grid_dims}."
 
         self._height_, self._width_ = grid_dims
         self._piece_size_ = piece_size

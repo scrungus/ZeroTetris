@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -7,7 +7,9 @@ class QLearningAgent(object):
     """
     A class representing a Q-learning agent.
 
-    :param q_table_dims: the q-table dimensions.
+    :param grid_dims: the grid dimensions.
+    :param num_pieces: the number of pieces in use.
+    :param num_actions: the number of actions available in each state.
     :param alpha: the learning rate parameter.
     :param gamma: the discount rate parameter.
     :param epsilon: the exploration rate of the epsilon-greedy policy.
@@ -15,7 +17,9 @@ class QLearningAgent(object):
 
     def __init__(
         self,
-        q_table_dims: list,
+        grid_dims: Union[List[int], Tuple[int]],
+        num_pieces: int,
+        num_actions: int,
         alpha: Optional[float] = 0.2,
         gamma: Optional[float] = 0.99,
         epsilon: Optional[float] = 1.0,
@@ -23,8 +27,12 @@ class QLearningAgent(object):
         self.epsilon = epsilon
         self.alpha = alpha
         self.gamma = gamma
+
+        q_table_dims = [2 for _ in range(grid_dims[0] * grid_dims[1])]
+        q_table_dims += [num_pieces] + [num_actions]
         self._q_table = np.zeros((q_table_dims), dtype="double")
-        self._num_actions = q_table_dims[-1]
+
+        self._num_actions = num_actions
 
     def predict(self, obs: np.array) -> int:
         """

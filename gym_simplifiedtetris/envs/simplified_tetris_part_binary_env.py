@@ -38,6 +38,6 @@ class SimplifiedTetrisPartBinaryEnv(SimplifiedTetrisBaseEnv):
 
 
 register(
-    idx="simplifiedtetris-partbinary-v0",
+    incomplete_id="simplifiedtetris-partbinary",
     entry_point="gym_simplifiedtetris.envs:SimplifiedTetrisPartBinaryEnv",
 )

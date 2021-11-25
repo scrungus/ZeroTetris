@@ -31,6 +31,6 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
 
 
 register(
-    idx="simplifiedtetris-binary-v0",
+    incomplete_id=f"simplifiedtetris-binary",
     entry_point=f"gym_simplifiedtetris.envs:SimplifiedTetrisBinaryEnv",
 )

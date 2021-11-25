@@ -21,6 +21,6 @@ class SimplifiedTetrisPartBinaryShapedEnv(
 
 
 register(
-    idx="simplifiedtetris-partbinary-shaped-v0",
+    incomplete_id="simplifiedtetris-partbinary-shaped",
     entry_point="gym_simplifiedtetris.envs:SimplifiedTetrisPartBinaryShapedEnv",
 )
