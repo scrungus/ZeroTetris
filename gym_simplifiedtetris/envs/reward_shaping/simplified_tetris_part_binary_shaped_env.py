@@ -17,11 +17,9 @@ class SimplifiedTetrisPartBinaryShapedEnv(
     :param seed: the rng seed.
     """
 
-    def __init__(
-        self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
-    ):
+    def __init__(self, **kwargs):
         super().__init__()
-        SimplifiedTetrisPartBinaryEnv.__init__(self, grid_dims, piece_size, seed)
+        SimplifiedTetrisPartBinaryEnv.__init__(self, **kwargs)
 
 
 register(

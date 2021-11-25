@@ -28,7 +28,7 @@ def main() -> None:
 
         num_episodes = 0
         is_first_move = True
-        while num_episodes < 10:
+        while num_episodes < 3:
             env.render()
             action = agent(obs)
             obs, reward, done, _ = env.step(action)

@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 
 from gym_simplifiedtetris.envs import SimplifiedTetrisEngine as Engine
-from gym_simplifiedtetris.utils.pieces import Piece
+from gym_simplifiedtetris.utils.piece import Piece
 
 
 class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):

@@ -8,7 +8,7 @@ import numpy as np
 from matplotlib import colors
 from PIL import Image
 
-from ..utils.pieces import Piece
+from ..utils.piece import Piece
 
 
 class SimplifiedTetrisEngine(object):

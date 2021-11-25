@@ -1,9 +1,12 @@
 from abc import abstractmethod
 from typing import Any, Dict, Optional, Sequence, Tuple
 
-import numpy as np
 import gym
+import numpy as np
+from gym import spaces
 from gym.utils import seeding
+
+from gym_simplifiedtetris.envs.simplified_tetris_engine import SimplifiedTetrisEngine
 
 
 class SimplifiedTetrisBaseEnv(gym.Env):
@@ -17,6 +20,15 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     metadata = {"render.modes": ["human", "rgb_array"]}
     reward_range = (0, 4)
+
+    @property
+    def action_space(self) -> spaces.Discrete:
+        return spaces.Discrete(self._num_actions_)
+
+    @property
+    @abstractmethod
+    def observation_space(self):
+        raise NotImplementedError()
 
     def __init__(
         self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
@@ -52,46 +64,72 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
         self._seed(seed=seed)
 
+        self._engine = SimplifiedTetrisEngine(
+            grid_dims=grid_dims,
+            piece_size=piece_size,
+            num_pieces=self._num_pieces_,
+            num_actions=self._num_actions_,
+        )
+
+    def __str__(self) -> str:
+        return np.array(self._engine._grid.T, dtype=int).__str__()
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(({self._height_!r}, {self._width_!r}), {self._piece_size_!r})"
+
     def reset(self) -> np.array:
-        return self._reset_()
+        self._engine._reset()
+        return self._get_obs()
 
     def step(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
-        return self._step_(action)
+        """
+        Hard drops the current piece according to the argument provided. Terminates the game if a condition is met. Otherwise, a new piece is selected, and the anchor is reset.
+
+        :param action: the action to be taken.
+        :return: the next observation, reward, game termination indicator, and env info.
+        """
+        info = {}
+
+        translation, rotation = self._engine._all_available_actions[
+            self._get_obs()[-1]
+        ][action]
+
+        self._engine._rotate_piece(rotation)
+        self._engine._anchor = [translation, self._piece_size_ - 1]
+
+        self._engine._hard_drop()
+        self._engine._update_grid(True)
+
+        # The game terminates when any of the dropped piece's blocks occupies any of the top 'piece_size' rows, before any full rows are cleared.
+        if np.any(self._engine._grid[:, : self._piece_size_]):
+            info["num_rows_cleared"] = 0
+            self._engine._final_scores = np.append(
+                self._engine._final_scores, self._engine._score
+            )
+            return self._get_obs(), self._get_terminal_reward(), True, info
+
+        reward, num_rows_cleared = self._get_reward()
+        self._engine._score += num_rows_cleared
+        self._engine._update_coords_and_anchor()
+        info["num_rows_cleared"] = num_rows_cleared
+
+        return self._get_obs(), float(reward), False, info
 
     def render(self, mode: Optional[str] = "human") -> np.ndarray:
-        return self._render_(mode)
+        return self._engine._render(mode)
 
     def close(self) -> None:
-        return self._close_()
+        return self._engine._close()
 
     def _seed(self, seed: Optional[int] = 8191) -> None:
-        self.np_random, _ = seeding.np_random(seed)
+        self._np_random, _ = seeding.np_random(seed)
 
-    @property
-    @abstractmethod
-    def action_space(self):
-        raise NotImplementedError()
+    def _get_reward(self) -> Tuple[float, int]:
+        return self._engine._get_reward()
 
-    @abstractmethod
-    def _reset_(self):
-        raise NotImplementedError()
+    def _get_terminal_reward(self) -> float:
+        return 0.0
 
     @abstractmethod
-    def _step_(self, action):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _render_(self, mode):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _close_(self):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _get_reward(self):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def _get_terminal_reward(self):
+    def _get_obs(self):
         raise NotImplementedError()

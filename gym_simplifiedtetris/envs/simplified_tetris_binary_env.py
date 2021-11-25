@@ -2,10 +2,10 @@ import numpy as np
 from gym import spaces
 
 from ..register import register
-from .simplified_tetris_standard_env import SimplifiedTetrisStandardEnv
+from .simplified_tetris_base_env import SimplifiedTetrisBaseEnv
 
 
-class SimplifiedTetrisBinaryEnv(SimplifiedTetrisStandardEnv):
+class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
     """
     A class representing a custom Gym env for Tetris, where the observation space
     is the binary representation of the grid plus the current piece's id.
