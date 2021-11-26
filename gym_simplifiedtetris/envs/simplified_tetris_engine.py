@@ -12,10 +12,7 @@ from ..utils import Piece, Colours
 
 class SimplifiedTetrisEngine(object):
     """
-    A class representing a simplified Tetris engine containing methods
-    that retrieve the actions available for each of the pieces in use, drop
-    pieces vertically downwards, having identified the correct location to
-    drop them, clear full rows, and render a game of Tetris.
+    A class representing a simplified Tetris engine.
 
     :param grid_dims: the grid dimensions (height and width).
     :param piece_size: the size of the pieces in use.
@@ -24,6 +21,17 @@ class SimplifiedTetrisEngine(object):
     """
 
     CELL_SIZE = 50
+
+    BLOCK_COLOURS = [
+        Colours.WHITE.value,  # Empty.
+        Colours.CYAN.value,  # 'I'.
+        Colours.ORANGE.value,  # 'L'.
+        Colours.YELLOW.value,  #  'O'.
+        Colours.PURPLE.value,  # 'T'.
+        Colours.BLUE.value,  # 'J'.
+        Colours.GREEN.value,  # 'S'.
+        Colours.RED.value,  # 'Z'.
+    ]
 
     @staticmethod
     def _close() -> None:
@@ -56,17 +64,6 @@ class SimplifiedTetrisEngine(object):
 
         self._img = np.array([])
         self._last_move_info = {}
-
-        self._grid_colours = [
-            Colours.WHITE.value,  # Empty.
-            Colours.CYAN.value,  # 'I'.
-            Colours.ORANGE.value,  # 'L'.
-            Colours.YELLOW.value,  #  'O'.
-            Colours.PURPLE.value,  # 'T'.
-            Colours.BLUE.value,  # 'J'.
-            Colours.GREEN.value,  # 'S'.
-            Colours.RED.value,  # 'Z'.
-        ]
 
         self._initialise_pieces()
         self._update_coords_and_anchor()
@@ -169,7 +166,7 @@ class SimplifiedTetrisEngine(object):
         """
 
         grid = [
-            [self._grid_colours[self._colour_grid[j][i]] for j in range(self._width)]
+            [self.BLOCK_COLOURS[self._colour_grid[j][i]] for j in range(self._width)]
             for i in range(self._height)
         ]
 
@@ -634,3 +631,13 @@ class SimplifiedTetrisEngine(object):
 
         self._piece._rotation = rotation
         self._piece._coords = self._piece._all_coords[self._piece._rotation]
+
+    def _get_translation_rotation(self, action: int) -> Tuple[int, int]:
+        """
+        Returns the translation and rotation associated with the action provided.
+
+        :param action: the action.
+        :return: the translation and rotation associated with the action provided.
+        """
+
+        return self._all_available_actions[self._piece._idx][action]

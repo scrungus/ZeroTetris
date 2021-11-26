@@ -24,7 +24,7 @@ def main():
         heuristic_scores = env._engine._get_dellacherie_scores()
         action = agent.predict(heuristic_scores)
 
-        obs, rwd, done, info = env.step(action)
+        obs, reward, done, info = env.step(action)
         ep_returns[episode_num] += info["num_rows_cleared"]
 
         if done:

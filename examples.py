@@ -11,7 +11,7 @@ def run_example_1():
     while episode_num < 10:
         env.render()
         action = env.action_space.sample()
-        obs, rwd, done, info = env.step(action)
+        obs, reward, done, info = env.step(action)
 
         if done:
             print(f"Episode {episode_num + 1} has terminated.")

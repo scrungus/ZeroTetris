@@ -20,7 +20,7 @@ def main():
     while num_episodes < 10:
         env.render()
         action = agent.predict()
-        obs, rwd, done, info = env.step(action)
+        obs, reward, done, info = env.step(action)
         ep_returns[num_episodes] += info["num_rows_cleared"]
 
         if done:

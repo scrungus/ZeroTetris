@@ -119,7 +119,7 @@ episode_num = 0
 while episode_num < 10:
     env.render()
     action = env.action_space.sample()
-    obs, rwd, done, info = env.step(action)
+    obs, reward, done, info = env.step(action)
 
     if done:
         print(f"Episode {episode_num + 1} has terminated.")
@@ -180,7 +180,7 @@ Each environment's step method returns four values:
 - `info` (**dict**): only contains the `num_rows_cleared` due to taking the previous action
 
 ```python
->>> obs, rwd, done, info = env.step(action)
+>>> obs, reward, done, info = env.step(action)
 ```
 
 #### 2.2.3. `render()` method

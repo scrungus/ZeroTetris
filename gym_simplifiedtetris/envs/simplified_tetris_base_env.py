@@ -47,10 +47,12 @@ class SimplifiedTetrisBaseEnv(gym.Env):
             4,
         ], "piece_size should be either 1, 2, 3, or 4."
 
-        possible_grid_dims = [[20, 10], [10, 10], [8, 6], [7, 4]]
-        assert (
-            list(grid_dims) in possible_grid_dims
-        ), f"Grid dimensions must be one of (20, 10), (10, 10), (8, 6), or (7, 4)."
+        assert list(grid_dims) in [
+            [20, 10],
+            [10, 10],
+            [8, 6],
+            [7, 4],
+        ], f"Grid dimensions must be one of (20, 10), (10, 10), (8, 6), or (7, 4)."
 
         self._height_, self._width_ = grid_dims
         self._piece_size_ = piece_size
@@ -98,9 +100,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
         info = {}
 
-        translation, rotation = self._engine._all_available_actions[
-            self._get_obs()[-1]
-        ][action]
+        translation, rotation = self._engine._get_translation_rotation(action)
 
         self._engine._rotate_piece(rotation)
         self._engine._anchor = [translation, self._piece_size_ - 1]

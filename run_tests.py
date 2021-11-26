@@ -16,9 +16,7 @@ def main() -> None:
         check_env(env=env, skip_render_check=True)
 
         obs = env.reset()
-        # print(
-        #    f"\nFirst observation given: {obs}\nRepresentation: {repr(env)}\nString: {str(env)}\n"
-        # )
+
         num_episodes = 0
         is_first_move = True
         while num_episodes < 3:
@@ -31,9 +29,6 @@ def main() -> None:
             ), f"Reward seen: {reward}"
 
             if num_episodes == 0 and is_first_move:
-                # print(f"Reward range: {env.reward_range}")
-                # print(f"First reward seen: {reward}")
-                # print(f"Second observation given: {obs}")
                 is_first_move = False
 
             if done:
