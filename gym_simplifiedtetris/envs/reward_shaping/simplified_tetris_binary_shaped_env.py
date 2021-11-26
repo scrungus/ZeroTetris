@@ -1,10 +1,10 @@
 from ...register import register
 from ..simplified_tetris_binary_env import SimplifiedTetrisBinaryEnv
-from .simplified_tetris_shaping_reward import SimplifiedTetrisShapingReward
+from .potential_based_shaping_reward import PotentialBasedShapingReward
 
 
 class SimplifiedTetrisBinaryShapedEnv(
-    SimplifiedTetrisShapingReward, SimplifiedTetrisBinaryEnv
+    PotentialBasedShapingReward, SimplifiedTetrisBinaryEnv
 ):
     """
     A class representing a Tetris environment, where the reward function is a

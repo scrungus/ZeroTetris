@@ -9,10 +9,10 @@ def eval_agent(
     agent: object, env: gym.Env, num_episodes: int, render: bool
 ) -> Tuple[float, float]:
     """
-    Evaluates the agents performance on the game of SimplifiedTetris and returns the mean score.
+    Evaluate the agent's performance on the game of SimplifiedTetris and returns the mean score.
 
     :param agent: the agent to evaluate on the env.
-    :param env: the env to evaluate the agent on.
+    :param env: the agent will be evaluated on this env.
     :param num_episodes: the number of games to evaluate the trained agent.
     :param render: renders the agent playing SimplifiedTetris after training.
     :return: the mean and std score obtained from letting the agent play num_episodes games.

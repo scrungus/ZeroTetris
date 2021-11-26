@@ -221,7 +221,7 @@ Each environment comes with an `observation_space` that is a `Box` space and an 
 - Monominos: w
 - Dominos: 2w - 1
 - Trominoes: 4w - 4
-- Tetriminos: 4w - 6
+- Tetriminos: 4w - 6,
 
 where w is the grid width. With this action space, some actions have the same effect on the grid as others. When actions are selected uniformly at random, and the current piece is the 'O' Tetrimino, two actions are chosen with a higher probability than the other actions.
 

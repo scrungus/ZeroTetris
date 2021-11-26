@@ -13,11 +13,11 @@ PieceCoords = Dict[Rotation, PieceCoord]
 
 def _generate_max_min(coord_string: str, coords: PieceCoords):
     """
-    Returns the max and min x and y coords for the coord string and coords provided.
+    Returns the max and min x and y coordinates for the coordinate string and coordinates provided.
 
     :param coord_string: the string specifying what to calculate.
     :param coords: the piece coordinates.
-    :return: the max and min x and y coords for the coord string and coords provided.
+    :return: the max and min x and y coordinates for the coordinate string and coordinates provided.
     """
 
     coord_strings = {

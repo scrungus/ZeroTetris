@@ -12,7 +12,7 @@ from .simplified_tetris_engine import SimplifiedTetrisEngine
 
 class SimplifiedTetrisBaseEnv(gym.Env):
     """
-    A class representing a simplified Tetris base environment, which ensures that all custom envs inherit from gym.Env and implement the essential methods and spaces.
+    This class represents a simplified Tetris base environment, ensuring that all custom envs inherit from gym.Env and implement the essential methods and spaces.
 
     :param grid_dims: the grid dimensions.
     :param piece_size: the size of every piece.
@@ -90,7 +90,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     def step(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
         """
-        Hard drops the current piece according to the argument provided. Terminates the game if a condition is met. Otherwise, a new piece is selected, and the anchor is reset.
+        Hard drops the current piece according to the argument provided. The game terminates if the piece cannot fit into the bottom height-piece_size rows. Otherwise, a new piece is selected, and the anchor is reset.
 
         :param action: the action to be taken.
         :return: the next observation, reward, game termination indicator, and env info.

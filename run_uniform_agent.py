@@ -6,7 +6,7 @@ from gym_simplifiedtetris.agents import UniformAgent
 
 def main():
     """
-    Run 10 games, selections actions uniformly at random.
+    Run ten games, selecting actions uniformly at random.
     """
 
     ep_returns = np.zeros(10)

@@ -3,9 +3,9 @@ from typing import Tuple
 import numpy as np
 
 
-class SimplifiedTetrisShapingReward(object):
+class PotentialBasedShapingReward(object):
     """
-    A class representing a potential-based shaping reward.
+    This class instantiates a potential-based shaping reward object.
     """
 
     reward_range = (-1, 5)
@@ -54,7 +54,11 @@ class SimplifiedTetrisShapingReward(object):
         return terminal_shaping_reward
 
     def _update_range(self, heuristic_value: int) -> None:
-        """Update the heuristic range."""
+        """
+        Update the heuristic range.
+
+        :param heuristic_value: the computed heuristic value.
+        """
 
         if heuristic_value > self._heuristic_range["max"]:
             self._heuristic_range["max"] = heuristic_value

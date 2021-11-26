@@ -15,7 +15,7 @@ class SimplifiedTetrisEngine(object):
     """
     A class representing a simplified Tetris engine containing methods
     that retrieve the actions available for each of the pieces in use, drop
-    pieces vertically downwards having identified the correct location to
+    pieces vertically downwards, having identified the correct location to
     drop them, clear full rows, and render a game of Tetris.
 
     :param grid_dims: the grid dimensions (height and width).
@@ -75,7 +75,7 @@ class SimplifiedTetrisEngine(object):
             self._white,  # Empty.
             self._get_bgr_code("cyan"),  # 'I'.
             self._get_bgr_code("orange"),  # 'L'.
-            self._get_bgr_code("yellow"),  #  'O'.
+            self._get_bgr_code("yellow"),  #  'O'.
             self._get_bgr_code("purple"),  # 'T'.
             self._get_bgr_code("blue"),  # 'J'.
             self._get_bgr_code("green"),  # 'S'.
@@ -480,9 +480,9 @@ class SimplifiedTetrisEngine(object):
 
         return self._get_priorities(max_indices)
 
-    def _get_priorities(self, max_indices) -> np.array:
+    def _get_priorities(self, max_indices: np.array) -> np.array:
         """
-        Calculates the priorites of the available actions.
+        Calculates the priorities of the available actions.
 
         :param max_indices: the actions with the maximum ratings.
         :return: the priorities.
@@ -634,7 +634,11 @@ class SimplifiedTetrisEngine(object):
         return cumulative_wells
 
     def _rotate_piece(self, rotation: int) -> None:
-        """Sets the piece's rotation and rotates the current piece."""
+        """
+        Sets the piece's rotation and rotates the current piece.
+
+        :param rotation: the piece's rotation.
+        """
 
         self._piece._rotation = rotation
         self._piece._coords = self._piece._all_coords[self._piece._rotation]

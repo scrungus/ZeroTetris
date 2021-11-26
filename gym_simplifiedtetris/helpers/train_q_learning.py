@@ -1,3 +1,5 @@
+from typing import Optional
+
 import gym
 import numpy as np
 from tqdm import tqdm
@@ -9,14 +11,14 @@ def train_q_learning(
     env: gym.Env,
     agent: QLearningAgent,
     num_eval_timesteps: int,
-    render: bool = False,
+    render: Optional[bool] = False,
 ) -> QLearningAgent:
     """
     Trains and evaluates a Q-learning agent on the SimplifiedTetris environment.
 
-    :param env: the env to train the Q-learning agent on.
+    :param env: the Q-learning agent will be evaluated on this env.
     :param agent: the Q-learning agent.
-    :param num_eval_timesteps: the number of timesteps to evaluate for.
+    :param num_eval_timesteps: the agent will be evaluated for this number of timesteps.
     :param render: whether to render the env.
     :return: the trained Q-learning agent.
     """

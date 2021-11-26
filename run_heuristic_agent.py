@@ -6,7 +6,7 @@ from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
 def main():
     """
-    Evaluates an agents that selects action according to a heuristic.
+    Evaluate an agent that selects action according to a heuristic.
     """
 
     num_episodes = 30

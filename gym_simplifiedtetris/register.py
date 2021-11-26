@@ -10,7 +10,7 @@ def register(incomplete_id: str, entry_point: str) -> None:
     Registers the custom environments in Gym.
 
     :param idx: part of the official environment ID.
-    :param entry_point: the Python entrypoint of the environment.
+    :param entry_point: the Python entry point of the environment.
     """
 
     assert incomplete_id.startswith(
