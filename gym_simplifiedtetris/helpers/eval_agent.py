@@ -17,6 +17,7 @@ def eval_agent(
     :param render: renders the agent playing SimplifiedTetris after training.
     :return: the mean and std score obtained from letting the agent play num_episodes games.
     """
+
     ep_returns = np.zeros(num_episodes, dtype=int)
     env._engine._final_scores = np.array([], dtype=int)
 

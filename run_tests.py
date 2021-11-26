@@ -11,6 +11,7 @@ def main() -> None:
     at random. In every game, the reward received is validated and the env is rendered for visual
     inspection.
     """
+
     for env_id, env_name in enumerate(env_list):
         print(f"Testing the env: {env_name} ({env_id+1}/{len(env_list)})")
 

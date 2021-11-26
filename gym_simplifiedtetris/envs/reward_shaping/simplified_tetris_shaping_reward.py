@@ -11,6 +11,7 @@ class SimplifiedTetrisShapingReward(object):
     reward_range = (-1, 5)
 
     def __init__(self):
+
         self._heuristic_range = {"min": 1000, "max": -1}
 
         # The old potential is 1 because there are no holes at the start of a game.
@@ -23,6 +24,7 @@ class SimplifiedTetrisShapingReward(object):
 
         :return: the potential-based shaping reward and the number of lines cleared.
         """
+
         num_lines_cleared = self._engine._clear_rows()
         heuristic_value = self._engine._get_holes()
         self._update_range(heuristic_value)
@@ -36,6 +38,7 @@ class SimplifiedTetrisShapingReward(object):
         )
         shaping_reward = (new_potential - self._old_potential) + num_lines_cleared
         self._old_potential = new_potential
+
         return shaping_reward, num_lines_cleared
 
     def _get_terminal_reward(self) -> float:
@@ -44,8 +47,10 @@ class SimplifiedTetrisShapingReward(object):
 
         :return: the terminal potential-based shaping reward.
         """
+
         terminal_shaping_reward = -self._old_potential
         self._old_potential = self._initial_potential
+
         return terminal_shaping_reward
 
     def _update_range(self, heuristic_value: int) -> None:

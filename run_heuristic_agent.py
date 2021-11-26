@@ -8,6 +8,7 @@ def main():
     """
     Evaluates an agents that selects action according to a heuristic.
     """
+
     num_episodes = 30
     ep_returns = np.zeros(num_episodes)
 

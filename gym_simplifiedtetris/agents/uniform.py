@@ -9,6 +9,7 @@ class UniformAgent(object):
     """
 
     def __init__(self, num_actions: int):
+
         self._num_actions = num_actions
 
     def predict(self) -> int:
@@ -17,4 +18,5 @@ class UniformAgent(object):
 
         :return: the action chosen by the agent.
         """
+
         return np.random.randint(0, self._num_actions)

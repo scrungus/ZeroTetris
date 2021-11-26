@@ -12,6 +12,7 @@ def register(incomplete_id: str, entry_point: str) -> None:
     :param idx: part of the official environment ID.
     :param entry_point: the Python entrypoint of the environment.
     """
+
     assert incomplete_id.startswith(
         "simplifiedtetris-"
     ), 'Env ID should start with "simplifiedtetris-".'

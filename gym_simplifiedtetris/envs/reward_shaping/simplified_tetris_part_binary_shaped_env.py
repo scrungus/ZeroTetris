@@ -16,6 +16,7 @@ class SimplifiedTetrisPartBinaryShapedEnv(
     """
 
     def __init__(self, **kwargs):
+
         super().__init__()
         SimplifiedTetrisPartBinaryEnv.__init__(self, **kwargs)
 

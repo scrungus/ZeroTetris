@@ -24,6 +24,7 @@ class QLearningAgent(object):
         gamma: Optional[float] = 0.99,
         epsilon: Optional[float] = 1.0,
     ):
+
         self.epsilon = epsilon
         self.alpha = alpha
         self.gamma = gamma

@@ -14,4 +14,5 @@ class HeuristicAgent(object):
         :param heuristic_scores: the heuristic scores for each action.
         :return: the action with the largest heuristic score.
         """
+
         return np.argmax(ratings_or_priorities)

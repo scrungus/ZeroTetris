@@ -12,12 +12,21 @@ PieceCoords = Dict[Rotation, PieceCoord]
 
 
 def _generate_max_min(coord_string: str, coords: PieceCoords):
+    """
+    Returns the max and min x and y coords for the coord string and coords provided.
+
+    :param coord_string: the string specifying what to calculate.
+    :param coords: the piece coordinates.
+    :return: the max and min x and y coords for the coord string and coords provided.
+    """
+
     coord_strings = {
         "max_y_coord": {"func": np.max, "index": 1},
         "min_y_coord": {"func": np.min, "index": 1},
         "max_x_coord": {"func": np.max, "index": 0},
         "min_x_coord": {"func": np.min, "index": 0},
     }
+
     return {
         rot: coord_strings[coord_string]["func"](
             [coord[coord_strings[coord_string]["index"]] for coord in coords]
@@ -28,6 +37,7 @@ def _generate_max_min(coord_string: str, coords: PieceCoords):
 
 @dataclass
 class Piece(object):
+
     _size: int
     _idx: int
     _rotation: int = 0
@@ -40,6 +50,7 @@ class Piece(object):
     _min_x_coord: Dict[int, int] = field(init=False)
 
     def __post_init__(self):
+
         self._all_coords = deepcopy(PIECES_DICT[self._size][self._idx]["coords"])
         self._coords = self._all_coords[self._rotation]
         self._name = deepcopy(PIECES_DICT[self._size][self._idx]["name"])

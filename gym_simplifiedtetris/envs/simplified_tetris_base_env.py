@@ -34,6 +34,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
     def __init__(
         self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
     ):
+
         if not isinstance(grid_dims, (list, tuple)) or len(grid_dims) != 2:
             raise TypeError(
                 "Inappropriate format provided for grid_dims. It should be [height(int), width(int)] or (height(int), width(int))."
@@ -49,7 +50,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         possible_grid_dims = [[20, 10], [10, 10], [8, 6], [7, 4]]
         assert (
             list(grid_dims) in possible_grid_dims
-        ), f"Grid dimensions must be one of {possible_grid_dims}."
+        ), f"Grid dimensions must be one of (20, 10), (10, 10), (8, 6), or (7, 4)."
 
         self._height_, self._width_ = grid_dims
         self._piece_size_ = piece_size
@@ -77,7 +78,14 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         return f"{self.__class__.__name__}(({self._height_!r}, {self._width_!r}), {self._piece_size_!r})"
 
     def reset(self) -> np.array:
+        """
+        Resets the env.
+
+        :return: the current obs.
+        """
+
         self._engine._reset()
+
         return self._get_obs()
 
     def step(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
@@ -87,6 +95,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         :param action: the action to be taken.
         :return: the next observation, reward, game termination indicator, and env info.
         """
+
         info = {}
 
         translation, rotation = self._engine._all_available_actions[
@@ -115,18 +124,44 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         return self._get_obs(), float(reward), False, info
 
     def render(self, mode: Optional[str] = "human") -> np.ndarray:
+        """
+        Renders the env.
+
+        :param mode: the render mode.
+        :return: the image pixel values.
+        """
+
         return self._engine._render(mode)
 
     def close(self) -> None:
+        """Closes the open windows."""
+
         return self._engine._close()
 
     def _seed(self, seed: Optional[int] = 8191) -> None:
+        """
+        Seeds the env.
+
+        :param seed: an optional seed to seed the rng with.
+        """
+
         self._np_random, _ = seeding.np_random(seed)
 
     def _get_reward(self) -> Tuple[float, int]:
+        """
+        Returns the reward.
+
+        :return: the reward and the number of lines cleared.
+        """
+
         return self._engine._get_reward()
 
     def _get_terminal_reward(self) -> float:
+        """
+        Returns the terminal reward.
+
+        :return: the terminal reward.
+        """
         return 0.0
 
     @abstractmethod

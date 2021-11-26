@@ -6,7 +6,10 @@ from ..agents.q_learning import QLearningAgent
 
 
 def train_q_learning(
-    env: gym.Env, agent: QLearningAgent, num_eval_timesteps: int
+    env: gym.Env,
+    agent: QLearningAgent,
+    num_eval_timesteps: int,
+    render: bool = False,
 ) -> QLearningAgent:
     """
     Trains and evaluates a Q-learning agent on the SimplifiedTetris environment.
@@ -14,6 +17,8 @@ def train_q_learning(
     :param env: the env to train the Q-learning agent on.
     :param agent: the Q-learning agent.
     :param num_eval_timesteps: the number of timesteps to evaluate for.
+    :param render: whether to render the env.
+    :return: the trained Q-learning agent.
     """
 
     ep_return = 0
@@ -23,6 +28,9 @@ def train_q_learning(
     obs = env.reset()
 
     for _ in tqdm(range(num_eval_timesteps), desc="No. of time steps completed"):
+
+        if render:
+            env.render()
 
         action = agent.predict(obs)
 
