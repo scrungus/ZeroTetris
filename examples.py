@@ -1,9 +1,8 @@
-import gym
-
-from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
-
-
 def run_example_1():
+    import gym
+
+    from gym_simplifiedtetris import SimplifiedTetrisBinaryEnv as Tetris
+
     env = gym.make("simplifiedtetris-binary-20x10-4-v0")
     obs = env.reset()
 
@@ -23,6 +22,8 @@ def run_example_1():
 
 
 def run_example_2():
+    from gym_simplifiedtetris import SimplifiedTetrisBinaryEnv as Tetris
+
     env = Tetris(grid_dims=(20, 10), piece_size=4)
 
 

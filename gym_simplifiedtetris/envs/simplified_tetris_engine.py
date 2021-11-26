@@ -5,10 +5,9 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 import cv2.cv2 as cv
 import numpy as np
-from matplotlib import colors
 from PIL import Image
 
-from ..utils.piece import Piece
+from ..utils import Piece, Colours
 
 
 class SimplifiedTetrisEngine(object):
@@ -24,18 +23,7 @@ class SimplifiedTetrisEngine(object):
     :param num_actions: the number of available actions in each state.
     """
 
-    CELL_SIZE = 40
-
-    @staticmethod
-    def _get_bgr_code(colour_name: str) -> Tuple[float, float, float]:
-        """
-        Gets the BGR code corresponding to the arg provided.
-
-        :param colour_name: a string of the colour name,
-        :return: an inverted RGB code of the inputted colour name.
-        """
-
-        return tuple(np.array([255, 255, 255]) * colors.to_rgb(colour_name))[::-1]
+    CELL_SIZE = 50
 
     @staticmethod
     def _close() -> None:
@@ -69,17 +57,15 @@ class SimplifiedTetrisEngine(object):
         self._img = np.array([])
         self._last_move_info = {}
 
-        self._black = self._get_bgr_code("black")
-        self._white = self._get_bgr_code("white")
         self._grid_colours = [
-            self._white,  # Empty.
-            self._get_bgr_code("cyan"),  # 'I'.
-            self._get_bgr_code("orange"),  # 'L'.
-            self._get_bgr_code("yellow"),  #  'O'.
-            self._get_bgr_code("purple"),  # 'T'.
-            self._get_bgr_code("blue"),  # 'J'.
-            self._get_bgr_code("green"),  # 'S'.
-            self._get_bgr_code("red"),  # 'Z'.
+            Colours.WHITE.value,  # Empty.
+            Colours.CYAN.value,  # 'I'.
+            Colours.ORANGE.value,  # 'L'.
+            Colours.YELLOW.value,  #  'O'.
+            Colours.PURPLE.value,  # 'T'.
+            Colours.BLUE.value,  # 'J'.
+            Colours.GREEN.value,  # 'S'.
+            Colours.RED.value,  # 'Z'.
         ]
 
         self._initialise_pieces()
@@ -173,7 +159,7 @@ class SimplifiedTetrisEngine(object):
             + 1,
             400:,
             :,
-        ] = self._get_bgr_code("red")
+        ] = Colours.RED.value
 
     def _get_grid(self) -> np.ndarray:
         """
@@ -212,10 +198,10 @@ class SimplifiedTetrisEngine(object):
         for j in range(-int(self.CELL_SIZE / 40), int(self.CELL_SIZE / 40) + 1):
             self._img[
                 [i * self.CELL_SIZE + j for i in range(self._height)], :, :
-            ] = self._black
+            ] = Colours.BLACK.value
             self._img[
                 :, [i * self.CELL_SIZE + j for i in range(self._width)], :
-            ] = self._black
+            ] = Colours.BLACK.value
 
     def _add_img_left(self) -> None:
         """
@@ -231,10 +217,16 @@ class SimplifiedTetrisEngine(object):
             img_array=img_array,
             items=[
                 [
+                    "Height",
+                    "Width",
+                    "",
                     "Current score",
                     "Mean score",
                 ],
                 [
+                    f"{self._height}",
+                    f"{self._width}",
+                    "",
                     f"{self._score}",
                     f"{mean_score:.1f}",
                 ],
@@ -262,7 +254,7 @@ class SimplifiedTetrisEngine(object):
                     (x_offsets[i], 60 * (count + 1)),
                     cv.FONT_HERSHEY_SIMPLEX,
                     1,
-                    self._white,
+                    Colours.WHITE.value,
                     2,
                     cv.LINE_AA,
                 )

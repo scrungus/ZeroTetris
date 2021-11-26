@@ -2,8 +2,8 @@ import unittest
 
 import numpy as np
 
-from gym_simplifiedtetris.envs import SimplifiedTetrisEngine as Engine
-from gym_simplifiedtetris.utils.piece import Piece
+from gym_simplifiedtetris import SimplifiedTetrisEngine as Engine
+from gym_simplifiedtetris import Piece
 
 
 class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
@@ -31,14 +31,6 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
     def tearDown(self) -> None:
         self.engine._close()
         del self.engine
-
-    def test__get_bgr_code_orange(self) -> None:
-        bgr_code_orange = self.engine._get_bgr_code("orange")
-        self.assertEqual(bgr_code_orange, (0.0, 165.0, 255.0))
-
-    def test__get_bgr_code_coral(self) -> None:
-        bgr_code_coral = self.engine._get_bgr_code("coral")
-        self.assertEqual(bgr_code_coral, (80.0, 127.0, 255.0))
 
     def test__is_illegal_non_empty_overlapping(self) -> None:
         self.engine._piece = Piece(self.piece_size, 0)
