@@ -462,7 +462,7 @@ class SimplifiedTetrisEngine(object):
             translation, rotation = self._all_available_actions[self._piece._idx][
                 action
             ]
-            x_spawn_pos = (self._width / 2) + 1
+            x_spawn_pos = self._width / 2 + 1
             priorities[action] += 100 * abs(translation - x_spawn_pos)
 
             if translation < x_spawn_pos:

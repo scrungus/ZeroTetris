@@ -16,6 +16,9 @@ def get_bgr_code(colour_name: str) -> Tuple[float, float, float]:
 
 
 class Colours(Enum):
+    """
+    Enumerate inverted RGB code.
+    """
 
     WHITE = get_bgr_code("white")
     BLACK = get_bgr_code("black")

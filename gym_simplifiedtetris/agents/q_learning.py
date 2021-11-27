@@ -5,7 +5,7 @@ import numpy as np
 
 class QLearningAgent(object):
     """
-    TODO
+    An agent that learns a Q-value for each of the state-action pairs it visits.
 
     :param grid_dims: the grid dimensions.
     :param num_pieces: the number of pieces in use.

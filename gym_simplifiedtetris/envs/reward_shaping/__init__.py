@@ -1,8 +1,13 @@
-from gym_simplifiedtetris.envs.reward_shaping.simplified_tetris_binary_shaped_env import (
+from .simplified_tetris_binary_shaped_env import (
     SimplifiedTetrisBinaryShapedEnv,
 )
-from gym_simplifiedtetris.envs.reward_shaping.simplified_tetris_part_binary_shaped_env import (
+from .simplified_tetris_part_binary_shaped_env import (
     SimplifiedTetrisPartBinaryShapedEnv,
 )
+from .potential_based_shaping_reward import PotentialBasedShapingReward
 
-__all__ = ["SimplifiedTetrisBinaryShapedEnv", "SimplifiedTetrisPartBinaryShapedEnv"]
+__all__ = [
+    "SimplifiedTetrisBinaryShapedEnv",
+    "SimplifiedTetrisPartBinaryShapedEnv",
+    "PotentialBasedShapingReward",
+]

@@ -20,7 +20,7 @@ class PotentialBasedShapingReward(object):
 
     def _get_reward(self) -> Tuple[float, int]:
         """
-        Get the potential-based shaping reward.
+        Override superclass method and return the potential-based shaping reward.
 
         :return: the potential-based shaping reward and the number of lines cleared.
         """
@@ -42,7 +42,7 @@ class PotentialBasedShapingReward(object):
 
     def _get_terminal_reward(self) -> float:
         """
-        Return the terminal potential-based shaping reward.
+        Override superclass method and return the terminal potential-based shaping reward.
 
         :return: the terminal potential-based shaping reward.
         """

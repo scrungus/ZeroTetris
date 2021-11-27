@@ -3,7 +3,7 @@ import numpy as np
 
 class HeuristicAgent(object):
     """
-    Instantiate an agent that selects the action with the largest heuristic score.
+    An agent that selects actions according to a heuristic.
     """
 
     @staticmethod

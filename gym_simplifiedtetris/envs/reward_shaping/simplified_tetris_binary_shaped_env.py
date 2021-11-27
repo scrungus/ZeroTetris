@@ -18,6 +18,7 @@ class SimplifiedTetrisBinaryShapedEnv(
     """
 
     def __init__(self, **kwargs):
+        """Extend the two superclasses."""
         super().__init__()
         SimplifiedTetrisBinaryEnv.__init__(self, **kwargs)
 

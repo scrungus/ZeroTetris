@@ -36,6 +36,9 @@ def _generate_max_min(coord_string: str, coords: PieceCoords):
 
 @dataclass
 class Piece(object):
+    """
+    Class for instantiating a Tetris piece.
+    """
 
     _size: int
     _idx: int
@@ -49,7 +52,6 @@ class Piece(object):
     _min_x_coord: Dict[int, int] = field(init=False)
 
     def __post_init__(self):
-
         self._all_coords = deepcopy(PIECES_DICT[self._size][self._idx]["coords"])
         self._coords = self._all_coords[self._rotation]
         self._name = deepcopy(PIECES_DICT[self._size][self._idx]["name"])

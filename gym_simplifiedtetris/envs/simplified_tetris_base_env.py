@@ -34,9 +34,9 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
     ):
 
-        if not isinstance(grid_dims, (list, tuple)) or len(grid_dims) != 2:
+        if not isinstance(grid_dims, (list, tuple, np.array)) or len(grid_dims) != 2:
             raise TypeError(
-                "Inappropriate format provided for grid_dims. It should be [height(int), width(int)] or (height(int), width(int))."
+                "Inappropriate format provided for grid_dims. It should be a list, tuple or numpy array of length 2 containing integers."
             )
 
         assert piece_size in [

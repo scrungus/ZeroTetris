@@ -3,7 +3,7 @@ import numpy as np
 
 class UniformAgent(object):
     """
-    Instantiates an agent that selects actions uniformly at random.
+    An agent that selects actions uniformly at random.
 
     :param num_actions: the number of actions available to the agent in each state.
     """

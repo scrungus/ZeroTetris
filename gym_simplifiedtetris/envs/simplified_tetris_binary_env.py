@@ -16,6 +16,11 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
 
     @property
     def observation_space(self) -> spaces.Box:
+        """
+        Override the superclass property.
+
+        :return: a Box obs space.
+        """
         return spaces.Box(
             low=np.append(np.zeros(self._width_ * self._height_), 0),
             high=np.append(
@@ -26,7 +31,7 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
 
     def _get_obs(self) -> np.array:
         """
-        Return the current obs.
+        Override superclass method and return a flattened NumPy array containing the grid's binary representation, plus the current piece's id.
 
         :return: the current obs.
         """
