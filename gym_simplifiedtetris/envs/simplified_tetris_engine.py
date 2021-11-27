@@ -12,7 +12,8 @@ from gym_simplifiedtetris.utils import Piece, Colours
 
 class SimplifiedTetrisEngine(object):
     """
-    A class representing a simplified Tetris engine. TODO
+    A class representing a simplified Tetris engine.
+    TODO
 
     :param grid_dims: the grid dimensions (height and width).
     :param piece_size: the size of the pieces in use.
@@ -22,16 +23,16 @@ class SimplifiedTetrisEngine(object):
 
     CELL_SIZE = 50
 
-    BLOCK_COLOURS = [
-        Colours.WHITE.value,  # Empty.
-        Colours.CYAN.value,  # 'I'.
-        Colours.ORANGE.value,  # 'L'.
-        Colours.YELLOW.value,  #  'O'.
-        Colours.PURPLE.value,  # 'T'.
-        Colours.BLUE.value,  # 'J'.
-        Colours.GREEN.value,  # 'S'.
-        Colours.RED.value,  # 'Z'.
-    ]
+    BLOCK_COLOURS = {
+        0: Colours.WHITE.value,
+        1: Colours.CYAN.value,
+        2: Colours.ORANGE.value,
+        3: Colours.YELLOW.value,
+        4: Colours.PURPLE.value,
+        5: Colours.BLUE.value,
+        6: Colours.GREEN.value,
+        7: Colours.RED.value,
+    }
 
     @staticmethod
     def _close() -> None:
@@ -111,27 +112,27 @@ class SimplifiedTetrisEngine(object):
                 cv.imshow("Simplified Tetris", self._img)
                 k = cv.waitKey(self._sleep_time)
 
-                if k == 3:  # right arrow
+                if k == 3:  # Right arrow has been pressed.
                     self._sleep_time -= 100
 
                     if self._sleep_time < 100:
                         self._sleep_time = 1
 
                     time.sleep(self._sleep_time / 1000)
-                elif k == 2:  # Left arrow.
+                elif k == 2:  # Left arrow has been pressed.
                     self._sleep_time += 100
                     time.sleep(self._sleep_time / 1000)
-                elif k == 27:  # Esc.
+                elif k == 27:  # Esc has been pressed.
                     self._show_agent_playing = False
                     self._close()
-                elif k == 32:  # Spacebar.
+                elif k == 32:  # Spacebar has been pressed.
                     while True:
                         j = cv.waitKey(30)
 
-                        if j == 32:  # Spacebar.
+                        if j == 32:  # Spacebar has been pressed.
                             break
 
-                        if j == 27:  # Esc.
+                        if j == 27:  # Esc has been pressed.
                             self._show_agent_playing = False
                             self._close()
                             break
@@ -268,7 +269,8 @@ class SimplifiedTetrisEngine(object):
             if y_pos < 0:
                 continue
 
-            # Check if the move is illegal. The last condition must come after the previous conditions.
+            # Check if the move is illegal. The last condition must come after
+            # the previous conditions.
             if (
                 x_pos < 0
                 or x_pos >= self._width
@@ -285,7 +287,8 @@ class SimplifiedTetrisEngine(object):
         Find the position to place the piece (the anchor) by hard dropping the current piece.
         """
         while True:
-            # Keep going until current piece occupies a full cell, then backtrack once.
+            # Keep going until current piece occupies a full cell, then
+            # backtrack once.
             if not self._is_illegal():
                 self._anchor[1] += 1
             else:
@@ -557,13 +560,7 @@ class SimplifiedTetrisEngine(object):
 
     def _get_cumulative_wells(self) -> int:
         """
-        Get the cumulative wells value.
-
-        Cumulative wells is defined here: https://arxiv.org/abs/1905.01652.
-
-        For each well, find the depth of the well, d(w), then calculate the sum from i=1 to d(w) of i. Lastly, sum the well sums.
-
-        A block is part of a well if the cells directly on either side are full, and the block can be reached from above (there are no full cells directly above it).
+        Get the cumulative wells value. Cumulative wells is defined here: https://arxiv.org/abs/1905.01652.  For each well, find the depth of the well, d(w), then calculate the sum from i=1 to d(w) of i.  Lastly, sum the well sums.  A block is part of a well if the cells directly on either side are full, and the block can be reached from above (there are no full cells directly above it).
 
         :return: cumulative wells.
         """
@@ -586,7 +583,7 @@ class SimplifiedTetrisEngine(object):
                 if cell_mid >= 1:
                     well_complete = True
 
-                # Checks either side to see if the cells are occupied.
+                # Check either side to see if the cells are occupied.
                 if not well_complete and cell_left > 0 and cell_right > 0:
                     cumulative_wells += depth
                     depth += 1

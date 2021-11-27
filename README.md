@@ -45,7 +45,7 @@
 
 > 🟥 Simplified Tetris environments compliant with OpenAI Gym's API
 
-Gym-SimplifiedTetris is a pip installable package that creates simplified Tetris environments compliant with [OpenAI Gym's API](https://github.com/openai/gym). The environments are simplified because the player must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
+Gym-SimplifiedTetris is a pip installable package that creates simplified Tetris environments compliant with [OpenAI Gym's API](https://github.com/openai/gym). The environments are simplified because the player must select the column and piece's rotation before the piece is dropped vertically downwards.  If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
 
 ## Table of contents <!-- omit in toc -->
 
@@ -207,18 +207,18 @@ The user can close all open windows using:
 ### 2.3. Action and observation spaces
 
 Each environment comes with an `observation_space` that is a `Box` space and an `action_space` t
-hat is a `Discrete` space. At each time step, the agent must choose an action, an integer from a particular range. Each action maps to a tuple that specifies the column to drop the piece and its rotation. The number of actions available for each of the pieces is given below:
+hat is a `Discrete` space. At each time step, the agent must choose an action, an integer from a particular range.  Each action maps to a tuple that specifies the column to drop the piece and its rotation.  The number of actions available for each of the pieces is given below:
 
 - Monominos: w
 - Dominos: 2w - 1
 - Trominoes: 4w - 4
 - Tetriminos: 4w - 6,
 
-where w is the grid width. With this action space, some actions have the same effect on the grid as others. When actions are selected uniformly at random, and the current piece is the 'O' Tetrimino, two actions are chosen with a smaller probability than the other actions.
+where w is the grid width.  With this action space, some actions have the same effect on the grid as others.  When actions are selected uniformly at random, and the current piece is the 'O' Tetrimino, two actions are chosen with a smaller probability than the other actions.
 
 ### 2.4. Game ending
 
-Each game terminates if any of the dropped piece's square blocks enter into the top `piece_size` rows before any full rows are cleared. This condition ensures that scores achieved are lower bounds on the score that the agent could have obtained on a standard game of Tetris, as laid out in Colin Fahey's ['Standard Tetris' specification](https://www.colinfahey.com/tetris/tetris.html#:~:text=5.%20%22Standard%20Tetris%22%20specification).
+Each game terminates if any of the dropped piece's square blocks enter into the top `piece_size` rows before any full rows are cleared.  This condition ensures that scores achieved are lower bounds on the score that the agent could have obtained on a standard game of Tetris, as laid out in Colin Fahey's ['Standard Tetris' specification](https://www.colinfahey.com/tetris/tetris.html#:~:text=5.%20%22Standard%20Tetris%22%20specification).
 
 ### 2.5. Building more environments
 
@@ -243,7 +243,7 @@ The uniform agent selects actions uniformly at random. See [run_uniform_agent.py
 
 ### 3.2. Q-learning
 
-Due to the curse of dimensionality, this agent struggles to learn as the grid's dimensions are increased; the size of the state-action space grows exponentially. The exploration rate parameter, epsilon, is linearly annealed over the training period. Following the training period, the Q-learning agent selects the action with the highest state-action value. See [run_q_learning_agent.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_q_learning_agent.py) for an example of how to use it.
+Due to the curse of dimensionality, this agent struggles to learn as the grid's dimensions are increased; the size of the state-action space grows exponentially. The exploration rate parameter, epsilon, is linearly annealed over the training period.  Following the training period, the Q-learning agent selects the action with the highest state-action value.  See [run_q_learning_agent.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_q_learning_agent.py) for an example of how to use it.
 
 <p align="center">
     <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/7x4_3_q_learning.gif" width="500">
@@ -251,11 +251,11 @@ Due to the curse of dimensionality, this agent struggles to learn as the grid's 
 
 ### 3.3. Heuristic
 
-The heuristic agent selects the action with the highest heuristic score, based on the [Dellacherie feature set](https://arxiv.org/abs/1905.01652). The heuristic score for each possible action is computed using the following heuristic, crafted by Pierre Dellacherie [Colin Fahey's website](https://colinfahey.com):
+The heuristic agent selects the action with the highest heuristic score, based on the [Dellacherie feature set](https://arxiv.org/abs/1905.01652).  The heuristic score for each possible action is computed using the following heuristic, crafted by Pierre Dellacherie [Colin Fahey's website](https://colinfahey.com):
 
 ***- landing height + eroded cells - row transitions - column transitions -4 x holes - cumulative wells***
 
-Similarly to how Colin Fahey implemented Dellacherie's agent, ties are broken by selecting the action with the largest priority. Deviations from and to the left of the centre of the grid are rewarded, and rotations are punished. See [run_heuristic_agent.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_heuristic_agent.py) for an example of how to use it.
+Similarly to how Colin Fahey implemented Dellacherie's agent, ties are broken by selecting the action with the largest priority.  Deviations from and to the left of the centre of the grid are rewarded, and rotations are punished.  See [run_heuristic_agent.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_heuristic_agent.py) for an example of how to use it.
 
 <p align="center">
     <img src="assets/20x10_4_heuristic.gif" width="500">

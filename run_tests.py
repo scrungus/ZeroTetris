@@ -1,3 +1,8 @@
+"""
+TODO
+"""
+
+
 import gym
 from stable_baselines3.common.env_checker import check_env
 
@@ -19,7 +24,6 @@ def main() -> None:
         num_episodes = 0
         is_first_move = True
         while num_episodes < 3:
-            # env.render()
             action = env.action_space.sample()
             obs, reward, done, _ = env.step(action)
 

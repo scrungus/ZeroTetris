@@ -1,3 +1,7 @@
+"""
+TODO
+"""
+
 from gym_simplifiedtetris.utils.piece import Piece
 from gym_simplifiedtetris.utils.colours import Colours
 

@@ -1,3 +1,7 @@
+"""
+TODO
+"""
+
 from gym_simplifiedtetris.register import register
 from gym_simplifiedtetris.envs.simplified_tetris_binary_env import (
     SimplifiedTetrisBinaryEnv,

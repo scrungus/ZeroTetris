@@ -1,3 +1,7 @@
+"""
+TODO
+"""
+
 from .simplified_tetris_binary_shaped_env import (
     SimplifiedTetrisBinaryShapedEnv,
 )
@@ -9,5 +13,4 @@ from .potential_based_shaping_reward import PotentialBasedShapingReward
 __all__ = [
     "SimplifiedTetrisBinaryShapedEnv",
     "SimplifiedTetrisPartBinaryShapedEnv",
-    "PotentialBasedShapingReward",
 ]

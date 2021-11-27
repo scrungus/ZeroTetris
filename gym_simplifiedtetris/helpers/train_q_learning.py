@@ -1,3 +1,7 @@
+"""
+TODO
+"""
+
 from typing import Optional
 
 import gym
@@ -40,7 +44,7 @@ def train_q_learning(
         agent.learn(reward=reward, obs=obs, next_obs=next_obs, action=action)
         ep_return += info["num_rows_cleared"]
 
-        # Epsilon annealing.
+        # Anneal epsilon so that it is zero by the end of training.
         agent.epsilon -= 1 / (num_eval_timesteps)
 
         if done:

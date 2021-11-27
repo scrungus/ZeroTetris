@@ -11,7 +11,8 @@ from gym_simplifiedtetris.envs.simplified_tetris_engine import SimplifiedTetrisE
 
 class SimplifiedTetrisBaseEnv(gym.Env):
     """
-    All custom envs inherit from gym.Env and implement the essential methods and spaces. TODO
+    All custom envs inherit from gym.Env and implement the essential methods and spaces.
+    TODO
 
     :param grid_dims: the grid dimensions.
     :param piece_size: the size of every piece.
@@ -90,7 +91,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     def step(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
         """
-        Hard drop the current piece according to the action. Terminate the game if the piece cannot fit into the bottom 'height-piece_size' rows. Otherwise, select a new piece and reset the anchor. TODO
+        Hard drop the current piece according to the action. Terminate the game if the piece cannot fit into the bottom 'height-piece_size' rows. Otherwise, select a new piece and reset the anchor.
 
         :param action: the action to be taken.
         :return: the next observation, reward, game termination indicator, and env info.
@@ -105,7 +106,8 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         self._engine._hard_drop()
         self._engine._update_grid(True)
 
-        # The game terminates when any of the dropped piece's blocks occupies any of the top 'piece_size' rows, before any full rows are cleared.
+        # The game terminates when any of the dropped piece's blocks occupies
+        # any of the top 'piece_size' rows, before any full rows are cleared.
         if np.any(self._engine._grid[:, : self._piece_size_]):
             info["num_rows_cleared"] = 0
             self._engine._final_scores = np.append(

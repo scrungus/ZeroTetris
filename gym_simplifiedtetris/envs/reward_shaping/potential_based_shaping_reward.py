@@ -1,3 +1,7 @@
+"""
+TODO
+"""
+
 from typing import Tuple
 
 import numpy as np
@@ -5,7 +9,8 @@ import numpy as np
 
 class PotentialBasedShapingReward(object):
     """
-    A potential-based shaping reward object. TODO
+    A potential-based shaping reward object.
+    TODO
     """
 
     reward_range = (-1, 5)
@@ -14,7 +19,8 @@ class PotentialBasedShapingReward(object):
 
         self._heuristic_range = {"min": 1000, "max": -1}
 
-        # The old potential is 1 because there are no holes at the start of a game.
+        # The old potential is 1 because there are no holes at the start of a
+        # game.
         self._old_potential = 1
         self._initial_potential = self._old_potential
 
