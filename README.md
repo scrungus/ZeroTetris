@@ -106,7 +106,7 @@ Here is a list of dependencies:
 
 ### 1.2. Usage
 
-The file [examples.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/examples.py) shows two examples of using an instance of the `simplifiedtetris-binary-20x10-4-v0` environment for ten games:
+The file [examples.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/examples.py) shows two examples of using an instance of the `simplifiedtetris-binary-20x10-4-v0` environment for ten game. You can create an environment using `gym.make`, supplying the environment's ID as an argument.
 
 ```python
 import gym
