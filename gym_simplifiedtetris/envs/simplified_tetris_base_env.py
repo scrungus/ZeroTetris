@@ -11,7 +11,8 @@ from gym_simplifiedtetris.envs.simplified_tetris_engine import SimplifiedTetrisE
 
 class SimplifiedTetrisBaseEnv(gym.Env):
     """
-    All custom envs inherit from gym.Env and implement the essential methods and spaces.
+    All custom envs inherit from gym.Env and implement the essential methods
+    and spaces.
     TODO
 
     :param grid_dims: the grid dimensions.
@@ -24,6 +25,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     @property
     def action_space(self) -> spaces.Discrete:
+        # Set the discrete action space.
         return spaces.Discrete(self._num_actions_)
 
     @property
@@ -77,7 +79,8 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         return np.array(self._engine._grid.T, dtype=int).__str__()
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(({self._height_!r}, {self._width_!r}), {self._piece_size_!r})"
+        return f"""{self.__class__.__name__}(({self._height_!r}, {self.
+        _width_!r}), {self._piece_size_!r})"""
 
     def reset(self) -> np.array:
         """
@@ -91,7 +94,9 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     def step(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
         """
-        Hard drop the current piece according to the action. Terminate the game if the piece cannot fit into the bottom 'height-piece_size' rows. Otherwise, select a new piece and reset the anchor.
+        Hard drop the current piece according to the action. Terminate the
+        game if the piece cannot fit into the bottom 'height-piece_size' rows.
+        Otherwise, select a new piece and reset the anchor.
 
         :param action: the action to be taken.
         :return: the next observation, reward, game termination indicator, and env info.
@@ -141,7 +146,6 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
         :param seed: an optional seed to seed the rng with.
         """
-
         self._np_random, _ = seeding.np_random(seed)
 
     def _get_reward(self) -> Tuple[float, int]:
@@ -150,10 +154,10 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
         :return: the reward and the number of lines cleared.
         """
-
         return self._engine._get_reward()
 
-    def _get_terminal_reward(self) -> float:
+    @staticmethod
+    def _get_terminal_reward() -> float:
         """
         Return the terminal reward.
 

@@ -100,6 +100,8 @@ class SimplifiedTetrisEngine(object):
         :param mode: the render mode.
         :return: the image pixel values.
         """
+        assert mode in ["human", "rgb_array"], "Mode should be 'human' or 'rgb_array'."
+
         grid = self._get_grid()
         self._resize_grid(grid)
         self._draw_separating_lines()
@@ -109,7 +111,7 @@ class SimplifiedTetrisEngine(object):
         if mode == "human":
             if self._show_agent_playing:
 
-                cv.imshow("Simplified Tetris", self._img)
+                cv.imshow(f"Simplified Tetris", self._img)
                 k = cv.waitKey(self._sleep_time)
 
                 if k == 3:  # Right arrow has been pressed.
@@ -131,15 +133,12 @@ class SimplifiedTetrisEngine(object):
 
                         if j == 32:  # Spacebar has been pressed.
                             break
-
-                        if j == 27:  # Esc has been pressed.
+                        elif j == 27:  # Esc has been pressed.
                             self._show_agent_playing = False
                             self._close()
                             break
-        elif mode == "rgb_array":
-            return self._img
         else:
-            raise ValueError('Mode should be "human".')
+            return self._img
 
     def _draw_boundary(self) -> None:
         """Draw a horizontal red line to indicate the cut off point."""
@@ -223,8 +222,9 @@ class SimplifiedTetrisEngine(object):
         )
         self._img = np.concatenate((img_array, self._img), axis=1)
 
+    @staticmethod
     def _add_statistics(
-        self, img_array: np.ndarray, items: List[List[str]], x_offsets: List[int]
+        img_array: np.ndarray, items: List[List[str]], x_offsets: List[int]
     ) -> None:
         """
         Add statistics to the array provided.
@@ -386,7 +386,7 @@ class SimplifiedTetrisEngine(object):
 
         :return: the available actions.
         """
-        available_actions = {}
+        available_actions: Dict[int, Tuple[int, int]] = {}
         count = 0
 
         for rotation in self._piece._all_coords.keys():
@@ -560,7 +560,12 @@ class SimplifiedTetrisEngine(object):
 
     def _get_cumulative_wells(self) -> int:
         """
-        Get the cumulative wells value. Cumulative wells is defined here: https://arxiv.org/abs/1905.01652.  For each well, find the depth of the well, d(w), then calculate the sum from i=1 to d(w) of i.  Lastly, sum the well sums.  A block is part of a well if the cells directly on either side are full, and the block can be reached from above (there are no full cells directly above it).
+        Get the cumulative wells value. Cumulative wells is defined here:
+        https://arxiv.org/abs/1905.01652.  For each well, find the depth of
+        the well, d(w), then calculate the sum from i=1 to d(w) of i.  Lastly,
+        sum the well sums.  A block is part of a well if the cells directly on
+        either side are full, and the block can be reached from above (there
+        are no full cells directly above it).
 
         :return: cumulative wells.
         """

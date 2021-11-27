@@ -110,6 +110,7 @@ The file [examples.py](https://github.com/OliverOverend/gym-simplifiedtetris/blo
 
 ```python
 import gym
+import gym_simplifiedtetris
 
 env = gym.make("simplifiedtetris-binary-20x10-4-v0")
 obs = env.reset()

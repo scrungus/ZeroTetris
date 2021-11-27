@@ -11,7 +11,8 @@ from gym_simplifiedtetris.envs.simplified_tetris_base_env import SimplifiedTetri
 
 class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
     """
-    A custom Gym env for Tetris, where the observation space is the binary representation of the grid plus the current piece's id.
+    A custom Gym env for Tetris, where the observation space is the binary
+    representation of the grid plus the current piece's id.
 
     :param grid_dims: the grid dimensions.
     :param piece_size: the size of every piece.
@@ -35,7 +36,9 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
 
     def _get_obs(self) -> np.array:
         """
-        Override superclass method and return a flattened NumPy array containing the grid's binary representation, plus the current piece's id.
+        Override superclass method and return a flattened NumPy array
+        containing the grid's binary representation, plus the current piece's
+        id.
 
         :return: the current obs.
         """

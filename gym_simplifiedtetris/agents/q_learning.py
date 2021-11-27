@@ -2,7 +2,7 @@
 TODO
 """
 
-from typing import List, Optional, Tuple, Union
+from typing import Optional, Sequence
 
 import numpy as np
 
@@ -21,7 +21,7 @@ class QLearningAgent(object):
 
     def __init__(
         self,
-        grid_dims: Union[List[int], Tuple[int]],
+        grid_dims: Sequence[int],
         num_pieces: int,
         num_actions: int,
         alpha: Optional[float] = 0.2,

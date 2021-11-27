@@ -1,10 +1,8 @@
 from copy import deepcopy
 from dataclasses import dataclass, field
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union
 
 import numpy as np
-
-from typing import Dict, List, Tuple, Union
 
 PieceCoord = List[Tuple[int, int]]
 Rotation = int

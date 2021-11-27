@@ -5,6 +5,7 @@ TODO
 
 def run_example_1():
     import gym
+    import gym_simplifiedtetris
 
     env = gym.make("simplifiedtetris-binary-20x10-4-v0")
     obs = env.reset()

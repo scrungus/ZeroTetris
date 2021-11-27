@@ -14,7 +14,8 @@ class SimplifiedTetrisBinaryShapedEnv(
 ):
     """
     A simplified Tetris environment, where the reward function is a
-    potential-based shaping reward and the observation space is the grid's binary representation plus the current piece's id.
+    potential-based shaping reward and the observation space is the grid's
+    binary representation plus the current piece's id.
 
     :param grid_dims: the grid's dimensions.
     :param piece_size: the size of the pieces in use.

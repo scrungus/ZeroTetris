@@ -1,11 +1,11 @@
 from enum import Enum
-from typing import Tuple
+from typing import Any, Tuple
 
 from matplotlib import colors
 import numpy as np
 
 
-def get_bgr_code(colour_name: str) -> Tuple[float, float, float]:
+def get_bgr_code(colour_name: str) -> Tuple[Any, ...]:
     """
     Get the inverted RGB code corresponding to the arg provided.
 

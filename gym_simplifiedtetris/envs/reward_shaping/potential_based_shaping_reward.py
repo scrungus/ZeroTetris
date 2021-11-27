@@ -6,6 +6,8 @@ from typing import Tuple
 
 import numpy as np
 
+from gym_simplifiedtetris.envs.simplified_tetris_base_env import SimplifiedTetrisBaseEnv
+
 
 class PotentialBasedShapingReward(object):
     """
@@ -16,7 +18,6 @@ class PotentialBasedShapingReward(object):
     reward_range = (-1, 5)
 
     def __init__(self):
-
         self._heuristic_range = {"min": 1000, "max": -1}
 
         # The old potential is 1 because there are no holes at the start of a
