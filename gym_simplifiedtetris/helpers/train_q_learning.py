@@ -4,7 +4,7 @@ import gym
 import numpy as np
 from tqdm import tqdm
 
-from ..agents.q_learning import QLearningAgent
+from gym_simplifiedtetris.agents.q_learning import QLearningAgent
 
 
 def train_q_learning(
@@ -14,7 +14,7 @@ def train_q_learning(
     render: Optional[bool] = False,
 ) -> QLearningAgent:
     """
-    Trains and evaluates a Q-learning agent on the SimplifiedTetris environment.
+    Train and evaluate a Q-learning agent on Tetris and return the trained Q-learning agent.
 
     :param env: the Q-learning agent will be evaluated on this env.
     :param agent: the Q-learning agent.
@@ -22,7 +22,6 @@ def train_q_learning(
     :param render: whether to render the env.
     :return: the trained Q-learning agent.
     """
-
     ep_return = 0
     ep_returns = np.array([], dtype=int)
     done = False

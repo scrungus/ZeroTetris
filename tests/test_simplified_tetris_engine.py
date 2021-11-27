@@ -2,8 +2,8 @@ import unittest
 
 import numpy as np
 
-from gym_simplifiedtetris import SimplifiedTetrisEngine as Engine
-from gym_simplifiedtetris import Piece
+from gym_simplifiedtetris.envs import SimplifiedTetrisEngine as Engine
+from gym_simplifiedtetris.utils import Piece
 
 
 class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):

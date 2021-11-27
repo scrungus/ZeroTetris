@@ -1,5 +1,4 @@
 from abc import abstractmethod
-import itertools
 from typing import Any, Dict, Optional, Sequence, Tuple
 
 import gym
@@ -7,12 +6,12 @@ import numpy as np
 from gym import spaces
 from gym.utils import seeding
 
-from .simplified_tetris_engine import SimplifiedTetrisEngine
+from gym_simplifiedtetris.envs.simplified_tetris_engine import SimplifiedTetrisEngine
 
 
 class SimplifiedTetrisBaseEnv(gym.Env):
     """
-    This class represents a simplified Tetris base environment, ensuring that all custom envs inherit from gym.Env and implement the essential methods and spaces.
+    All custom envs inherit from gym.Env and implement the essential methods and spaces. TODO
 
     :param grid_dims: the grid dimensions.
     :param piece_size: the size of every piece.
@@ -81,23 +80,21 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     def reset(self) -> np.array:
         """
-        Resets the env.
+        Reset the env.
 
         :return: the current obs.
         """
-
         self._engine._reset()
 
         return self._get_obs()
 
     def step(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
         """
-        Hard drops the current piece according to the argument provided. The game terminates if the piece cannot fit into the bottom height-piece_size rows. Otherwise, a new piece is selected, and the anchor is reset.
+        Hard drop the current piece according to the action. Terminate the game if the piece cannot fit into the bottom 'height-piece_size' rows. Otherwise, select a new piece and reset the anchor. TODO
 
         :param action: the action to be taken.
         :return: the next observation, reward, game termination indicator, and env info.
         """
-
         info = {}
 
         translation, rotation = self._engine._get_translation_rotation(action)
@@ -125,22 +122,20 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     def render(self, mode: Optional[str] = "human") -> np.ndarray:
         """
-        Renders the env.
+        Render the env.
 
         :param mode: the render mode.
         :return: the image pixel values.
         """
-
         return self._engine._render(mode)
 
     def close(self) -> None:
-        """Closes the open windows."""
-
+        """Close the open windows."""
         return self._engine._close()
 
     def _seed(self, seed: Optional[int] = 8191) -> None:
         """
-        Seeds the env.
+        Seed the env.
 
         :param seed: an optional seed to seed the rng with.
         """
@@ -149,7 +144,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     def _get_reward(self) -> Tuple[float, int]:
         """
-        Returns the reward.
+        Return the reward.
 
         :return: the reward and the number of lines cleared.
         """
@@ -158,7 +153,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     def _get_terminal_reward(self) -> float:
         """
-        Returns the terminal reward.
+        Return the terminal reward.
 
         :return: the terminal reward.
         """

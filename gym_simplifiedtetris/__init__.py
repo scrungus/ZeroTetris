@@ -1,4 +1,2 @@
-from .utils import *
-from .envs import *
-from .agents import *
-from .helpers import *
+# Import the envs module so that the envs register themselves in Gym.
+import gym_simplifiedtetris.envs

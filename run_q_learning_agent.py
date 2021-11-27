@@ -1,14 +1,13 @@
-from gym_simplifiedtetris import QLearningAgent
-from gym_simplifiedtetris import SimplifiedTetrisBinaryEnv as Tetris
-from gym_simplifiedtetris import train_q_learning
-from gym_simplifiedtetris import eval_agent
+from gym_simplifiedtetris.agents import QLearningAgent
+from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
+from gym_simplifiedtetris.helpers import train_q_learning
+from gym_simplifiedtetris.helpers import eval_agent
 
 
 def main():
     """
-    Trains and evaluates a Q-learning agent.
+    Train and evaluate a Q-learning agent.
     """
-
     grid_dims = (7, 4)
     env = Tetris(grid_dims=grid_dims, piece_size=4)
     agent = QLearningAgent(

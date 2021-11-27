@@ -1,13 +1,13 @@
 import numpy as np
 from gym import spaces
 
-from ..register import register
-from .simplified_tetris_base_env import SimplifiedTetrisBaseEnv
+from gym_simplifiedtetris.register import register
+from gym_simplifiedtetris.envs.simplified_tetris_base_env import SimplifiedTetrisBaseEnv
 
 
 class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
     """
-    A class representing a custom Gym env for Tetris, where the observation space is the binary representation of the grid plus the current piece's id.
+    A custom Gym env for Tetris, where the observation space is the binary representation of the grid plus the current piece's id.
 
     :param grid_dims: the grid dimensions.
     :param piece_size: the size of every piece.
@@ -26,11 +26,10 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
 
     def _get_obs(self) -> np.array:
         """
-        Gets the obs.
+        Return the current obs.
 
-        :return: the obs.
+        :return: the current obs.
         """
-
         current_grid = self._engine._grid.flatten()
 
         return np.append(current_grid, self._engine._piece._idx)

@@ -5,7 +5,7 @@ import numpy as np
 
 class PotentialBasedShapingReward(object):
     """
-    This class instantiates a potential-based shaping reward object.
+    A potential-based shaping reward object. TODO
     """
 
     reward_range = (-1, 5)
@@ -20,11 +20,10 @@ class PotentialBasedShapingReward(object):
 
     def _get_reward(self) -> Tuple[float, int]:
         """
-        Gets the potential-based shaping reward.
+        Get the potential-based shaping reward.
 
         :return: the potential-based shaping reward and the number of lines cleared.
         """
-
         num_lines_cleared = self._engine._clear_rows()
         heuristic_value = self._engine._get_holes()
         self._update_range(heuristic_value)
@@ -43,11 +42,10 @@ class PotentialBasedShapingReward(object):
 
     def _get_terminal_reward(self) -> float:
         """
-        Returns the terminal potential-based shaping reward.
+        Return the terminal potential-based shaping reward.
 
         :return: the terminal potential-based shaping reward.
         """
-
         terminal_shaping_reward = -self._old_potential
         self._old_potential = self._initial_potential
 
@@ -59,7 +57,6 @@ class PotentialBasedShapingReward(object):
 
         :param heuristic_value: the computed heuristic value.
         """
-
         if heuristic_value > self._heuristic_range["max"]:
             self._heuristic_range["max"] = heuristic_value
 

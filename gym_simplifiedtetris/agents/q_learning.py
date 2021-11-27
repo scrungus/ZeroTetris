@@ -5,7 +5,7 @@ import numpy as np
 
 class QLearningAgent(object):
     """
-    This class instantiates a Q-learning agent.
+    TODO
 
     :param grid_dims: the grid dimensions.
     :param num_pieces: the number of pieces in use.
@@ -37,12 +37,11 @@ class QLearningAgent(object):
 
     def predict(self, obs: np.array) -> int:
         """
-        This method returns the action whilst following an epsilon-greedy policy.
+        Return the action whilst following an epsilon-greedy policy.
 
         :param obs: a NumPy array containing the observation given to the agent by the env.
         :return: an integer corresponding to the action chosen by the Q-learning agent.
         """
-
         # Choose an action at random with probability epsilon.
         if np.random.rand(1)[0] <= self.epsilon:
             return np.random.choice(self._num_actions)
@@ -54,14 +53,13 @@ class QLearningAgent(object):
         self, reward: float, obs: np.array, next_obs: np.array, action: int
     ) -> None:
         """
-        This method updates the Q-learning agent's Q-table.
+        Update the Q-learning agent's Q-table.
 
         :param reward: the reward given to the agent by the env after taking action.
         :param obs: the old observation given to the agent by the env.
         :param next_obs: the next observation given to the agent by the env having taken action.
         :param action: the action taken that generated next_obs.
         """
-
         current_obs_action = tuple(list(obs) + [action])
         max_q_value = np.max(self._q_table[tuple(next_obs)])
 

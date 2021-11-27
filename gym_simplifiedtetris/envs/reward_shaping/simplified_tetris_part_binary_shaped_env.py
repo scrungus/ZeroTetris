@@ -1,5 +1,7 @@
-from ...register import register
-from ..simplified_tetris_part_binary_env import SimplifiedTetrisPartBinaryEnv
+from gym_simplifiedtetris.register import register
+from gym_simplifiedtetris.envs.simplified_tetris_part_binary_env import (
+    SimplifiedTetrisPartBinaryEnv,
+)
 from .potential_based_shaping_reward import PotentialBasedShapingReward
 
 
@@ -7,7 +9,7 @@ class SimplifiedTetrisPartBinaryShapedEnv(
     PotentialBasedShapingReward, SimplifiedTetrisPartBinaryEnv
 ):
     """
-    A class representing a Tetris env where the reward function is a
+    A simplified Tetris env, where the reward function is a
     scaled heuristic score and the obs space is the grid's part binary representation plus the current piece's id.
 
     :param grid_dims: the grid's dimensions.
@@ -16,7 +18,6 @@ class SimplifiedTetrisPartBinaryShapedEnv(
     """
 
     def __init__(self, **kwargs):
-
         super().__init__()
         SimplifiedTetrisPartBinaryEnv.__init__(self, **kwargs)
 

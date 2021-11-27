@@ -4,7 +4,7 @@ from typing import Dict, List, Tuple
 
 import numpy as np
 
-from .all_pieces import PIECES_DICT
+from gym_simplifiedtetris.utils.all_pieces import PIECES_DICT
 
 PieceCoord = List[Tuple[int, int]]
 Rotation = int
@@ -13,13 +13,12 @@ PieceCoords = Dict[Rotation, PieceCoord]
 
 def _generate_max_min(coord_string: str, coords: PieceCoords):
     """
-    Returns the max and min x and y coordinates for the coordinate string and coordinates provided.
+    Return the max and min x and y coordinates for the coordinate string and coordinates provided.
 
     :param coord_string: the string specifying what to calculate.
     :param coords: the piece coordinates.
     :return: the max and min x and y coordinates for the coordinate string and coordinates provided.
     """
-
     coord_strings = {
         "max_y_coord": {"func": np.max, "index": 1},
         "min_y_coord": {"func": np.min, "index": 1},

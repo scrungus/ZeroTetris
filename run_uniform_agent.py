@@ -8,7 +8,6 @@ def main():
     """
     Run ten games, selecting actions uniformly at random.
     """
-
     ep_returns = np.zeros(10)
 
     env = gym.make("simplifiedtetris-binary-20x10-4-v0")

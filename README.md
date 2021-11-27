@@ -132,7 +132,7 @@ env.close()
 Alternatively, you can import the environment directly:
 
 ```python
-from gym_simplifiedtetris import SimplifiedTetrisBinaryEnv as Tetris
+from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
 env = Tetris(grid_dims=(20, 10), piece_size=4)
 ```
@@ -214,7 +214,7 @@ hat is a `Discrete` space. At each time step, the agent must choose an action, a
 - Trominoes: 4w - 4
 - Tetriminos: 4w - 6,
 
-where w is the grid width. With this action space, some actions have the same effect on the grid as others. When actions are selected uniformly at random, and the current piece is the 'O' Tetrimino, two actions are chosen with a higher probability than the other actions.
+where w is the grid width. With this action space, some actions have the same effect on the grid as others. When actions are selected uniformly at random, and the current piece is the 'O' Tetrimino, two actions are chosen with a smaller probability than the other actions.
 
 ### 2.4. Game ending
 

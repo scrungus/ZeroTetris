@@ -1,4 +1,4 @@
-from .piece import Piece
-from .colours import Colours
+from gym_simplifiedtetris.utils.piece import Piece
+from gym_simplifiedtetris.utils.colours import Colours
 
 __all__ = ["Piece", "Colours"]

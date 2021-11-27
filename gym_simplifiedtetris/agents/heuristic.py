@@ -3,16 +3,15 @@ import numpy as np
 
 class HeuristicAgent(object):
     """
-    This class instantiates an agent that selects the action with the largest heuristic score.
+    Instantiate an agent that selects the action with the largest heuristic score.
     """
 
     @staticmethod
     def predict(ratings_or_priorities: np.array) -> int:
         """
-        Returns the action that yields the largest heuristic score. A priority rating separates ties based on the translation and rotation.
+        Return that action yielding the largest heuristic score. Separate ties using a priority rating, which is based on the translation and rotation.
 
-        :param heuristic_scores: the heuristic scores for each action.
-        :return: the action with the largest heuristic score.
+        :param ratings_or_priorities: either the ratings or priorities for all available actions.
+        :return: the action with the largest rating; ties are separated based on the priority.
         """
-
         return np.argmax(ratings_or_priorities)
