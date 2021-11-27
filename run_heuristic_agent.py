@@ -9,10 +9,8 @@ from gym_simplifiedtetris.agents import HeuristicAgent
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
 
-def main():
-    """
-    Evaluate the agent that selects action according to a heuristic.
-    """
+def main() -> None:
+    """Evaluate the agent that selects action according to a heuristic."""
     num_episodes = 30
     episode_num = 0
     ep_returns = np.zeros(num_episodes)

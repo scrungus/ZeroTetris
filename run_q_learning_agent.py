@@ -8,10 +8,8 @@ from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 from gym_simplifiedtetris.helpers import train_q_learning, eval_agent
 
 
-def main():
-    """
-    Train and evaluate a Q-learning agent.
-    """
+def main() -> None:
+    """Train and evaluate a Q-learning agent."""
     grid_dims = (7, 4)
     env = Tetris(grid_dims=grid_dims, piece_size=4)
     agent = QLearningAgent(

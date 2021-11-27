@@ -9,7 +9,7 @@ import numpy as np
 from gym_simplifiedtetris.agents import UniformAgent
 
 
-def main():
+def main() -> None:
     """
     Run ten games, selecting actions uniformly at random.
     """

@@ -47,7 +47,7 @@ class SimplifiedTetrisEngine(object):
         piece_size: int,
         num_pieces: int,
         num_actions: int,
-    ):
+    ) -> None:
 
         self._height, self._width = grid_dims
         self._piece_size = piece_size

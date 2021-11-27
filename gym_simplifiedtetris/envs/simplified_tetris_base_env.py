@@ -35,7 +35,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     def __init__(
         self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
-    ):
+    ) -> None:
 
         if not isinstance(grid_dims, (list, tuple, np.array)) or len(grid_dims) != 2:
             raise TypeError(

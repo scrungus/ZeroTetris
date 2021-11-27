@@ -3,7 +3,8 @@ TODO
 """
 
 
-def run_example_1():
+def run_example_1() -> None:
+    """Example 1 in the README Usage section."""
     import gym
     import gym_simplifiedtetris
 
@@ -25,13 +26,14 @@ def run_example_1():
     env.close()
 
 
-def run_example_2():
+def run_example_2() -> None:
+    """Example 1 in the README Usage section."""
     from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
     env = Tetris(grid_dims=(20, 10), piece_size=4)
 
 
-def main():
+def main() -> None:
     run_example_1()
     run_example_2()
 

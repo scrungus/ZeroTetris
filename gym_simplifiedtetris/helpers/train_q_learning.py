@@ -14,7 +14,7 @@ from gym_simplifiedtetris.agents.q_learning import QLearningAgent
 def train_q_learning(
     env: gym.Env,
     agent: QLearningAgent,
-    num_eval_timesteps: int = 1,
+    num_eval_timesteps: Optional[int] = 1,
     render: Optional[bool] = False,
 ) -> QLearningAgent:
     """
