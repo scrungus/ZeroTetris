@@ -107,6 +107,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
         self._engine._rotate_piece(rotation)
         self._engine._anchor = [translation, self._piece_size_ - 1]
+        info["anchor"] = (translation, rotation)
 
         self._engine._hard_drop()
         self._engine._update_grid(True)
@@ -114,18 +115,23 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         # The game terminates when any of the dropped piece's blocks occupies
         # any of the top 'piece_size' rows, before any full rows are cleared.
         if np.any(self._engine._grid[:, : self._piece_size_]):
+
             info["num_rows_cleared"] = 0
+
             self._engine._final_scores = np.append(
                 self._engine._final_scores, self._engine._score
             )
+
             return self._get_obs(), self._get_terminal_reward(), True, info
 
         reward, num_rows_cleared = self._get_reward()
         self._engine._score += num_rows_cleared
+
         self._engine._update_coords_and_anchor()
+
         info["num_rows_cleared"] = num_rows_cleared
 
-        return self._get_obs(), float(reward), False, info
+        return self._get_obs(), reward, False, info
 
     def render(self, mode: Optional[str] = "human") -> np.ndarray:
         """
