@@ -1,5 +1,5 @@
 """
-TODO
+A heuristic agent class.
 """
 
 import numpy as np

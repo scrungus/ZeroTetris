@@ -1,5 +1,5 @@
 """
-TODO
+A Q-learning agent class.
 """
 
 from typing import Optional, Sequence

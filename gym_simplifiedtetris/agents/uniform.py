@@ -1,5 +1,5 @@
 """
-TODO
+A uniform agent class.
 """
 
 import numpy as np

@@ -1,7 +1,7 @@
-"""
-TODO
-"""
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
+"""A script for running a uniform agent on Tetris."""
 
 import gym
 import numpy as np
@@ -10,9 +10,7 @@ from gym_simplifiedtetris.agents import UniformAgent
 
 
 def main() -> None:
-    """
-    Run ten games, selecting actions uniformly at random.
-    """
+    """Run ten games, selecting actions uniformly at random."""
     ep_returns = np.zeros(10)
 
     env = gym.make("simplifiedtetris-binary-20x10-4-v0")
