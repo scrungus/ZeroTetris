@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-TODO
-"""
+"""A script for running training and evaluating a Q-learning agent."""
 
 
 from gym_simplifiedtetris.agents import QLearningAgent

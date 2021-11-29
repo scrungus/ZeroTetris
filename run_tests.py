@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-TODO
-"""
+"""A script for running some tests on the envs."""
 
 
 import gym

@@ -1,6 +1,4 @@
-"""
-TODO
-"""
+"""Contains a simplified Tetris env with a binary obs space and shaped reward function."""
 
 from gym_simplifiedtetris.register import register
 from gym_simplifiedtetris.envs.simplified_tetris_binary_env import (

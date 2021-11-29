@@ -1,6 +1,4 @@
-"""
-TODO
-"""
+"""Contains a function that evaluates an agent."""
 
 from typing import Tuple
 

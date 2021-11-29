@@ -13,7 +13,6 @@ class SimplifiedTetrisBaseEnv(gym.Env):
     """
     All custom envs inherit from gym.Env and implement the essential methods
     and spaces.
-    TODO
 
     :param grid_dims: the grid dimensions.
     :param piece_size: the size of every piece.

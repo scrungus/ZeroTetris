@@ -1,19 +1,12 @@
-"""
-TODO
-"""
+"""Contains a potential-based shaping reward class."""
 
 from typing import Tuple
 
 import numpy as np
 
-from gym_simplifiedtetris.envs.simplified_tetris_base_env import SimplifiedTetrisBaseEnv
-
 
 class PotentialBasedShapingReward(object):
-    """
-    A potential-based shaping reward object.
-    TODO
-    """
+    """A potential-based shaping reward object."""
 
     reward_range = (-1, 5)
 

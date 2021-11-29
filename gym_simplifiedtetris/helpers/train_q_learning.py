@@ -1,6 +1,4 @@
-"""
-TODO
-"""
+"""Contains a function that trains a Q-learning agent."""
 
 from typing import Optional
 

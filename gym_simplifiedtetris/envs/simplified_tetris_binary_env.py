@@ -1,5 +1,4 @@
-"""
-TODO
+"""Contains a simplified Tetris env class with a binary obs space.
 """
 
 import numpy as np
