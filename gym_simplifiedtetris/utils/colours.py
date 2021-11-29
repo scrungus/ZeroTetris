@@ -5,14 +5,14 @@ from matplotlib import colors
 import numpy as np
 
 
-def get_bgr_code(colour_name: str) -> Tuple[Any, ...]:
+def get_bgr_code(colour_name: str) -> Tuple[float, float, float]:
     """
     Get the inverted RGB code corresponding to the arg provided.
 
     :param colour_name: a string of the colour name,
     :return: an inverted RGB code of the inputted colour name.
     """
-    return tuple(np.array([255, 255, 255]) * colors.to_rgb(colour_name))[::-1]
+    return reversed(tuple(np.array([255, 255, 255]) * colors.to_rgb(colour_name)))
 
 
 class Colours(Enum):
