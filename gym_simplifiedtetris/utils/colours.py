@@ -12,7 +12,7 @@ def get_bgr_code(colour_name: str) -> Tuple[float, float, float]:
     :param colour_name: a string of the colour name,
     :return: an inverted RGB code of the inputted colour name.
     """
-    return reversed(tuple(np.array([255, 255, 255]) * colors.to_rgb(colour_name)))
+    return tuple(np.array([255, 255, 255]) * colors.to_rgb(colour_name))[::-1]
 
 
 class Colours(Enum):

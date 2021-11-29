@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/20x10_4_heuristic.gif" width="500">
+  <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/20x10_4.gif" width="500">
 </p>
 
 <h1 align="center">Gym-SimplifiedTetris </h1>
@@ -149,11 +149,7 @@ There are currently 64 environments provided:
 - `simplifiedtetris-binary-shaped-{height}x{width}-{piece_size}-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid, plus the current piece's ID. The reward function is a potential-based reward function based on the _holes_ feature
 - `simplifiedtetris-partbinary-shaped-{height}x{width}-{piece_size}-v0`: The observation space is a flattened NumPy array containing a binary representation of the grid excluding the top `piece_size` rows, plus the current piece's ID. The reward function is a potential-based shaping reward based on the _holes_ feature
 
-where (height, width) are either (20, 10), (10, 10), (8, 6), or (7, 4), and the piece size is either 1, 2, 3, or 4. Below is a GIF showing games being played on `simplifiedtetris-binary-8x6-3-v0`.
-
-<p align="center">
-    <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/8x6_3.gif" width="500">
-</p>
+where (height, width) are either (20, 10), (10, 10), (8, 6), or (7, 4), and the piece size is either 1, 2, 3, or 4.
 
 ### 2.2. Methods
 

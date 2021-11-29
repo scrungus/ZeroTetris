@@ -7,6 +7,8 @@ import cv2.cv2 as cv
 import numpy as np
 from PIL import Image
 
+# import imageio
+
 from gym_simplifiedtetris.utils import Piece, Colours
 
 
@@ -63,6 +65,7 @@ class SimplifiedTetrisEngine(object):
 
         self._img = np.array([])
         self._last_move_info = {}
+        # self._image_lst = []
 
         self._initialise_pieces()
         self._update_coords_and_anchor()
@@ -109,6 +112,18 @@ class SimplifiedTetrisEngine(object):
 
         if mode == "human":
             if self._show_agent_playing:
+
+                """frame_rgb = cv.cvtColor(self._img, cv.COLOR_BGR2RGB)
+                self._image_lst.append(frame_rgb)
+
+                if len(self._final_scores) == 4:  # self._score == 20:
+                    imageio.mimsave(
+                        f"assets/{self._height}x{self._width}_{self._piece_size}.gif",
+                        self._image_lst,
+                        fps=60,
+                        duration=0.5,
+                    )
+                    self._save_frame = False"""
 
                 cv.imshow(f"Simplified Tetris", self._img)
                 k = cv.waitKey(self._sleep_time)
