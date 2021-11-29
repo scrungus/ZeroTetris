@@ -1,5 +1,4 @@
 from abc import abstractmethod
-import itertools
 from typing import Any, Dict, Optional, Sequence, Tuple
 
 import gym
@@ -7,12 +6,13 @@ import numpy as np
 from gym import spaces
 from gym.utils import seeding
 
-from .simplified_tetris_engine import SimplifiedTetrisEngine
+from gym_simplifiedtetris.envs.simplified_tetris_engine import SimplifiedTetrisEngine
 
 
 class SimplifiedTetrisBaseEnv(gym.Env):
     """
-    A class representing a simplified Tetris base environment, which ensures that all custom envs inherit from gym.Env and implement the essential methods and spaces.
+    All custom envs inherit from gym.Env and implement the essential methods
+    and spaces.
 
     :param grid_dims: the grid dimensions.
     :param piece_size: the size of every piece.
@@ -24,6 +24,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     @property
     def action_space(self) -> spaces.Discrete:
+        # Set the discrete action space.
         return spaces.Discrete(self._num_actions_)
 
     @property
@@ -33,10 +34,11 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
     def __init__(
         self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
-    ):
-        if not isinstance(grid_dims, (list, tuple)) or len(grid_dims) != 2:
+    ) -> None:
+
+        if not isinstance(grid_dims, (list, tuple, np.array)) or len(grid_dims) != 2:
             raise TypeError(
-                "Inappropriate format provided for grid_dims. It should be [height(int), width(int)] or (height(int), width(int))."
+                "Inappropriate format provided for grid_dims. It should be a list, tuple or numpy array of length 2 containing integers."
             )
 
         assert piece_size in [
@@ -46,10 +48,12 @@ class SimplifiedTetrisBaseEnv(gym.Env):
             4,
         ], "piece_size should be either 1, 2, 3, or 4."
 
-        possible_grid_dims = [[20, 10], [10, 10], [8, 6], [7, 4]]
-        assert (
-            list(grid_dims) in possible_grid_dims
-        ), f"Grid dimensions must be one of {possible_grid_dims}."
+        assert list(grid_dims) in [
+            [20, 10],
+            [10, 10],
+            [8, 6],
+            [7, 4],
+        ], f"Grid dimensions must be one of (20, 10), (10, 10), (8, 6), or (7, 4)."
 
         self._height_, self._width_ = grid_dims
         self._piece_size_ = piece_size
@@ -74,59 +78,96 @@ class SimplifiedTetrisBaseEnv(gym.Env):
         return np.array(self._engine._grid.T, dtype=int).__str__()
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(({self._height_!r}, {self._width_!r}), {self._piece_size_!r})"
+        return f"""{self.__class__.__name__}(({self._height_!r}, {self.
+        _width_!r}), {self._piece_size_!r})"""
 
     def reset(self) -> np.array:
+        """
+        Reset the env.
+
+        :return: the current obs.
+        """
         self._engine._reset()
+
         return self._get_obs()
 
     def step(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
         """
-        Hard drops the current piece according to the argument provided. Terminates the game if a condition is met. Otherwise, a new piece is selected, and the anchor is reset.
+        Hard drop the current piece according to the action. Terminate the
+        game if the piece cannot fit into the bottom 'height-piece_size' rows.
+        Otherwise, select a new piece and reset the anchor.
 
         :param action: the action to be taken.
         :return: the next observation, reward, game termination indicator, and env info.
         """
         info = {}
 
-        translation, rotation = self._engine._all_available_actions[
-            self._get_obs()[-1]
-        ][action]
+        translation, rotation = self._engine._get_translation_rotation(action)
 
         self._engine._rotate_piece(rotation)
         self._engine._anchor = [translation, self._piece_size_ - 1]
+        info["anchor"] = (translation, rotation)
 
         self._engine._hard_drop()
         self._engine._update_grid(True)
 
-        # The game terminates when any of the dropped piece's blocks occupies any of the top 'piece_size' rows, before any full rows are cleared.
+        # The game terminates when any of the dropped piece's blocks occupies
+        # any of the top 'piece_size' rows, before any full rows are cleared.
         if np.any(self._engine._grid[:, : self._piece_size_]):
+
             info["num_rows_cleared"] = 0
+
             self._engine._final_scores = np.append(
                 self._engine._final_scores, self._engine._score
             )
+
             return self._get_obs(), self._get_terminal_reward(), True, info
 
         reward, num_rows_cleared = self._get_reward()
         self._engine._score += num_rows_cleared
+
         self._engine._update_coords_and_anchor()
+
         info["num_rows_cleared"] = num_rows_cleared
 
-        return self._get_obs(), float(reward), False, info
+        return self._get_obs(), reward, False, info
 
     def render(self, mode: Optional[str] = "human") -> np.ndarray:
+        """
+        Render the env.
+
+        :param mode: the render mode.
+        :return: the image pixel values.
+        """
         return self._engine._render(mode)
 
     def close(self) -> None:
+        """Close the open windows."""
         return self._engine._close()
 
     def _seed(self, seed: Optional[int] = 8191) -> None:
+        """
+        Seed the env.
+
+        :param seed: an optional seed to seed the rng with.
+        """
         self._np_random, _ = seeding.np_random(seed)
 
     def _get_reward(self) -> Tuple[float, int]:
+        """
+        Return the reward.
+
+        :return: the reward and the number of lines cleared.
+        """
         return self._engine._get_reward()
 
-    def _get_terminal_reward(self) -> float:
+    @staticmethod
+    def _get_terminal_reward() -> float:
+        """
+        Return the terminal reward.
+
+        :return: the terminal reward.
+        """
         return 0.0
 
     @abstractmethod

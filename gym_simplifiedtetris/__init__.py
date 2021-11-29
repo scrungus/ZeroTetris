@@ -1,4 +1,2 @@
-from .utils import *
+"""Import the envs module so that the envs register themselves in Gym."""
 from .envs import *
-from .agents import *
-from .helpers import *

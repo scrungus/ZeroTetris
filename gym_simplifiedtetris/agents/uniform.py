@@ -1,19 +1,23 @@
+"""
+A uniform agent class.
+"""
+
 import numpy as np
 
 
 class UniformAgent(object):
     """
-    A class representing an agent that selects actions uniformly at random.
+    An agent that selects actions uniformly at random.
 
-    :param _num_actions: the number of actions available to the agent in each state.
+    :param num_actions: the number of actions available to the agent in each state.
     """
 
-    def __init__(self, num_actions: int):
+    def __init__(self, num_actions: int) -> None:
         self._num_actions = num_actions
 
     def predict(self) -> int:
         """
-        Selects an action uniformly at random.
+        Select an action uniformly at random.
 
         :return: the action chosen by the agent.
         """

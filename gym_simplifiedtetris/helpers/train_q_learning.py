@@ -1,21 +1,29 @@
+"""Contains a function that trains a Q-learning agent."""
+
+from typing import Optional
+
 import gym
 import numpy as np
 from tqdm import tqdm
 
-from ..agents.q_learning import QLearningAgent
+from gym_simplifiedtetris.agents.q_learning import QLearningAgent
 
 
 def train_q_learning(
-    env: gym.Env, agent: QLearningAgent, num_eval_timesteps: int
+    env: gym.Env,
+    agent: QLearningAgent,
+    num_eval_timesteps: Optional[int] = 1,
+    render: Optional[bool] = False,
 ) -> QLearningAgent:
     """
-    Trains and evaluates a Q-learning agent on the SimplifiedTetris environment.
+    Train and evaluate a Q-learning agent on Tetris and return the trained Q-learning agent.
 
-    :param env: the env to train the Q-learning agent on.
+    :param env: the Q-learning agent will be evaluated on this env.
     :param agent: the Q-learning agent.
-    :param num_eval_timesteps: the number of timesteps to evaluate for.
+    :param num_eval_timesteps: the agent will be evaluated for this number of timesteps.
+    :param render: whether to render the env.
+    :return: the trained Q-learning agent.
     """
-
     ep_return = 0
     ep_returns = np.array([], dtype=int)
     done = False
@@ -24,6 +32,9 @@ def train_q_learning(
 
     for _ in tqdm(range(num_eval_timesteps), desc="No. of time steps completed"):
 
+        if render:
+            env.render()
+
         action = agent.predict(obs)
 
         next_obs, reward, done, info = env.step(action)
@@ -31,7 +42,7 @@ def train_q_learning(
         agent.learn(reward=reward, obs=obs, next_obs=next_obs, action=action)
         ep_return += info["num_rows_cleared"]
 
-        # Epsilon annealing.
+        # Anneal epsilon so that it is zero by the end of training.
         agent.epsilon -= 1 / (num_eval_timesteps)
 
         if done:

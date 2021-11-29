@@ -1,28 +1,33 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""A script for running a heuristic agent."""
+
+
 import numpy as np
 
-from gym_simplifiedtetris.agents.heuristic import HeuristicAgent
+from gym_simplifiedtetris.agents import HeuristicAgent
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
 
-def main():
-    """
-    Evaluates an agents that selects action according to a heuristic.
-    """
-    num_episodes = 10
+def main() -> None:
+    """Evaluate the agent that selects action according to a heuristic."""
+    num_episodes = 30
+    episode_num = 0
     ep_returns = np.zeros(num_episodes)
 
     agent = HeuristicAgent()
     env = Tetris(grid_dims=(10, 10), piece_size=4)
+
     obs = env.reset()
 
-    episode_num = 0
     while episode_num < num_episodes:
         env.render()
 
         heuristic_scores = env._engine._get_dellacherie_scores()
-
         action = agent.predict(heuristic_scores)
-        obs, rwd, done, info = env.step(action)
+
+        obs, reward, done, info = env.step(action)
         ep_returns[episode_num] += info["num_rows_cleared"]
 
         if done:

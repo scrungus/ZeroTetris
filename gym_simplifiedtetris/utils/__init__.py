@@ -1,3 +1,6 @@
-from .piece import Piece
+"""Initialise the utils package."""
 
-__all__ = ["Piece"]
+from gym_simplifiedtetris.utils.piece import Piece
+from gym_simplifiedtetris.utils.colours import Colours
+
+__all__: list = []

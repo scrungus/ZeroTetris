@@ -1,5 +1,7 @@
-from .heuristic import HeuristicAgent
-from .q_learning import QLearningAgent
-from .uniform import UniformAgent
+"""Initialise the agents module."""
 
-__all__ = ["UniformAgent", "QLearningAgent", "HeuristicAgent"]
+from gym_simplifiedtetris.agents.heuristic import HeuristicAgent
+from gym_simplifiedtetris.agents.q_learning import QLearningAgent
+from gym_simplifiedtetris.agents.uniform import UniformAgent
+
+__all__ = ["HeuristicAgent", "QLearningAgent", "UniformAgent"]
