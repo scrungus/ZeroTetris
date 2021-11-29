@@ -12,7 +12,6 @@ from gym_simplifiedtetris.utils import Piece, Colours
 
 class SimplifiedTetrisEngine(object):
     """
-    A class representing a simplified Tetris engine.
     TODO
 
     :param grid_dims: the grid dimensions (height and width).
