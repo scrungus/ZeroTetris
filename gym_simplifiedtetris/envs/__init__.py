@@ -17,6 +17,7 @@ from gym_simplifiedtetris.envs.reward_shaping import (
 # Affect 'from envs import *'.
 __all__ = [
     "SimplifiedTetrisBinaryEnv",
+    "SimplifiedTetrisEngine",
     "SimplifiedTetrisBinaryShapedEnv",
     "SimplifiedTetrisPartBinaryEnv",
     "SimplifiedTetrisPartBinaryShapedEnv",
