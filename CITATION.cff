@@ -11,5 +11,5 @@ authors:
 repository-code: >-
   https://github.com/OliverOverend/gym-simplifiedtetris
 license: MIT
-version: 0.1.9
-date-released: 2021-11-29
+version: 0.1.10
+date-released: 2021-11-30
