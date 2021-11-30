@@ -70,8 +70,6 @@ The environments impleneted in this package are simplified because the player mu
   - [3.3. Heuristic](#33-heuristic)
 - [4. Future work](#4-future-work)
 - [5. Acknowledgements](#5-acknowledgements)
-- [6. BibTeX entry](#6-bibtex-entry)
-- [7. License](#7-license)
 
 ## 1. Getting started
 
@@ -269,20 +267,3 @@ Similarly to how Colin Fahey implemented Dellacherie's agent, ties are broken by
 ## 5. Acknowledgements
 
 This package utilises several methods from the [codebase](https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning) developed by andreanlay (2020) and the [codebase](https://github.com/Benjscho/gym-mdptetris) developed by Benjscho (2021).
-
-## 6. BibTeX entry
-
-```
-@misc{gym_simplifiedtetris,
-  author = {Overend, Oliver},
-  title = {gym-simplifiedtetris package for OpenAI Gym},
-  year = {2021},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/OliverOverend/gym-simplifiedtetris}},
-}
-```
-
-## 7. License
-
-This project is licensed under the terms of the [MIT license](/LICENSE.md).
