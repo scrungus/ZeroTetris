@@ -1,7 +1,15 @@
-@misc{gym_simplifiedtetris,
-  author = {Overend, Oliver},
-  title = {gym-simplifiedtetris package for OpenAI Gym},
-  year = {2021},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/OliverOverend/gym-simplifiedtetris}}}
+cff-version: 1.2.0
+title: gym-simplifiedtetris package for OpenAI Gym
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - family-names: Overend
+    email: ollyoverend10@gmail.com
+    given-names: Oliver
+repository-code: >-
+  https://github.com/OliverOverend/gym-simplifiedtetris
+license: MIT
+version: 0.1.9
+date-released: 2021-11-29
