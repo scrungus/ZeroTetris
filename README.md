@@ -45,7 +45,7 @@
 
 Gym-SimplifiedTetris is a pip installable package that creates simplified Tetris environments compliant with [OpenAI Gym's API](https://github.com/openai/gym). Currently, Gym's API is the field standard for developing and comparing reinforcement learning algorithms.
 
-The environments impleneted in this package are simplified because the player must select the column and piece's rotation before the piece is dropped vertically downwards.  If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
+The environments implemented in this package are simplified because the player must select the column and piece's rotation before the piece is dropped vertically downwards.  If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
 
 ---
 
@@ -88,7 +88,7 @@ Here is a list of dependencies:
 
 ## 2. Usage
 
-The file [examples.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/examples.py) shows two examples of using an instance of the `simplifiedtetris-binary-20x10-4-v0` environment for ten game. You can create an environment using `gym.make`, supplying the environment's ID as an argument.
+The file [examples.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/examples.py) shows two examples of using an instance of the `simplifiedtetris-binary-20x10-4-v0` environment for ten games. You can create an environment using `gym.make`, supplying the environment's ID as an argument.
 
 ```python
 import gym
@@ -122,7 +122,7 @@ env = Tetris(grid_dims=(20, 10), piece_size=4)
 
 ## 3. Agents and environments
 
-Three agents — described in [gym_simplifiedtetris/agents](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/gym_simplifiedtetris/agents/README.md) — are provided. There are currently 64 environments provided; a description can be found in [gym_simplifiedtetris/envs](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/gym_simplifiedtetris/envs/README.md).
+Three agents — described in [gym_simplifiedtetris/agents](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/gym_simplifiedtetris/agents) — are provided. There are currently 64 environments provided; a description can be found in [gym_simplifiedtetris/envs](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/gym_simplifiedtetris/envs).
 
 ## 4. Future work
 
