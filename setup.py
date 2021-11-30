@@ -28,7 +28,7 @@ install_requires = [
 
 setup(
     name="gym_simplifiedtetris",
-    version="0.1.10",
+    version="0.1.11",
     author="Oliver Overend",
     author_email="ollyoverend10@gmail.com",
     url="https://github.com/OliverOverend/gym-simplifiedtetris",
