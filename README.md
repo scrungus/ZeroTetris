@@ -4,8 +4,6 @@
 
 <h1 align="center">Gym-SimplifiedTetris </h1>
 
-> 🟥 Simplified Tetris environments compliant with OpenAI Gym's API
-
 <p align="center">
   <a href="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetris">
     <img src="https://img.shields.io/codefactor/grade/github/OliverOverend/gym-simplifiedtetris?color=ff69b4&style=for-the-badge">
@@ -42,6 +40,8 @@
 </p>
 
 ---
+
+> 🟥 Simplified Tetris environments compliant with OpenAI Gym's API
 
 Gym-SimplifiedTetris is a pip installable package that creates simplified Tetris environments compliant with [OpenAI Gym's API](https://github.com/openai/gym). Currently, Gym's API is the field standard for developing and comparing reinforcement learning algorithms.
 
