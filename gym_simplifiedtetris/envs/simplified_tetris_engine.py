@@ -14,7 +14,43 @@ from gym_simplifiedtetris.utils import Piece, Colours
 
 class SimplifiedTetrisEngine(object):
     """
-    TODO
+    Creates a Tetris engine object, which has a hard-drop mechanism for dropping the pieces and the methods listed below.
+
+    Rendering related methods:
+    > _close
+    > _add_statistics
+    > _render
+    > _draw_boundary
+    > _get_grid
+    > _resize_grid
+    > _draw_separating_lines
+    > _add_img_left
+
+    Game dynamics related methods:
+    > _rotate_piece
+    > _get_translation_rotation
+    > _generate_id_randomly
+    > _initialise_pieces
+    > _reset
+    > _update_coords_and_anchor
+    > _is_illegal
+    > _hard_drop
+    > _clear_rows
+    > _update_grid
+    > _get_reward
+    > _get_all_available_actions
+    > _compute_available_actions
+
+    Heuristic agent related methods:
+    > _get_dellacherie_scores
+    > _get_priorities
+    > _get_dellacherie_funcs
+    > _get_landing_height
+    > _get_eroded_cells
+    > _get_row_transitions
+    > _get_column_transitions
+    > _get_holes
+    > _get_cumulative_wells
 
     :param grid_dims: the grid dimensions (height and width).
     :param piece_size: the size of the pieces in use.
@@ -41,6 +77,30 @@ class SimplifiedTetrisEngine(object):
         cv.waitKey(1)
         cv.destroyAllWindows()
         cv.waitKey(1)
+
+    @staticmethod
+    def _add_statistics(
+        img_array: np.ndarray, items: List[List[str]], x_offsets: List[int]
+    ) -> None:
+        """
+        Add statistics to the array provided.
+
+        :param img_array: the array to be edited.
+        :param items: the lists to be added to the array.
+        :param x_offsets: the horizontal positions where the statistics should be added.
+        """
+        for i, item in enumerate(items):
+            for count, j in enumerate(item):
+                cv.putText(
+                    img_array,
+                    j,
+                    (x_offsets[i], 60 * (count + 1)),
+                    cv.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    Colours.WHITE.value,
+                    2,
+                    cv.LINE_AA,
+                )
 
     def __init__(
         self,
@@ -235,30 +295,6 @@ class SimplifiedTetrisEngine(object):
             x_offsets=[50, 300],
         )
         self._img = np.concatenate((img_array, self._img), axis=1)
-
-    @staticmethod
-    def _add_statistics(
-        img_array: np.ndarray, items: List[List[str]], x_offsets: List[int]
-    ) -> None:
-        """
-        Add statistics to the array provided.
-
-        :param img_array: the array to be edited.
-        :param items: the lists to be added to the array.
-        :param x_offsets: the horizontal positions where the statistics should be added.
-        """
-        for i, item in enumerate(items):
-            for count, j in enumerate(item):
-                cv.putText(
-                    img_array,
-                    j,
-                    (x_offsets[i], 60 * (count + 1)),
-                    cv.FONT_HERSHEY_SIMPLEX,
-                    1,
-                    Colours.WHITE.value,
-                    2,
-                    cv.LINE_AA,
-                )
 
     def _update_coords_and_anchor(self) -> None:
         """Update the current piece, and reset the anchor."""
