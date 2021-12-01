@@ -82,7 +82,7 @@ Each game terminates if any of the dropped piece's square blocks enter into the 
 The user can implement more custom Gym environments by ensuring that they inherit from `SimplifiedTetrisBaseEnv` and are registered in a similar way to this:
 
 ```python
->>> register(
+>>> register_env(
 >>>     incomplete_id=f"simplifiedtetris-binary",
 >>>     entry_point=f"gym_simplifiedtetris.envs:SimplifiedTetrisBinaryEnv",
 >>> )

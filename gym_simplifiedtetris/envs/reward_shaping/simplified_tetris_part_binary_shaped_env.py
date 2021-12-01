@@ -1,6 +1,6 @@
 """Contains a simplified Tetris env with a part-binary obs space and shaping reward function."""
 
-from gym_simplifiedtetris.register import register
+from gym_simplifiedtetris.register import register_env
 from gym_simplifiedtetris.envs.simplified_tetris_part_binary_env import (
     SimplifiedTetrisPartBinaryEnv,
 )
@@ -26,7 +26,7 @@ class SimplifiedTetrisPartBinaryShapedEnv(
         SimplifiedTetrisPartBinaryEnv.__init__(self, **kwargs)
 
 
-register(
+register_env(
     incomplete_id="simplifiedtetris-partbinary-shaped",
     entry_point="gym_simplifiedtetris.envs:SimplifiedTetrisPartBinaryShapedEnv",
 )

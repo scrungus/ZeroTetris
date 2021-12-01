@@ -1,11 +1,11 @@
 import itertools
 
-from gym.envs.registration import register as gym_register
+from gym.envs.registration import register as register_env_in_gym
 
 env_list: list = []
 
 
-def register(incomplete_id: str, entry_point: str) -> None:
+def register_env(incomplete_id: str, entry_point: str) -> None:
     """
     Register the custom environments in Gym.
 
@@ -31,7 +31,7 @@ def register(incomplete_id: str, entry_point: str) -> None:
 
         assert idx not in env_list, f"Already registered env id: {idx}"
 
-        gym_register(
+        register_env_in_gym(
             id=idx,
             entry_point=entry_point,
             nondeterministic=True,

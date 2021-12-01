@@ -4,7 +4,7 @@
 import numpy as np
 from gym import spaces
 
-from gym_simplifiedtetris.register import register
+from gym_simplifiedtetris.register import register_env
 from gym_simplifiedtetris.envs.simplified_tetris_base_env import SimplifiedTetrisBaseEnv
 
 
@@ -46,7 +46,7 @@ class SimplifiedTetrisBinaryEnv(SimplifiedTetrisBaseEnv):
         return np.append(current_grid, self._engine._piece._idx)
 
 
-register(
+register_env(
     incomplete_id=f"simplifiedtetris-binary",
     entry_point=f"gym_simplifiedtetris.envs:SimplifiedTetrisBinaryEnv",
 )
