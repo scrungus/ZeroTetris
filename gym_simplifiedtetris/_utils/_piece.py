@@ -135,7 +135,7 @@ def _generate_max_min(coord_string: str, coords: PieceCoords):
 
 
 @dataclass
-class Piece(object):
+class _Piece(object):
     """
     Class for instantiating a Tetris piece.
     """

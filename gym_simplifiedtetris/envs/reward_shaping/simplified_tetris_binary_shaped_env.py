@@ -4,11 +4,11 @@ from gym_simplifiedtetris.register import register_env
 from gym_simplifiedtetris.envs.simplified_tetris_binary_env import (
     SimplifiedTetrisBinaryEnv,
 )
-from .potential_based_shaping_reward import PotentialBasedShapingReward
+from ._potential_based_shaping_reward import _PotentialBasedShapingReward
 
 
 class SimplifiedTetrisBinaryShapedEnv(
-    PotentialBasedShapingReward, SimplifiedTetrisBinaryEnv
+    _PotentialBasedShapingReward, SimplifiedTetrisBinaryEnv
 ):
     """
     A simplified Tetris environment, where the reward function is a

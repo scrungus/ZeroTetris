@@ -9,10 +9,10 @@ from PIL import Image
 
 # import imageio
 
-from gym_simplifiedtetris.utils import Piece, Colours
+from gym_simplifiedtetris._utils import _Piece, _Colours
 
 
-class SimplifiedTetrisEngine(object):
+class _SimplifiedTetrisEngine(object):
     """
     Creates a Tetris engine object, which has a hard-drop mechanism for dropping the pieces and the methods listed below.
 
@@ -61,14 +61,14 @@ class SimplifiedTetrisEngine(object):
     CELL_SIZE = 50
 
     BLOCK_COLOURS = {
-        0: Colours.WHITE.value,
-        1: Colours.CYAN.value,
-        2: Colours.ORANGE.value,
-        3: Colours.YELLOW.value,
-        4: Colours.PURPLE.value,
-        5: Colours.BLUE.value,
-        6: Colours.GREEN.value,
-        7: Colours.RED.value,
+        0: _Colours.WHITE.value,
+        1: _Colours.CYAN.value,
+        2: _Colours.ORANGE.value,
+        3: _Colours.YELLOW.value,
+        4: _Colours.PURPLE.value,
+        5: _Colours.BLUE.value,
+        6: _Colours.GREEN.value,
+        7: _Colours.RED.value,
     }
 
     @staticmethod
@@ -97,7 +97,7 @@ class SimplifiedTetrisEngine(object):
                     (x_offsets[i], 60 * (count + 1)),
                     cv.FONT_HERSHEY_SIMPLEX,
                     1,
-                    Colours.WHITE.value,
+                    _Colours.WHITE.value,
                     2,
                     cv.LINE_AA,
                 )
@@ -144,7 +144,7 @@ class SimplifiedTetrisEngine(object):
         """Create a dictionary containing the pieces."""
         self._pieces = {}
         for idx in range(self._num_pieces):
-            self._pieces[idx] = Piece(self._piece_size, idx)
+            self._pieces[idx] = _Piece(self._piece_size, idx)
 
     def _reset(self) -> None:
         """Reset the score, grid, piece coords, piece id and anchor."""
@@ -224,7 +224,7 @@ class SimplifiedTetrisEngine(object):
             + 1,
             400:,
             :,
-        ] = Colours.RED.value
+        ] = _Colours.RED.value
 
     def _get_grid(self) -> np.ndarray:
         """
@@ -260,10 +260,10 @@ class SimplifiedTetrisEngine(object):
         for j in range(-int(self.CELL_SIZE / 40), int(self.CELL_SIZE / 40) + 1):
             self._img[
                 [i * self.CELL_SIZE + j for i in range(self._height)], :, :
-            ] = Colours.BLACK.value
+            ] = _Colours.BLACK.value
             self._img[
                 :, [i * self.CELL_SIZE + j for i in range(self._width)], :
-            ] = Colours.BLACK.value
+            ] = _Colours.BLACK.value
 
     def _add_img_left(self) -> None:
         """

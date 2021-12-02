@@ -5,11 +5,11 @@ import unittest
 
 import numpy as np
 
-from gym_simplifiedtetris.envs import SimplifiedTetrisEngine as Engine
-from gym_simplifiedtetris.utils import Piece
+from gym_simplifiedtetris.envs import _SimplifiedTetrisEngine as Engine
+from gym_simplifiedtetris._utils import _Piece
 
 
-class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
+class _SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
     def setUp(self) -> None:
         height = 20
         width = 10
@@ -36,19 +36,19 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
         del self.engine
 
     def test__is_illegal_non_empty_overlapping(self) -> None:
-        self.engine._piece = Piece(self.piece_size, 0)
+        self.engine._piece = _Piece(self.piece_size, 0)
         self.engine._anchor = [0, self.engine._height - 1]
         self.engine._grid[0, self.engine._height - 1] = 1
         self.assertEqual(self.engine._is_illegal(), True)
 
     def test__hard_drop_empty_grid(self) -> None:
-        self.engine._piece = Piece(self.piece_size, 0)
+        self.engine._piece = _Piece(self.piece_size, 0)
         self.engine._anchor = [0, 0]
         self.engine._hard_drop()
         self.assertEqual(self.engine._anchor, [0, self.engine._height - 1])
 
     def test__hard_drop_non_empty_grid(self) -> None:
-        self.engine._piece = Piece(self.piece_size, 0)
+        self.engine._piece = _Piece(self.piece_size, 0)
         self.engine._anchor = [0, 0]
         self.engine._grid[0, self.engine._height - 1] = 1
         self.engine._hard_drop()
@@ -96,7 +96,7 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
         np.testing.assert_array_equal(self.engine._grid, grid_after)
 
     def test__update_grid_simple(self) -> None:
-        self.engine._piece = Piece(self.piece_size, 0)
+        self.engine._piece = _Piece(self.piece_size, 0)
         self.engine._anchor = [0, self.engine._height - 1]
         grid_to_compare = np.zeros(
             (self.engine._width, self.engine._height), dtype="bool"
@@ -106,7 +106,7 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
         np.testing.assert_array_equal(self.engine._grid, grid_to_compare)
 
     def test__update_grid_empty(self) -> None:
-        self.engine._piece = Piece(self.piece_size, 0)
+        self.engine._piece = _Piece(self.piece_size, 0)
         self.engine._anchor = [0, self.engine._height - 1]
         grid_to_compare = np.zeros(
             (self.engine._width, self.engine._height), dtype="bool"
@@ -115,7 +115,7 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
         np.testing.assert_array_equal(self.engine._grid, grid_to_compare)
 
     def test__update_grid_populated(self) -> None:
-        self.engine._piece = Piece(self.piece_size, 0)
+        self.engine._piece = _Piece(self.piece_size, 0)
         self.engine._grid[0, self.engine._height - self.piece_size :] = 1
         self.engine._anchor = [0, self.engine._height - 1]
         grid_to_compare = np.zeros(
@@ -130,7 +130,7 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
             self.assertEqual(self.engine._num_actions, len(value))
 
     def test__get_dellacherie_scores_empty_grid(self) -> None:
-        self.engine._piece = Piece(self.piece_size, 0)
+        self.engine._piece = _Piece(self.piece_size, 0)
         print(self.engine._all_available_actions[self.engine._piece._idx])
         array_to_compare = np.array(
             [
@@ -188,7 +188,7 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
         self.engine._grid[self.engine._width - 3, self.engine._height - 3] = False
         self.engine._grid[self.engine._width - 1, self.engine._height - 6] = True
         self.engine._grid[3, self.engine._height - 3 : self.engine._height - 1] = False
-        self.engine._piece = Piece(self.piece_size, 0)
+        self.engine._piece = _Piece(self.piece_size, 0)
         self.engine._anchor = [0, 0]
         self.engine._hard_drop()
         self.engine._update_grid(True)
@@ -202,7 +202,7 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
         )
 
     def test__get_landing_height_I_piece_(self) -> None:
-        self.engine._piece = Piece(self.piece_size, 0)
+        self.engine._piece = _Piece(self.piece_size, 0)
         self.engine._anchor = [0, self.engine._height - 1]
         self.engine._update_grid(True)
         self.assertEqual(self.engine._get_landing_height(), 0.5 * (1 + self.piece_size))
@@ -213,7 +213,7 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
     def test__get_eroded_cells_single(self) -> None:
         self.engine._grid[:, self.engine._height - 1 :] = True
         self.engine._grid[0, self.engine._height - 1] = False
-        self.engine._piece = Piece(self.piece_size, 0)
+        self.engine._piece = _Piece(self.piece_size, 0)
         self.engine._anchor = [0, 0]
         self.engine._hard_drop()
         self.engine._update_grid(True)

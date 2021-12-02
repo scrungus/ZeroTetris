@@ -6,10 +6,10 @@ import numpy as np
 from gym import spaces
 from gym.utils import seeding
 
-from gym_simplifiedtetris.envs.simplified_tetris_engine import SimplifiedTetrisEngine
+from gym_simplifiedtetris.envs._simplified_tetris_engine import _SimplifiedTetrisEngine
 
 
-class SimplifiedTetrisBaseEnv(gym.Env):
+class _SimplifiedTetrisBaseEnv(gym.Env):
     """
     All custom envs inherit from gym.Env and implement the essential methods
     and spaces.
@@ -67,7 +67,7 @@ class SimplifiedTetrisBaseEnv(gym.Env):
 
         self._seed(seed=seed)
 
-        self._engine = SimplifiedTetrisEngine(
+        self._engine = _SimplifiedTetrisEngine(
             grid_dims=grid_dims,
             piece_size=piece_size,
             num_pieces=self._num_pieces_,

@@ -6,7 +6,7 @@ from .simplified_tetris_binary_shaped_env import (
 from .simplified_tetris_part_binary_shaped_env import (
     SimplifiedTetrisPartBinaryShapedEnv,
 )
-from .potential_based_shaping_reward import PotentialBasedShapingReward
+from ._potential_based_shaping_reward import _PotentialBasedShapingReward
 
 __all__ = [
     "SimplifiedTetrisBinaryShapedEnv",
