@@ -65,7 +65,7 @@ pip install gym-simplifiedtetris
 Or, you can copy the repository by forking it and then downloading it using:
 
 ```bash
-git clone https://github.com/INSERT-YOUR-USERNAME-HERE/gym-simplifiedtetris
+git clone https://github.com/<YOUR-USERNAME>/gym-simplifiedtetris
 ```
 
 Packages can be installed using pip:
