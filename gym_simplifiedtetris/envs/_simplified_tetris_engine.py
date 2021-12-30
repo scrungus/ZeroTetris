@@ -3,6 +3,7 @@ import time
 from copy import deepcopy
 from typing import Dict, List, Optional, Sequence, Tuple
 
+from PIL import Image
 import cv2.cv2 as cv
 import numpy as np
 from PIL import Image
@@ -246,11 +247,13 @@ class _SimplifiedTetrisEngine(object):
 
         :param grid: the grid to be resized.
         """
-        self._img = grid.reshape((self._height, self._width, 3)).astype(np.uint8)
-        self._img = Image.fromarray(self._img, "RGB")
-        self._img = self._img.resize(
-            (self._width * self.CELL_SIZE, self._height * self.CELL_SIZE)
+        self._img = np.repeat(
+            np.repeat(grid, self.CELL_SIZE, axis=0), self.CELL_SIZE, axis=1
         )
+        self._img = self._img.reshape(
+            (self._height * self.CELL_SIZE, self._width * self.CELL_SIZE, 3)
+        ).astype(np.uint8)
+        self._img = Image.fromarray(self._img, "RGB")
         self._img = np.array(self._img)
 
     def _draw_separating_lines(self) -> None:
