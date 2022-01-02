@@ -3,6 +3,9 @@ from setuptools import find_packages, setup
 with open("README.md", "r", encoding="utf-8") as file:
     long_description = file.read()
 
+with open("requirements.txt") as f:
+    install_requires = f.read().splitlines()
+
 classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Education",
@@ -15,17 +18,6 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Games/Entertainment :: Puzzle Games",
     "Topic :: Software Development :: Libraries :: Python Modules",
-]
-
-install_requires = [
-    "numpy==1.19.5",
-    "tqdm==4.51.0",
-    "gym==0.18.0",
-    "stable_baselines3==1.1.0",
-    "opencv_python=4.5.1.48",
-    "matplotlib==3.4.2",
-    "dataclasses==0.8",
-    "Pillow==8.4.0",
 ]
 
 setup(

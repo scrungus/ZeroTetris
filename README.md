@@ -75,17 +75,6 @@ cd gym-simplifiedtetris
 pip install -r requirements.txt
 ```
 
-Here is a list of dependencies:
-
-- numpy
-- gym
-- tqdm
-- opencv_python
-- matplotlib
-- Pillow
-- stable_baselines3
-- dataclasses
-
 ## 2. Usage
 
 The file [examples.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/examples.py) shows two examples of using an instance of the `simplifiedtetris-binary-20x10-4-v0` environment for ten games. You can create an environment using `gym.make`, supplying the environment's ID as an argument.
