@@ -33,7 +33,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
         raise NotImplementedError()
 
     def __init__(
-        self, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
+        self, *, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
     ) -> None:
 
         if not isinstance(grid_dims, (list, tuple, np.array)) or len(grid_dims) != 2:
@@ -65,7 +65,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
             4: (4 * grid_dims[1] - 6, 7),
         }[piece_size]
 
-        self._seed(seed=seed)
+        self._seed(seed)
 
         self._engine = _SimplifiedTetrisEngine(
             grid_dims=grid_dims,
@@ -91,7 +91,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
 
         return self._get_obs()
 
-    def step(self, action: int) -> Tuple[np.array, float, bool, Dict[str, Any]]:
+    def step(self, action: int, /) -> Tuple[np.array, float, bool, Dict[str, Any]]:
         """
         Hard drop the current piece according to the action. Terminate the
         game if the piece cannot fit into the bottom 'height-piece_size' rows.
@@ -132,7 +132,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
 
         return self._get_obs(), reward, False, info
 
-    def render(self, mode: Optional[str] = "human") -> np.ndarray:
+    def render(self, mode: Optional[str] = "human", /) -> np.ndarray:
         """
         Render the env.
 
@@ -145,7 +145,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
         """Close the open windows."""
         return self._engine._close()
 
-    def _seed(self, seed: Optional[int] = 8191) -> None:
+    def _seed(self, seed: Optional[int] = 8191, /) -> None:
         """
         Seed the env.
 

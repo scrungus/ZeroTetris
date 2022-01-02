@@ -12,7 +12,7 @@ class UniformAgent(object):
     :param num_actions: the number of actions available to the agent in each state.
     """
 
-    def __init__(self, num_actions: int) -> None:
+    def __init__(self, num_actions: int, /) -> None:
         self._num_actions = num_actions
 
     def predict(self) -> int:

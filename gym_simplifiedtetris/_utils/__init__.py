@@ -3,4 +3,4 @@
 from gym_simplifiedtetris._utils._piece import _Piece
 from gym_simplifiedtetris._utils._colours import _Colours
 
-__all__: list = []
+__all__ = []

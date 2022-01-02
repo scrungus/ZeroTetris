@@ -5,7 +5,7 @@ from matplotlib import colors
 import numpy as np
 
 
-def _get_bgr_code(colour_name: str) -> Tuple[float, float, float]:
+def _get_bgr_code(colour_name: str, /) -> Tuple[float, float, float]:
     """
     Get the inverted RGB code corresponding to the arg provided.
 

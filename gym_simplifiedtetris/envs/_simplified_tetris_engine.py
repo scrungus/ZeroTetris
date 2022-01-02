@@ -81,7 +81,7 @@ class _SimplifiedTetrisEngine(object):
 
     @staticmethod
     def _add_statistics(
-        img_array: np.ndarray, items: List[List[str]], x_offsets: List[int]
+        img_array: np.ndarray, items: List[List[str]], x_offsets: List[int], /
     ) -> None:
         """
         Add statistics to the array provided.
@@ -105,6 +105,7 @@ class _SimplifiedTetrisEngine(object):
 
     def __init__(
         self,
+        *,
         grid_dims: Sequence[int],
         piece_size: int,
         num_pieces: int,
@@ -154,7 +155,7 @@ class _SimplifiedTetrisEngine(object):
         self._colour_grid = np.zeros_like(self._colour_grid, dtype="int")
         self._update_coords_and_anchor()
 
-    def _render(self, mode: Optional[str] = "human") -> np.ndarray:
+    def _render(self, mode: Optional[str] = "human", /) -> np.ndarray:
         """
         Show an image of the current grid, having dropped the current piece.
         The human has the option to pause (SPACEBAR), speed up (RIGHT key),
@@ -240,7 +241,7 @@ class _SimplifiedTetrisEngine(object):
 
         return np.array(grid)
 
-    def _resize_grid(self, grid: np.ndarray) -> None:
+    def _resize_grid(self, grid: np.ndarray, /) -> None:
         """
         Reshape the grid, convert it to an Image and resize it, then convert it
         to an array.
@@ -278,8 +279,8 @@ class _SimplifiedTetrisEngine(object):
         )
 
         self._add_statistics(
-            img_array=img_array,
-            items=[
+            img_array,
+            [
                 [
                     "Height",
                     "Width",
@@ -295,7 +296,7 @@ class _SimplifiedTetrisEngine(object):
                     f"{mean_score:.1f}",
                 ],
             ],
-            x_offsets=[50, 300],
+            [50, 300],
         )
         self._img = np.concatenate((img_array, self._img), axis=1)
 
@@ -383,7 +384,7 @@ class _SimplifiedTetrisEngine(object):
 
         return num_rows_cleared
 
-    def _update_grid(self, set_piece: bool) -> None:
+    def _update_grid(self, set_piece: bool, /) -> None:
         """
         Set the current piece using the anchor.
 
@@ -505,7 +506,7 @@ class _SimplifiedTetrisEngine(object):
 
         return self._get_priorities(max_indices)
 
-    def _get_priorities(self, max_indices: np.array) -> np.array:
+    def _get_priorities(self, max_indices: np.array, /) -> np.array:
         """
         Calculate the priorities of the available actions.
 
@@ -648,7 +649,7 @@ class _SimplifiedTetrisEngine(object):
 
         return cumulative_wells
 
-    def _rotate_piece(self, rotation: int) -> None:
+    def _rotate_piece(self, rotation: int, /) -> None:
         """
         Set the piece's rotation and rotate the current piece.
 
@@ -657,7 +658,7 @@ class _SimplifiedTetrisEngine(object):
         self._piece._rotation = rotation
         self._piece._coords = self._piece._all_coords[self._piece._rotation]
 
-    def _get_translation_rotation(self, action: int) -> Tuple[int, int]:
+    def _get_translation_rotation(self, action: int, /) -> Tuple[int, int]:
         """
         Return the translation and rotation associated with the action provided.
 
