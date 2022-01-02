@@ -1,10 +1,10 @@
 from setuptools import find_packages, setup
 
-with open("README.md", "r", encoding="utf-8") as file:
+with open("README.md", encoding="utf-8") as file:
     long_description = file.read()
 
-with open("requirements.txt") as f:
-    install_requires = f.read().splitlines()
+with open("requirements.txt") as file:
+    install_requires = file.read().splitlines()
 
 classifiers = [
     "Intended Audience :: Developers",
