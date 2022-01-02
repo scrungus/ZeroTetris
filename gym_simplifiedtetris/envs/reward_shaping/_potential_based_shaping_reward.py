@@ -5,7 +5,7 @@ from typing import Tuple
 import numpy as np
 
 
-class PotentialBasedShapingReward(object):
+class _PotentialBasedShapingReward(object):
     """A potential-based shaping reward object."""
 
     reward_range = (-1, 5)

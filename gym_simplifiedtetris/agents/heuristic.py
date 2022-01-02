@@ -11,7 +11,7 @@ class HeuristicAgent(object):
     """
 
     @staticmethod
-    def predict(ratings_or_priorities: np.array) -> int:
+    def predict(ratings_or_priorities: np.array, /) -> int:
         """
         Return that action yielding the largest heuristic score. Separate ties
         using a priority rating, which is based on the translation and

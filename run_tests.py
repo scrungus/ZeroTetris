@@ -12,7 +12,9 @@ from gym_simplifiedtetris.register import env_list
 
 def main() -> None:
     """
-    Check if each env created is compliant with the OpenAI Gym API, by playing ten games using an agent that selects actions uniformly at random. In every game, validate the reward received, and render the env for visual inspection.
+    Check if each env created is compliant with the OpenAI Gym API
+
+    Plays ten games using an agent that selects actions uniformly at random. In every game, validate the reward received, and render the env for visual inspection.
     """
     for env_id, env_name in enumerate(env_list):
         print(f"Testing the env: {env_name} ({env_id+1}/{len(env_list)})")

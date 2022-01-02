@@ -27,7 +27,7 @@ If you want to help improve the docs, please create a new issue (or comment on a
 
 ## Contributing code
 
-If you would like to contribute, I'd recommend following [this](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/) advice. In summary, fork the repo ➡️ clone the copied repo ➡️ create a new branch ➡️ make changes ➡️ merge to master ➡️ create a new pull request.
+If you would like to contribute, I'd recommend following [this](https://git-scm.com/book/en/v2) advice. In summary, fork the repo ➡️ clone the forked repo ➡️ create a new branch ➡️ make changes ➡️ merge to master ➡️ create a new pull request.
 
 ### Finding an issue
 
@@ -35,7 +35,7 @@ You can find the list of outstanding feature requests and bugs on the [GitHub is
 
 ### Development process
 
-It would be best if you use the master branch for the most stable release.  We work in the 'dev' branch if you want to keep up with the latest changes.  If you are using dev, keep an eye on commits.
+It would be best if you use the master branch for the most stable release.  I work in the 'dev' branch if you want to keep up with the latest changes.  If you are using dev, keep an eye on commits.
 
 ### Git commit guidelines
 

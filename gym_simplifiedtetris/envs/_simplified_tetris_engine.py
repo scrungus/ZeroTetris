@@ -3,18 +3,55 @@ import time
 from copy import deepcopy
 from typing import Dict, List, Optional, Sequence, Tuple
 
+from PIL import Image
 import cv2.cv2 as cv
 import numpy as np
 from PIL import Image
 
 # import imageio
 
-from gym_simplifiedtetris.utils import Piece, Colours
+from gym_simplifiedtetris._utils import _Piece, _Colours
 
 
-class SimplifiedTetrisEngine(object):
+class _SimplifiedTetrisEngine(object):
     """
-    TODO
+    Creates a Tetris engine object, which has a hard-drop mechanism for dropping the pieces and the methods listed below.
+
+    Rendering related methods:
+    > _close
+    > _add_statistics
+    > _render
+    > _draw_boundary
+    > _get_grid
+    > _resize_grid
+    > _draw_separating_lines
+    > _add_img_left
+
+    Game dynamics related methods:
+    > _rotate_piece
+    > _get_translation_rotation
+    > _generate_id_randomly
+    > _initialise_pieces
+    > _reset
+    > _update_coords_and_anchor
+    > _is_illegal
+    > _hard_drop
+    > _clear_rows
+    > _update_grid
+    > _get_reward
+    > _get_all_available_actions
+    > _compute_available_actions
+
+    Heuristic agent related methods:
+    > _get_dellacherie_scores
+    > _get_priorities
+    > _get_dellacherie_funcs
+    > _get_landing_height
+    > _get_eroded_cells
+    > _get_row_transitions
+    > _get_column_transitions
+    > _get_holes
+    > _get_cumulative_wells
 
     :param grid_dims: the grid dimensions (height and width).
     :param piece_size: the size of the pieces in use.
@@ -25,14 +62,14 @@ class SimplifiedTetrisEngine(object):
     CELL_SIZE = 50
 
     BLOCK_COLOURS = {
-        0: Colours.WHITE.value,
-        1: Colours.CYAN.value,
-        2: Colours.ORANGE.value,
-        3: Colours.YELLOW.value,
-        4: Colours.PURPLE.value,
-        5: Colours.BLUE.value,
-        6: Colours.GREEN.value,
-        7: Colours.RED.value,
+        0: _Colours.WHITE.value,
+        1: _Colours.CYAN.value,
+        2: _Colours.ORANGE.value,
+        3: _Colours.YELLOW.value,
+        4: _Colours.PURPLE.value,
+        5: _Colours.BLUE.value,
+        6: _Colours.GREEN.value,
+        7: _Colours.RED.value,
     }
 
     @staticmethod
@@ -42,8 +79,33 @@ class SimplifiedTetrisEngine(object):
         cv.destroyAllWindows()
         cv.waitKey(1)
 
+    @staticmethod
+    def _add_statistics(
+        img_array: np.ndarray, items: List[List[str]], x_offsets: List[int], /
+    ) -> None:
+        """
+        Add statistics to the array provided.
+
+        :param img_array: the array to be edited.
+        :param items: the lists to be added to the array.
+        :param x_offsets: the horizontal positions where the statistics should be added.
+        """
+        for i, item in enumerate(items):
+            for count, j in enumerate(item):
+                cv.putText(
+                    img_array,
+                    j,
+                    (x_offsets[i], 60 * (count + 1)),
+                    cv.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    _Colours.WHITE.value,
+                    2,
+                    cv.LINE_AA,
+                )
+
     def __init__(
         self,
+        *,
         grid_dims: Sequence[int],
         piece_size: int,
         num_pieces: int,
@@ -84,7 +146,7 @@ class SimplifiedTetrisEngine(object):
         """Create a dictionary containing the pieces."""
         self._pieces = {}
         for idx in range(self._num_pieces):
-            self._pieces[idx] = Piece(self._piece_size, idx)
+            self._pieces[idx] = _Piece(self._piece_size, idx)
 
     def _reset(self) -> None:
         """Reset the score, grid, piece coords, piece id and anchor."""
@@ -93,7 +155,7 @@ class SimplifiedTetrisEngine(object):
         self._colour_grid = np.zeros_like(self._colour_grid, dtype="int")
         self._update_coords_and_anchor()
 
-    def _render(self, mode: Optional[str] = "human") -> np.ndarray:
+    def _render(self, mode: Optional[str] = "human", /) -> np.ndarray:
         """
         Show an image of the current grid, having dropped the current piece.
         The human has the option to pause (SPACEBAR), speed up (RIGHT key),
@@ -164,7 +226,7 @@ class SimplifiedTetrisEngine(object):
             + 1,
             400:,
             :,
-        ] = Colours.RED.value
+        ] = _Colours.RED.value
 
     def _get_grid(self) -> np.ndarray:
         """
@@ -179,18 +241,20 @@ class SimplifiedTetrisEngine(object):
 
         return np.array(grid)
 
-    def _resize_grid(self, grid: np.ndarray) -> None:
+    def _resize_grid(self, grid: np.ndarray, /) -> None:
         """
         Reshape the grid, convert it to an Image and resize it, then convert it
         to an array.
 
         :param grid: the grid to be resized.
         """
-        self._img = grid.reshape((self._height, self._width, 3)).astype(np.uint8)
-        self._img = Image.fromarray(self._img, "RGB")
-        self._img = self._img.resize(
-            (self._width * self.CELL_SIZE, self._height * self.CELL_SIZE)
+        self._img = np.repeat(
+            np.repeat(grid, self.CELL_SIZE, axis=0), self.CELL_SIZE, axis=1
         )
+        self._img = self._img.reshape(
+            (self._height * self.CELL_SIZE, self._width * self.CELL_SIZE, 3)
+        ).astype(np.uint8)
+        self._img = Image.fromarray(self._img, "RGB")
         self._img = np.array(self._img)
 
     def _draw_separating_lines(self) -> None:
@@ -200,10 +264,10 @@ class SimplifiedTetrisEngine(object):
         for j in range(-int(self.CELL_SIZE / 40), int(self.CELL_SIZE / 40) + 1):
             self._img[
                 [i * self.CELL_SIZE + j for i in range(self._height)], :, :
-            ] = Colours.BLACK.value
+            ] = _Colours.BLACK.value
             self._img[
                 :, [i * self.CELL_SIZE + j for i in range(self._width)], :
-            ] = Colours.BLACK.value
+            ] = _Colours.BLACK.value
 
     def _add_img_left(self) -> None:
         """
@@ -215,8 +279,8 @@ class SimplifiedTetrisEngine(object):
         )
 
         self._add_statistics(
-            img_array=img_array,
-            items=[
+            img_array,
+            [
                 [
                     "Height",
                     "Width",
@@ -232,33 +296,9 @@ class SimplifiedTetrisEngine(object):
                     f"{mean_score:.1f}",
                 ],
             ],
-            x_offsets=[50, 300],
+            [50, 300],
         )
         self._img = np.concatenate((img_array, self._img), axis=1)
-
-    @staticmethod
-    def _add_statistics(
-        img_array: np.ndarray, items: List[List[str]], x_offsets: List[int]
-    ) -> None:
-        """
-        Add statistics to the array provided.
-
-        :param img_array: the array to be edited.
-        :param items: the lists to be added to the array.
-        :param x_offsets: the horizontal positions where the statistics should be added.
-        """
-        for i, item in enumerate(items):
-            for count, j in enumerate(item):
-                cv.putText(
-                    img_array,
-                    j,
-                    (x_offsets[i], 60 * (count + 1)),
-                    cv.FONT_HERSHEY_SIMPLEX,
-                    1,
-                    Colours.WHITE.value,
-                    2,
-                    cv.LINE_AA,
-                )
 
     def _update_coords_and_anchor(self) -> None:
         """Update the current piece, and reset the anchor."""
@@ -344,7 +384,7 @@ class SimplifiedTetrisEngine(object):
 
         return num_rows_cleared
 
-    def _update_grid(self, set_piece: bool) -> None:
+    def _update_grid(self, set_piece: bool, /) -> None:
         """
         Set the current piece using the anchor.
 
@@ -466,7 +506,7 @@ class SimplifiedTetrisEngine(object):
 
         return self._get_priorities(max_indices)
 
-    def _get_priorities(self, max_indices: np.array) -> np.array:
+    def _get_priorities(self, max_indices: np.array, /) -> np.array:
         """
         Calculate the priorities of the available actions.
 
@@ -609,7 +649,7 @@ class SimplifiedTetrisEngine(object):
 
         return cumulative_wells
 
-    def _rotate_piece(self, rotation: int) -> None:
+    def _rotate_piece(self, rotation: int, /) -> None:
         """
         Set the piece's rotation and rotate the current piece.
 
@@ -618,7 +658,7 @@ class SimplifiedTetrisEngine(object):
         self._piece._rotation = rotation
         self._piece._coords = self._piece._all_coords[self._piece._rotation]
 
-    def _get_translation_rotation(self, action: int) -> Tuple[int, int]:
+    def _get_translation_rotation(self, action: int, /) -> Tuple[int, int]:
         """
         Return the translation and rotation associated with the action provided.
 

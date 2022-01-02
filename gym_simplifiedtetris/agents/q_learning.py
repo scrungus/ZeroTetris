@@ -21,6 +21,7 @@ class QLearningAgent(object):
 
     def __init__(
         self,
+        *,
         grid_dims: Sequence[int],
         num_pieces: int,
         num_actions: int,
@@ -39,7 +40,7 @@ class QLearningAgent(object):
 
         self._num_actions = num_actions
 
-    def predict(self, obs: np.array) -> int:
+    def predict(self, obs: np.array, /) -> int:
         """
         Return the action whilst following an epsilon-greedy policy.
 

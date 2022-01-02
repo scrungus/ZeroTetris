@@ -65,7 +65,7 @@ pip install gym-simplifiedtetris
 Or, you can copy the repository by forking it and then downloading it using:
 
 ```bash
-git clone https://github.com/INSERT-YOUR-USERNAME-HERE/gym-simplifiedtetris
+git clone https://github.com/<YOUR-USERNAME>/gym-simplifiedtetris
 ```
 
 Packages can be installed using pip:
@@ -74,17 +74,6 @@ Packages can be installed using pip:
 cd gym-simplifiedtetris
 pip install -r requirements.txt
 ```
-
-Here is a list of dependencies:
-
-- numpy
-- gym
-- tqdm
-- opencv_python
-- matplotlib
-- Pillow
-- stable_baselines3
-- dataclasses
 
 ## 2. Usage
 
