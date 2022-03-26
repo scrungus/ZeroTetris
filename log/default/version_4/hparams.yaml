@@ -1,0 +1,33 @@
+alr: !!python/object/apply:numpy.core.multiarray.scalar
+- &id001 !!python/object/apply:numpy.dtype
+  args:
+  - f8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  IR4x/DCyoT8=
+batch_size: 7
+clip_eps: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  dn/oRf2Xyj8=
+clr: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  EvfQRDp3pT8=
+depth: 1
+epoch_steps: 488
+gamma: 0.99
+lamb: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  Rh2bpTwq7z8=
