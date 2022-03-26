@@ -117,7 +117,7 @@ class PPOLightning(LightningModule):
 
         print("hparams:",self.hparams)
         
-        self.env = Tetris(grid_dims=(10, 10), piece_size=1)
+        self.env = Tetris(grid_dims=(10, 10), piece_size=2)
         self.state = torch.Tensor(self.env.reset())
         self.ep_step = 0
         obs_size = self.env.observation_space.shape[0]
@@ -304,7 +304,7 @@ class ReturnCallback(Callback):
         return self.total
 
 
-def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth, num_epochs=250):
+def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth, num_epochs=800):
 
     batch_size = int(batch_size)
     epoch_steps = int(epoch_steps)
@@ -319,25 +319,33 @@ def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth, num_ep
         epoch_steps,
         0.99, #gamma
         depth,
-        )
-    
-    data_aggregator = ReturnCallback()
+    )
 
     tb_logger = TensorBoardLogger("log/")
 
     trainer = Trainer(
         gpus=0,
         max_epochs=num_epochs,
-        logger=tb_logger,
-        callbacks=[
-            data_aggregator,
-        ])
+        logger=tb_logger)
 
     trainer.fit(model)
 
-    avg = np.average(data_aggregator.get_total()[-10:])
+    totals = []
 
-    return avg
+    env = Tetris(grid_dims=(10, 10), piece_size=2)
+
+    state = env.reset()
+
+    for i in range(10):
+        done = 0
+        total = 0
+        while not done:
+            _,action,_ = model(torch.Tensor(state))
+            state, reward, done, _ = env.step(action.item())
+            total += reward
+        totals.append(total)
+
+    return np.average(totals)
     
 
 def find_params():
