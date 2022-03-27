@@ -358,8 +358,11 @@ def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth):
         logger=tb_logger)
 
     trainer.fit(model)
+
+    print("finished training")
+
+    f.close()
     
-    #print("finished training")
     totals = []
 
     env = Tetris(grid_dims=(10, 10), piece_size=2)
