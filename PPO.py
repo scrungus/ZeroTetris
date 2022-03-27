@@ -390,10 +390,10 @@ def find_params():
     pbounds = {
         "alr" : (1e-5,1e-3),
         "clr" : (1e-5,1e-3),
-        "batch_size" : (3,15),
+        "batch_size" : (16,128),
         "clip_eps" : (0.1,0.3),
         "lamb" : (9.3e-1,9.8e-1),
-        "epoch_steps" : (100,2000),
+        "epoch_steps" : (1024,8192),
         "depth" : (0.6,2.4)
     }
     
