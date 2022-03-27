@@ -322,7 +322,7 @@ import os
 
 def pickFileName():
 
-    Path("log/trainingvals/").mkdir(parents=True, exist_ok=True)
+    Path("log/trainingvalsPPO/").mkdir(parents=True, exist_ok=True)
 
     files = os.listdir('log/trainingvalsPPO/')
 
@@ -398,7 +398,8 @@ def find_params():
     optimizer = BayesianOptimization(
         f = train_model,
         pbounds=pbounds,
-        random_state=1
+        random_state=1,
+        verbose=1
         )
 
     logger = JSONLogger(path="log/logs.json")
