@@ -358,8 +358,8 @@ def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth):
 def find_params():
 
     pbounds = {
-        "alr" : (1e-5,1e-1),
-        "clr" : (1e-5,1e-1),
+        "alr" : (1e-5,1e-3),
+        "clr" : (1e-5,1e-3),
         "batch_size" : (3,15),
         "clip_eps" : (0.1,0.3),
         "lamb" : (9.3e-1,9.8e-1),
