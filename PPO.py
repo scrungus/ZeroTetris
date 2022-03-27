@@ -113,8 +113,11 @@ class PPOLightning(LightningModule):
         lamb ,
         epoch_steps,
         gamma,
-        depth
+        depth,
+        writer
     ):
+        self.writer = writer
+        writer = -1
         super().__init__()
         self.save_hyperparameters()
 
@@ -267,15 +270,22 @@ class PPOLightning(LightningModule):
              self.last_ep_logged += 1
 
         self.log("avg_ep_reward", self.avg_ep_reward, prog_bar=True, on_step=False, on_epoch=True, logger=True)
+
         
         if optimizer_idx == 0:
             loss = self.act_loss(state, action, prob_old, adv)
             self.log('act_loss', loss, on_step=False, on_epoch=True, prog_bar=True,logger=True)
+
+            self.writer.writerow([self.global_step, self.avg_ep_reward, loss.unsqueeze(0).item()])
+
             return loss
 
         elif optimizer_idx == 1:
             loss = self.crit_loss(state,val)
             self.log('crit_loss', loss, on_step=False, on_epoch=True, prog_bar=True,logger=True)
+
+            self.writer.writerow([self.global_step, self.avg_ep_reward, loss.unsqueeze(0).item()])
+
             return loss
 
     
@@ -306,6 +316,17 @@ class ReturnCallback(Callback):
     def get_total(self):
         return self.total
 
+from pathlib import Path
+import csv
+import os
+
+def pickFileName():
+
+    Path("log/trainingvals/").mkdir(parents=True, exist_ok=True)
+
+    files = os.listdir('log/trainingvalsPPO/')
+
+    return '{}.csv'.format(len(files)+1)
 
 def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth):
     #print("entered training")    
@@ -313,6 +334,9 @@ def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth):
     batch_size = int(batch_size)
     epoch_steps = int(epoch_steps)
     depth = int(depth)
+
+    f = open('log/trainingvalsPPO/{}'.format(pickFileName()), 'w+')
+    writer = csv.writer(f)
 
     model = PPOLightning(
         alr,
@@ -323,6 +347,7 @@ def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth):
         epoch_steps,
         0.99, #gamma
         depth,
+        writer
     )
 
     tb_logger = TensorBoardLogger("log/")
