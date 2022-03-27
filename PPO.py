@@ -406,7 +406,7 @@ def find_params():
     optimizer.subscribe(Events.OPTIMIZATION_STEP, logger)
 
     optimizer.maximize(
-        init_points=20,
+        init_points=30,
         n_iter=200,
     )
 

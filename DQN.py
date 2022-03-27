@@ -406,7 +406,7 @@ class DQNLightning(LightningModule):
 
 def train_model(batch_size,lr,sync_rate,replay_size,warm_start_steps,eps_last_frame,sample_size,depth):
 
-    num_epochs = 1
+    num_epochs = 1000
 
     batch_size = int(batch_size)
     sync_rate = int(sync_rate)
@@ -483,14 +483,15 @@ def find_params():
     optimizer = BayesianOptimization(
         f = train_model,
         pbounds=pbounds,
-        random_state=1
+        random_state=1,
+        verbose=1
         )
 
     logger = JSONLogger(path="log/logsDQN.json")
     optimizer.subscribe(Events.OPTIMIZATION_STEP, logger)
 
     optimizer.maximize(
-        init_points=20,
+        init_points=30,
         n_iter=200,
     )
 
