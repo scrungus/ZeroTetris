@@ -66,7 +66,10 @@ class ActorNet(nn.Module):
             )
 
     def forward(self, x):
+        #if x.sum().data.item() == 0:
+            #print("ALL ZEROS INPUT : ",self.actor(x))
         logits = self.actor(x)
+        logits = torch.nan_to_num(logits)
         dist = Categorical(logits=logits)
         action = dist.sample()
 
@@ -143,7 +146,7 @@ class PPOLightning(LightningModule):
         self.agent = ActorCritic(self.critic, self.actor)
     
     def forward(self, x):
-
+        
         dist, action = self.actor(x)
         val = self.critic(x)
         
@@ -214,7 +217,7 @@ class PPOLightning(LightningModule):
                 if end and not done:
                     #if epoch ends before terminal state, bootstrap value
                     with torch.no_grad():
-                        print("epoch ended early")
+                        #print("epoch ended early")
                         _,_,_,val = self.agent(self.state)
                         next_val = val.item()
                 else:
@@ -226,7 +229,7 @@ class PPOLightning(LightningModule):
                 self.batch_advs += self.compute_gae(self.ep_rewards,self.ep_vals, next_val)
                 
                 self.epoch_rewards.append(sum(self.ep_rewards))
-                print("Total for Ep :",sum(self.ep_rewards))
+                #print("Total for Ep :",sum(self.ep_rewards))
                 self.ep_rewards_all.append(sum(self.ep_rewards))
                 self.ep_rewards.clear()
                 self.ep_vals.clear()
@@ -304,8 +307,9 @@ class ReturnCallback(Callback):
         return self.total
 
 
-def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth, num_epochs=800):
-
+def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth):
+    #print("entered training")    
+    num_epochs=1000
     batch_size = int(batch_size)
     epoch_steps = int(epoch_steps)
     depth = int(depth)
@@ -329,22 +333,25 @@ def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth, num_ep
         logger=tb_logger)
 
     trainer.fit(model)
-
+    
+    #print("finished training")
     totals = []
 
     env = Tetris(grid_dims=(10, 10), piece_size=2)
-
-    state = env.reset()
-
-    for i in range(10):
-        done = 0
-        total = 0
-        while not done:
-            _,action,_ = model(torch.Tensor(state))
-            state, reward, done, _ = env.step(action.item())
-            total += reward
-        totals.append(total)
-
+    
+    with torch.no_grad():
+        for i in range(100):
+            done = 0
+            total = 0
+            state = env.reset()
+            while not done:
+                _,action,_ = model(torch.Tensor(state))
+                state, reward, done, _ = env.step(action.item())
+                total += reward
+                #   print("stepped",action.item(),done)
+            totals.append(total)
+    
+    print("average over final games:",np.average(totals))
     return np.average(totals)
     
 
@@ -370,7 +377,7 @@ def find_params():
     optimizer.subscribe(Events.OPTIMIZATION_STEP, logger)
 
     optimizer.maximize(
-        init_points=3,
+        init_points=20,
         n_iter=200,
     )
 
