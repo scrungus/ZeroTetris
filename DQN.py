@@ -455,14 +455,16 @@ def train_model(batch_size,lr,sync_rate,replay_size,warm_start_steps,eps_last_fr
 
     with torch.no_grad():
         for i in range(10):
+            step = 0
             done = 0
             total = 0
             state = env.reset()
-            while not done:
+            while not done and step < 100000:
                 q_values = model(torch.Tensor(state))
                 _, action = torch.max(q_values, dim=0)
                 state, reward, done, _ = env.step(action.item())
                 total += reward
+                step +=1
             totals.append(total)
 
     return np.average(totals)

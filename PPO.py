@@ -371,12 +371,14 @@ def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth):
         for i in range(10):
             done = 0
             total = 0
+            step = 0
             state = env.reset()
-            while not done:
+            while not done and step < 100000:
                 _,action,_ = model(torch.Tensor(state))
                 state, reward, done, _ = env.step(action.item())
                 total += reward
                 #   print("stepped",action.item(),done)
+                step +=1
             totals.append(total)
     
     print("average over final games:",np.average(totals))
