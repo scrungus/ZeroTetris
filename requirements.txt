@@ -4,10 +4,10 @@ matplotlib==3.4.2
 numpy==1.19.5
 opencv_python==4.5.1.48
 scipy==1.7.3
-Pillow==9.0.1
+Pillow==8.4.0
 pytorch_lightning==1.5.10
-setuptools==52.0.0
+setuptools==59.5.0
 stable_baselines==2.10.2
 stable_baselines3==1.1.0
 torch==1.10.1
-tqdm==4.40.0
+tqdm==4.51.0
