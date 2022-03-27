@@ -392,7 +392,7 @@ def find_params():
         "clip_eps" : (0.1,0.3),
         "lamb" : (9.3e-1,9.8e-1),
         "epoch_steps" : (100,2000),
-        "depth" : (1,2)
+        "depth" : (0.6,2.4)
     }
     
     optimizer = BayesianOptimization(

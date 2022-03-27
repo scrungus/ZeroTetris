@@ -471,13 +471,13 @@ def find_params():
 
     pbounds = {
         "batch_size" : (4,64),
-        "lr" : (1e-5,1e-1),
+        "lr" : (1e-5,1e-3),
         "sync_rate" : (100,1000),
         "replay_size" : (1000,50000),
         "warm_start_steps" : (500,2000),
         "eps_last_frame" : (100,1000),
         "sample_size" : (100,1000),
-        "depth" : (1,2)
+        "depth" : (0.6,2.4)
     }
 
     optimizer = BayesianOptimization(
