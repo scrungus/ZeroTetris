@@ -368,7 +368,7 @@ def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth):
     env = Tetris(grid_dims=(10, 10), piece_size=2)
     
     with torch.no_grad():
-        for i in range(100):
+        for i in range(10):
             done = 0
             total = 0
             state = env.reset()

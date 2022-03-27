@@ -454,7 +454,7 @@ def train_model(batch_size,lr,sync_rate,replay_size,warm_start_steps,eps_last_fr
     totals = []
 
     with torch.no_grad():
-        for i in range(100):
+        for i in range(10):
             done = 0
             total = 0
             state = env.reset()
