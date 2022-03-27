@@ -466,7 +466,7 @@ def train_model(batch_size,lr,sync_rate,replay_size,warm_start_steps,eps_last_fr
                 state, reward, done, _ = env.step(action.item())
                 total += reward
                 step +=1
-                print("step,", i)
+                print("step,", step)
             totals.append(total)
 
     return np.average(totals)
