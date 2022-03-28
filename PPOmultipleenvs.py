@@ -121,12 +121,15 @@ class PPOLightning(LightningModule):
         self.save_hyperparameters()
 
         print("hparams:",self.hparams)
+
+        self.procs = int(multiprocessing.cpu_count()/2)
         
-        self.states = self.envs.reset()
-        self.procs = self.states.shape[0]
+        self.states = [[] for _ in range(self.procs)]
+        for i,state in enumerate(self.envs.reset()):
+            self.states[i] = torch.Tensor(state)
+
 
         print("Running",self.procs,"Environments")
-
         self.ep_step = 0
         self.env = Tetris(grid_dims=(10, 10), piece_size=2)
         obs_size = self.env.observation_space.shape[0]
@@ -134,13 +137,13 @@ class PPOLightning(LightningModule):
         self.env = 0
         print("actions",n_actions)
         
-        self.batch_states = tuple([] for _ in range(self.procs))
-        self.batch_actions = tuple([] for _ in range(self.procs))
-        self.batch_probs = tuple([] for _ in range(self.procs))
-        self.batch_advs = tuple([] for _ in range(self.procs))
-        self.batch_vals = tuple([] for _ in range(self.procs))
-        self.ep_rewards = tuple([] for _ in range(self.procs))
-        self.ep_vals = tuple([] for _ in range(self.procs))
+        self.batch_states = [[] for _ in range(self.procs)]
+        self.batch_actions = [[] for _ in range(self.procs)]
+        self.batch_probs = [[] for _ in range(self.procs)]
+        self.batch_advs = [[] for _ in range(self.procs)]
+        self.batch_vals = [[] for _ in range(self.procs)]
+        self.ep_rewards = [[] for _ in range(self.procs)]
+        self.ep_vals = [[] for _ in range(self.procs)]
         self.epoch_rewards = []
         self.avg_reward = 0
         self.avg_ep_reward = 0
@@ -207,7 +210,7 @@ class PPOLightning(LightningModule):
             #print("step",i)
             actions = []
             for i,state in enumerate(self.states):
-                _, action, prob, val = self.agent(torch.FloatTensor(state))
+                _, action, prob, val = self.agent(state)
                 self.batch_states[i].append(state)
                 self.batch_actions[i].append(action)
                 actions.append(action.item())
@@ -220,7 +223,7 @@ class PPOLightning(LightningModule):
                 
             for i, (next_state,reward) in enumerate(zip(next_states,rewards)):
                 self.ep_rewards[i].append(reward)
-                self.states[i] = next_state
+                self.states[i] = torch.Tensor(next_state)
 
             
             end = j == (steps -1)
@@ -232,15 +235,15 @@ class PPOLightning(LightningModule):
                         #if epoch ends before terminal state, bootstrap value
                         with torch.no_grad():
                             #print("epoch ended early")
-                            _,_,_,val = self.agent(torch.FloatTensor(self.states[i]))
+                            _,_,_,val = self.agent(self.states[i])
                             next_val = val.item()
                     else:
                         next_val = 0
                     
                     #compute batch discounted rewards
                     self.ep_rewards[i].append(next_val)
-                    self.batch_vals[i].extend(self.compute_reward(self.ep_rewards[i],self.hparams.gamma)[:-1])
-                    self.batch_advs[i].extend(self.compute_gae(self.ep_rewards[i],self.ep_vals[i], next_val))
+                    self.batch_vals[i] += self.compute_reward(self.ep_rewards[i],self.hparams.gamma)[:-1]
+                    self.batch_advs[i] += self.compute_gae(self.ep_rewards[i],self.ep_vals[i], next_val)
                     
                     self.epoch_rewards.append(sum(self.ep_rewards[i]))
                     print("REWARD :",sum(self.ep_rewards[i]))
