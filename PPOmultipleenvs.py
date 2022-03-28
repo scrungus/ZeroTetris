@@ -333,9 +333,9 @@ import os
 
 def pickFileName():
 
-    Path("log/trainingvalsPPO/").mkdir(parents=True, exist_ok=True)
+    Path("/log/trainingvalsPPO/").mkdir(parents=True, exist_ok=True)
 
-    files = os.listdir('log/trainingvalsPPO/')
+    files = os.listdir('/log/trainingvalsPPO/')
 
     return '{}.csv'.format(len(files)+1)
 
@@ -352,7 +352,7 @@ def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth):
     epoch_steps = int(epoch_steps)
     depth = int(depth)
 
-    f = open('log/trainingvalsPPO/{}'.format(pickFileName()), 'w+')
+    f = open('/log/trainingvalsPPO/{}'.format(pickFileName()), 'w+')
     writer = csv.writer(f)
 
     procs = int(multiprocessing.cpu_count()/2)
@@ -375,7 +375,7 @@ def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth):
         envs
     )
 
-    tb_logger = TensorBoardLogger("log/")
+    tb_logger = TensorBoardLogger("/log/")
 
     trainer = Trainer(
         gpus=0,
@@ -428,7 +428,7 @@ def find_params():
         verbose=1
         )
 
-    logger = JSONLogger(path="log/logs.json")
+    logger = JSONLogger(path="/log/logs.json")
     optimizer.subscribe(Events.OPTIMIZATION_STEP, logger)
 
     optimizer.maximize(
