@@ -29,7 +29,7 @@ from bayes_opt import BayesianOptimization
 from bayes_opt.logger import JSONLogger
 from bayes_opt.event import Events
 
-from stable_baselines3.common.vec_env.subproc_vec_env import SubprocVecEnv
+from stable_baselines3.common.vec_env.dummy_vec_env import DummyVecEnv
 
 
 class CriticNet(nn.Module):
@@ -209,13 +209,14 @@ class PPOLightning(LightningModule):
         for j in range(steps):
             #print("step",i)
             actions = []
-            for i,state in enumerate(self.states):
-                _, action, prob, val = self.agent(state)
+
+            _, actions, probs, vals = self.agent(self.states)
+            for i,state in enumerate(self.states):               
                 self.batch_states[i].append(state)
-                self.batch_actions[i].append(action)
-                actions.append(action.item())
-                self.batch_probs[i].append(prob)
-                self.ep_vals[i].append(val.item())
+                self.batch_actions[i].append(actions[i])
+                actions.append(actions[i].item())
+                self.batch_probs[i].append(probs[i])
+                self.ep_vals[i].append(vals[i].item())
             
             self.envs.step_async(actions)
             next_states, rewards, dones, _ = self.envs.step_wait()
@@ -360,7 +361,7 @@ def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth):
     
     
     envs = [make_env() for _ in range(procs)]
-    envs = SubprocVecEnv(envs)
+    envs = DummyVecEnv(envs)
 
     model = PPOLightning(
         alr,
