@@ -182,7 +182,7 @@ class Agent:
             action = random.randint(0,self.env.action_space.n-1)
             #maybe with high epsilon at the start, replay buffer disproportionately fills up with pass, as pass is always a choice?
         else:
-            state = torch.tensor([self.state])
+            state = torch.tensor(np.array([self.state]))
 
             if device not in ["cpu"]:
                 state = state.cuda(device)
