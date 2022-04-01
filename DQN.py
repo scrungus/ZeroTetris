@@ -102,12 +102,7 @@ class ReplayBuffer:
         self.buffer.append(experience)
 
     def sample(self, batch_size: int) -> Tuple:
-        #print("Batch Size : ", batch_size)
-        if(batch_size < len(self.buffer)):
-            indices = np.random.choice(len(self.buffer), batch_size, replace=False)
-        #for bayes opt
-        else:
-            indices = np.random.choice(len(self.buffer), batch_size, replace=True)
+        indices = np.random.choice(len(self.buffer), batch_size, replace=False)
         states, actions, rewards, dones, next_states = zip(*(self.buffer[idx] for idx in indices))
 
         return (
@@ -130,7 +125,7 @@ class RLDataset(IterableDataset):
         sample_size: number of experiences to sample at a time
     """
 
-    def __init__(self, buffer: ReplayBuffer, sample_size: int = 300) -> None:
+    def __init__(self, buffer: ReplayBuffer, sample_size) -> None:
         self.buffer = buffer
         self.sample_size = sample_size
 
@@ -196,7 +191,6 @@ class Agent:
             _, action = torch.max(q_values, dim=1)
             #print("picked : ",action)
             action = int(action.item())
-            print("action : ",action)
         return action
 
     @torch.no_grad()
@@ -261,6 +255,8 @@ class DQNLightning(LightningModule):
         super().__init__()
         self.save_hyperparameters()
 
+        print("hparams:",self.hparams)
+
         self.env = Tetris(grid_dims=(10, 10), piece_size=2)
         obs_size = self.env.observation_space.shape[0]
         n_actions = self.env.action_space.n
@@ -282,7 +278,7 @@ class DQNLightning(LightningModule):
         Args:
             steps: number of random steps to populate the buffer with
         """
-        #print("populating...")
+        print("populating...",steps)
         for i in range(steps):
             _, done = self.agent.play_step(self.net, epsilon=1.0)
             if done:
@@ -343,7 +339,6 @@ class DQNLightning(LightningModule):
         )
 
         # step through environment with agent
-        #print("Agent playing")
         reward, done = self.agent.play_step(self.net, epsilon, device)
         
         self.episode_reward += reward
@@ -404,16 +399,16 @@ class DQNLightning(LightningModule):
         return batch[0].device.index if self.on_gpu else "cpu"
 
 
-def train_model(batch_size,lr,sync_rate,replay_size,warm_start_steps,eps_last_frame,sample_size,depth):
+def train_model(lr,sync_rate,replay_size,eps_last_frame,depth):
 
-    num_epochs = 1000
+    num_epochs = 500
 
-    batch_size = int(batch_size)
+    batch_size = 8
     sync_rate = int(sync_rate)
     replay_size = int(replay_size)
-    warm_start_steps = int(warm_start_steps)
+    warm_start_steps = 16352
     eps_last_frame = int(eps_last_frame)
-    sample_size = int(sample_size)
+    sample_size = 16352
     depth = int(depth)
 
     f = open('log/trainingvals/{}'.format(pickFileName()), 'w+')
@@ -474,13 +469,10 @@ def train_model(batch_size,lr,sync_rate,replay_size,warm_start_steps,eps_last_fr
 def find_params():
 
     pbounds = {
-        "batch_size" : (4,64),
         "lr" : (1e-5,1e-3),
-        "sync_rate" : (100,1000),
-        "replay_size" : (1000,50000),
-        "warm_start_steps" : (500,2000),
-        "eps_last_frame" : (100,1000),
-        "sample_size" : (100,1000),
+        "sync_rate" : (100,5000),
+        "replay_size" : (16352,500000),
+        "eps_last_frame" : (100,500),
         "depth" : (0.6,2.4)
     }
 
