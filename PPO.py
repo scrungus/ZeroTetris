@@ -328,11 +328,10 @@ def pickFileName():
 
     return '{}.csv'.format(len(files)+1)
 
-def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth):
+def train_model(alr, clr, batch_size, clip_eps, lamb, depth):
     #print("entered training")    
     num_epochs=1000
-    batch_size = int(batch_size)
-    epoch_steps = int(epoch_steps)
+    batch_size = round(batch_size)*16
     depth = int(depth)
 
     f = open('log/trainingvalsPPO/{}'.format(pickFileName()), 'w+')
@@ -344,7 +343,7 @@ def train_model(alr, clr, batch_size, clip_eps, lamb, epoch_steps, depth):
         batch_size, 
         clip_eps,
         lamb,
-        epoch_steps,
+        2048, #epoch steps
         0.99, #gamma
         depth,
         writer
@@ -390,10 +389,9 @@ def find_params():
     pbounds = {
         "alr" : (1e-5,1e-3),
         "clr" : (1e-5,1e-3),
-        "batch_size" : (16,128),
+        "batch_size" : (0.6,8.4),
         "clip_eps" : (0.1,0.3),
         "lamb" : (9.3e-1,9.8e-1),
-        "epoch_steps" : (1024,8192),
         "depth" : (0.6,2.4)
     }
     
