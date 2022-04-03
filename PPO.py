@@ -123,7 +123,7 @@ class PPOLightning(LightningModule):
 
         print("hparams:",self.hparams)
         
-        self.env = Tetris(grid_dims=(10, 10), piece_size=2)
+        self.env = Tetris(grid_dims=(10, 10), piece_size=4)
         self.state = torch.Tensor(self.env.reset())
         self.ep_step = 0
         obs_size = self.env.observation_space.shape[0]
@@ -328,105 +328,52 @@ def pickFileName():
 
     return '{}.csv'.format(len(files)+1)
 
-def train_model(alr, clr, batch_size, clip_eps, lamb, depth):
-    #print("entered training")    
-    num_epochs=1000
-    batch_size = round(batch_size)*16
-    depth = int(depth)
+num_epochs=25000
 
-    f = open('log/trainingvalsPPO/{}'.format(pickFileName()), 'w+')
-    writer = csv.writer(f)
 
-    model = PPOLightning(
-        alr,
-        clr,
-        batch_size, 
-        clip_eps,
-        lamb,
+f = open('log/trainingvalsPPO/{}'.format(pickFileName()), 'w+')
+writer = csv.writer(f)
+
+model = PPOLightning(
+        6.99e-4,#alr,
+        7.07e-4,#clr,
+        80,#batch_size,
+        0.208,#clip_eps,
+        0.953,#lamb,
         2048, #epoch steps
         0.99, #gamma
-        depth,
+        2,#depth,
         writer
     )
 
-    tb_logger = TensorBoardLogger("log/")
+tb_logger = TensorBoardLogger("log/")
 
-    trainer = Trainer(
+trainer = Trainer(
         gpus=0,
         max_epochs=num_epochs,
         logger=tb_logger)
 
-    trainer.fit(model)
+trainer.fit(model)
 
-    print("finished training")
+print("finished training")
 
-    f.close()
-    
-    totals = []
+f.close()
 
-    env = Tetris(grid_dims=(10, 10), piece_size=2)
-    
-    with torch.no_grad():
-        for i in range(10):
-            done = 0
-            total = 0
-            step = 0
-            state = env.reset()
-            while not done and step < 100000:
-                _,action,_ = model(torch.Tensor(state))
-                state, reward, done, _ = env.step(action.item())
-                total += reward
-                #   print("stepped",action.item(),done)
-                step +=1
-            totals.append(total)
-    
-    print("average over final games:",np.average(totals))
-    return np.average(totals)
-    
+totals = []
 
-def find_params():
+env = Tetris(grid_dims=(10, 10), piece_size=4)
 
-    pbounds = {
-        "alr" : (1e-5,1e-3),
-        "clr" : (1e-5,1e-3),
-        "batch_size" : (0.6,8.4),
-        "clip_eps" : (0.1,0.3),
-        "lamb" : (9.3e-1,9.8e-1),
-        "depth" : (0.6,2.4)
-    }
-    
-    optimizer = BayesianOptimization(
-        f = train_model,
-        pbounds=pbounds,
-        random_state=1,
-        verbose=1
-        )
+with torch.no_grad():
+    for i in range(10):
+        done = 0
+        total = 0
+        step = 0
+        state = env.reset()
+        while not done:
+            _,action,_ = model(torch.Tensor(state))
+            state, reward, done, _ = env.step(action.item())
+            total += reward
+            #   print("stepped",action.item(),done)
+        totals.append(total)
 
-    logger = JSONLogger(path="log/logs.json")
-    optimizer.subscribe(Events.OPTIMIZATION_STEP, logger)
-
-    optimizer.maximize(
-        init_points=30,
-        n_iter=200,
-    )
-
-    
-    print("Best hyperparameters found were: ", optimizer.max)
-
-    print("others")
-    for i, res in enumerate(optimizer.res):
-       print("Iteration {}: \n\t{}".format(i, res))
-
-find_params()
-exit()
-
-#model = PPOLightning().load_from_checkpoint("/home/scrungus/Documents/dissertation/Tetris/gym-simplifiedtetris/log/default/version_3/checkpoints/epoch=58-step=11799.ckpt")
-print("Playing")
-env = gym.make("simplifiedtetris-binary-10x10-2-v0")    
-state = env.reset()
-
-done = 0
-while not done:
-    _,action,_ = model(torch.Tensor(state))
-    state, _, done, _ = env.step(action.item())
-    env.render()
+print("average over final games:",np.average(totals))
