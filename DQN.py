@@ -20,6 +20,8 @@ from torch.utils.data.dataset import IterableDataset
 from pytorch_lightning.loggers import TensorBoardLogger
 import csv
 
+from pytorch_lightning.callbacks import Callback
+
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 import numpy as np
 
@@ -30,8 +32,6 @@ from bayes_opt.event import Events
 
 
 PATH_DATASETS = os.environ.get("PATH_DATASETS", ".")
-AVAIL_GPUS = min(1, torch.cuda.device_count())
-print(AVAIL_GPUS)
 
 # In[2]:
 
@@ -56,15 +56,7 @@ class DQN(nn.Module):
                 nn.ReLU(),
                 nn.Linear(hidden_size, hidden_size),
                 nn.ReLU(),
-                nn.Linear(hidden_size, n_actions),
-                nn.Softmax()
-            )
-        else:
-            self.net = nn.Sequential(
-                nn.Linear(obs_size, hidden_size),
-                nn.ReLU(),
-                nn.Linear(hidden_size, n_actions),
-                nn.Softmax()
+                nn.Linear(hidden_size, n_actions)
             )
 
     def forward(self, x):
@@ -167,25 +159,13 @@ class Agent:
         """Resents the environment and updates the state."""
         self.state = self.env.reset()
 
-    def get_action(self, net: nn.Module, epsilon: float, device: str) -> int:
-        """Using the given network, decide what action to carry out using an epsilon-greedy policy.
+    def get_action(self, net: nn.Module, epsilon: float) -> int:
 
-        Args:
-            net: DQN network
-            epsilon: value to determine likelihood of taking a random action
-            device: current device
-
-        Returns:
-            action
-        """
         if np.random.random() < epsilon:
             action = random.randint(0,self.env.action_space.n-1)
             #maybe with high epsilon at the start, replay buffer disproportionately fills up with pass, as pass is always a choice?
         else:
             state = torch.tensor(np.array([self.state]))
-
-            if device not in ["cpu"]:
-                state = state.cuda(device)
 
             q_values = net(state)
             _, action = torch.max(q_values, dim=1)
@@ -198,20 +178,9 @@ class Agent:
         self,
         net: nn.Module,
         epsilon: float = 0.0,
-        device: str = "cpu",
     ) -> Tuple[float, bool]:
-        """Carries out a single interaction step between the agent and the environment.
 
-        Args:
-            net: DQN network
-            epsilon: value to determine likelihood of taking a random action
-            device: current device
-
-        Returns:
-            reward, done
-        """
-
-        action = self.get_action(net, epsilon, device)
+        action = self.get_action(net, epsilon)
 
         # do step in the environment
         new_state, reward, done, _ = self.env.step(action)
@@ -257,7 +226,7 @@ class DQNLightning(LightningModule):
 
         print("hparams:",self.hparams)
 
-        self.env = Tetris(grid_dims=(10, 10), piece_size=2)
+        self.env = Tetris(grid_dims=(10, 10), piece_size=4)
         obs_size = self.env.observation_space.shape[0]
         n_actions = self.env.action_space.n
 
@@ -267,8 +236,10 @@ class DQNLightning(LightningModule):
 
         self.buffer = ReplayBuffer(self.hparams.replay_size)
         self.agent = Agent(self.env, self.buffer)
-        self.total_reward = 0
-        self.episode_reward = 0
+        self.epoch_rewards = []
+        self.avg_reward = 0
+        self.ep_reward = 0
+        self.done = 0
         self.populate(self.hparams.warm_start_steps)
 
     def populate(self, steps) -> None:
@@ -321,58 +292,45 @@ class DQNLightning(LightningModule):
         return nn.MSELoss()(state_action_values, expected_state_action_values)
 
     def training_step(self, batch: Tuple[Tensor, Tensor], nb_batch) -> OrderedDict:
-        """Carries out a single step through the environment to update the replay buffer. Then calculates loss
-        based on the minibatch recieved.
 
-        Args:
-            batch: current mini batch of replay data
-            nb_batch: batch number
-
-        Returns:
-            Training loss and log metrics
-        """
-
-        device = self.get_device(batch)
         epsilon = max(
             self.hparams.eps_end,
             self.hparams.eps_start - self.global_step + 1 / self.hparams.eps_last_frame,
         )
 
         # step through environment with agent
-        reward, done = self.agent.play_step(self.net, epsilon, device)
+        reward, self.done = self.agent.play_step(self.net, epsilon)
         
-        self.episode_reward += reward
+        self.ep_reward += reward
 
         # calculates training loss
         loss = self.dqn_mse_loss(batch)
 
-        if self.trainer._distrib_type in {DistributedType.DP, DistributedType.DDP2}:
-            loss = loss.unsqueeze(0)
-
-        if done:
-            self.total_reward = self.episode_reward
-            self.episode_reward = 0
+        if self.done:
+            self.epoch_rewards.append(self.ep_reward)
+            self.ep_reward = 0
 
         # Soft update of target network
         if self.global_step % self.hparams.sync_rate == 0:
             self.target_net.load_state_dict(self.net.state_dict())
 
+
         log = {
-            "total_reward": torch.tensor(self.total_reward).to(device),
-            "reward": torch.tensor(reward).to(device),
+            "epoch_rewards": sum(self.epoch_rewards),
+            "avg_reward" : self.avg_reward,
             "train_loss": loss,
         }
 
-        self.log("total_reward", torch.tensor(self.total_reward).to(device), on_step=True, on_epoch=True, prog_bar=True, logger=True)
-        self.log("reward", torch.tensor(reward).to(device), on_step=True, on_epoch=True, prog_bar=True, logger=True)
         self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
+        self.log("epoch_reward", sum(self.epoch_rewards), on_step=True, on_epoch=True, prog_bar=True, logger=True)
 
         status = {
-            "steps": torch.tensor(self.global_step).to(device),
-            "total_reward": torch.tensor(self.total_reward).to(device),
+            "steps": self.global_step,
+            "epoch_rewards": sum(self.epoch_rewards),
+            "avg_reward" : self.avg_reward,
         }
 
-        self.writer.writerow([self.global_step, self.total_reward, loss.unsqueeze(0).item()])
+        self.writer.writerow([self.global_step, self.ep_reward, self.avg_reward])
 
         return OrderedDict({"loss": loss, "log": log, "progress_bar": status})
 
@@ -394,27 +352,37 @@ class DQNLightning(LightningModule):
         """Get train loader."""
         return self.__dataloader()
 
-    def get_device(self, batch) -> str:
-        """Retrieve device currently being used by minibatch."""
-        return batch[0].device.index if self.on_gpu else "cpu"
+
+class Resetter(Callback):
+
+    def on_train_epoch_end(self, trainer, pl_module):
+        if not pl_module.done:
+            pl_module.epoch_rewards.append(pl_module.ep_reward)
+        pl_module.avg_reward = sum(pl_module.epoch_rewards)/len(pl_module.epoch_rewards)
+
+        pl_module.log("epoch_reward", sum(pl_module.epoch_rewards), on_step=False, on_epoch=True, prog_bar=True, logger=True)
+        pl_module.log("avg_reward",pl_module.avg_reward, on_step=False, on_epoch=True, prog_bar=True, logger=True)
+
+        pl_module.agent.reset()
+        pl_module.epoch_rewards.clear()
+        pl_module.ep_reward = 0
 
 
-def train_model(lr,sync_rate,replay_size,eps_last_frame,depth):
+num_epochs = 25000
 
-    num_epochs = 500
+batch_size = 8
+sync_rate = 16352
+replay_size = 433020
+warm_start_steps = 16352
+eps_last_frame = replay_size
+sample_size = 16352
+depth = 2
+lr = 5e-4
 
-    batch_size = 8
-    sync_rate = int(sync_rate)
-    replay_size = int(replay_size)
-    warm_start_steps = 16352
-    eps_last_frame = int(eps_last_frame)
-    sample_size = 16352
-    depth = int(depth)
+f = open('log/trainingvals/{}'.format(pickFileName()), 'w+')
+writer = csv.writer(f)
 
-    f = open('log/trainingvals/{}'.format(pickFileName()), 'w+')
-    writer = csv.writer(f)
-
-    model = DQNLightning(
+model = DQNLightning(
         batch_size,
         lr,
         0.99, #gamma
@@ -429,75 +397,37 @@ def train_model(lr,sync_rate,replay_size,eps_last_frame,depth):
         writer
         )
 
-    tb_logger = TensorBoardLogger("log/")
-    trainer = Trainer(
+tb_logger = TensorBoardLogger("log/")
+trainer = Trainer(
         #accelerator="gpu",
         #gpus=[0],
         accelerator="cpu",
         max_epochs=num_epochs,
         val_check_interval=100,
         logger=tb_logger,
+        callbacks=[Resetter()]
     )
 
-    trainer.fit(model)
-    print("F:",f)
+trainer.fit(model)
 
-    f.close()
+f.close()
 
-    env = Tetris(grid_dims=(10, 10), piece_size=2)
+env = Tetris(grid_dims=(10, 10), piece_size=4)
 
-    totals = []
+totals = []
 
-    with torch.no_grad():
-        for i in range(10):
-            print("iter, ",i)
-            step = 0
-            done = 0
-            total = 0
-            state = env.reset()
-            while not done and step < 100000:
-                q_values = model(torch.Tensor(state))
-                _, action = torch.max(q_values, dim=0)
-                state, reward, done, _ = env.step(action.item())
-                total += reward
-                step +=1
-                print("step,", step)
-            totals.append(total)
+with torch.no_grad():
+    for i in range(10):
+        step = 0
+        done = 0
+        total = 0
+        state = env.reset()
+        while not done:
+            q_values = model(torch.Tensor(state))
+            _, action = torch.max(q_values, dim=0)
+            state, reward, done, _ = env.step(action.item())
+            total += reward
+        totals.append(total)
 
-    return np.average(totals)
-
-def find_params():
-
-    pbounds = {
-        "lr" : (1e-5,1e-3),
-        "sync_rate" : (100,5000),
-        "replay_size" : (16352,500000),
-        "eps_last_frame" : (100,500),
-        "depth" : (0.6,2.4)
-    }
-
-    optimizer = BayesianOptimization(
-        f = train_model,
-        pbounds=pbounds,
-        random_state=1,
-        verbose=1
-        )
-
-    logger = JSONLogger(path="log/logsDQN.json")
-    optimizer.subscribe(Events.OPTIMIZATION_STEP, logger)
-
-    optimizer.maximize(
-        init_points=30,
-        n_iter=200,
-    )
-
-
-    print("Best hyperparameters found were: ", optimizer.max)
-
-    print("others")
-    for i, res in enumerate(optimizer.res):
-       print("Iteration {}: \n\t{}".format(i, res))
-
-find_params()
-
+print("average over games ",np.average(totals))
 
