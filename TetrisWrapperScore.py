@@ -44,8 +44,10 @@ class TetrisWrapper(Tetris):
             shaped_reward = 1200
             self.score_types[3] +=1
 
-        self.writer.writerow(self.score_types)
-
         return obs, shaped_reward, done, info
+
+    def epoch_lines(self):
+         self.writer.writerow(self.score_types)
+         self.score_types.clear()
 
 
