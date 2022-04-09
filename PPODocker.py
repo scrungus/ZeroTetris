@@ -269,12 +269,9 @@ class PPOLightning(LightningModule):
 
         # normalize adv
         adv = (adv - adv.mean())/adv.std()
-        
-        for i in range(self.last_ep_logged,len(self.ep_rewards_all)):
-             self.log("ep_reward",self.ep_rewards_all[i],prog_bar=True, on_step=False, on_epoch=True, logger=True)
-             self.last_ep_logged += 1
 
         self.log("avg_ep_reward", self.avg_ep_reward, prog_bar=True, on_step=False, on_epoch=True, logger=True)
+        self.log("epoch_rewards", self.epoch_rewards, prog_bar=True, on_step=False, on_epoch=True, logger=True)
 
         
         if optimizer_idx == 0:
