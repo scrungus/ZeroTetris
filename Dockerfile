@@ -12,4 +12,4 @@ RUN apt-get install ffmpeg libsm6 libxext6  -y
 
 COPY . . 
 
-CMD ["python3","PPO.py"]
+CMD ["python3","PPOScore.py"]

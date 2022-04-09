@@ -1,0 +1,12 @@
+batch_size: 8
+depth: 2
+eps_end: 0.01
+eps_last_frame: 433020
+eps_start: 1.0
+gamma: 0.99
+lr: 0.0005
+replay_size: 433020
+sample_size: 16352
+sync_rate: 16352
+warm_start_steps: 16352
+writer: -1

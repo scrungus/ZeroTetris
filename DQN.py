@@ -227,6 +227,7 @@ class DQNLightning(LightningModule):
         print("hparams:",self.hparams)
 
         self.env = Tetris(grid_dims=(10, 10), piece_size=4)
+
         obs_size = self.env.observation_space.shape[0]
         n_actions = self.env.action_space.n
 

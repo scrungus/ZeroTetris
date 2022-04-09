@@ -47,6 +47,10 @@ class SimplifiedTetrisBinaryEnv(_SimplifiedTetrisBaseEnv):
 
         return np.append(current_grid, self._engine._piece._idx)
 
+    def get_holes(self):
+
+        return self._engine._get_holes()
+
 
 register_env(
     incomplete_id=f"simplifiedtetris-binary",

@@ -25,6 +25,8 @@ import numpy as np
 from pytorch_lightning.callbacks import Callback
 import multiprocessing
 
+from TetrisWrapper import TetrisWrapper
+
 from bayes_opt import BayesianOptimization
 from bayes_opt.logger import JSONLogger
 from bayes_opt.event import Events
@@ -123,7 +125,7 @@ class PPOLightning(LightningModule):
 
         print("hparams:",self.hparams)
         
-        self.env = Tetris(grid_dims=(10, 10), piece_size=4)
+        self.env = TetrisWrapper(grid_dims=(10, 10), piece_size=2)
         self.state = torch.Tensor(self.env.reset())
         self.ep_step = 0
         obs_size = self.env.observation_space.shape[0]
@@ -204,6 +206,8 @@ class PPOLightning(LightningModule):
             _, action, probs, val = self.agent(self.state)
             next_state, reward, done, _ = self.env.step(action.item())
             self.ep_step += 1
+
+            #print(self.ep_step, reward)
             
             self.batch_states.append(self.state)
             self.batch_actions.append(action)
@@ -262,6 +266,7 @@ class PPOLightning(LightningModule):
     def training_step(self, batch, batch_idx, optimizer_idx):
         
         state,action,prob_old,val,adv = batch
+
         # normalize adv
         adv = (adv - adv.mean())/adv.std()
         
@@ -270,6 +275,7 @@ class PPOLightning(LightningModule):
              self.last_ep_logged += 1
 
         self.log("avg_ep_reward", self.avg_ep_reward, prog_bar=True, on_step=False, on_epoch=True, logger=True)
+        self.log("epoch_rewards", sum(self.epoch_rewards), prog_bar=True, on_step=False, on_epoch=True, logger=True)
 
         
         if optimizer_idx == 0:
@@ -309,9 +315,8 @@ class ReturnCallback(Callback):
     def __init__(self ):
         self.total = []
 
-    def on_train_epoch_end(self, trainer, pl_module):
-        print("Callback")
-        self.total.append(trainer.callback_metrics['avg_ep_reward'].item())
+    def on_train_end(self, trainer, pl_module):
+        pl_module.env.finish()
     
     def get_total(self):
         return self.total
@@ -328,7 +333,7 @@ def pickFileName():
 
     return '{}.csv'.format(len(files)+1)
 
-num_epochs=25000
+num_epochs=10
 
 
 f = open('log/trainingvalsPPO/{}'.format(pickFileName()), 'w+')
@@ -353,6 +358,8 @@ trainer = Trainer(
         max_epochs=num_epochs,
         logger=tb_logger)
 
+
+
 trainer.fit(model)
 
 print("finished training")
@@ -361,7 +368,7 @@ f.close()
 
 totals = []
 
-env = Tetris(grid_dims=(10, 10), piece_size=4)
+env = TetrisWrapper(grid_dims=(10, 10), piece_size=4)
 
 with torch.no_grad():
     for i in range(10):
@@ -377,3 +384,4 @@ with torch.no_grad():
         totals.append(total)
 
 print("average over final games:",np.average(totals))
+TetrisWrapper.finish()
