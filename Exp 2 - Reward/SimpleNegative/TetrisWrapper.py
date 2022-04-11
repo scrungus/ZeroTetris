@@ -2,13 +2,20 @@ import gym
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 import csv
 
+
+def pickFileName():
+
+    files = os.listdir('/log/')
+
+    return len(files)+1
+
 class TetrisWrapper(Tetris):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.n = 1
 
-        f = open('log/score_count{}.txt'.format(pickFileName()), 'w+')
+        f = open('/log/score_count{}.txt'.format(pickFileName()), 'w+')
         self.writer = csv.writer(f)
 
     def reset(self):
@@ -23,8 +30,7 @@ class TetrisWrapper(Tetris):
         if done:
             shaped_reward = -10
         elif reward >= 1:
-            shaped_reward = reward
-            print("row cleared",shaped_reward)
+            shaped_reward = reward)
 
         return obs, shaped_reward, done, info
 
