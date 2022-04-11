@@ -312,8 +312,7 @@ class ReturnCallback(Callback):
         self.total = []
 
     def on_train_epoch_end(self, trainer, pl_module):
-        print("Callback")
-        self.total.append(trainer.callback_metrics['avg_ep_reward'].item())
+        pl_module.env.epoch_lines()
     
     def get_total(self):
         return self.total
@@ -353,7 +352,8 @@ tb_logger = TensorBoardLogger("/log/")
 trainer = Trainer(
         gpus=0,
         max_epochs=num_epochs,
-        logger=tb_logger)
+        logger=tb_logger,
+        callbacks = [ReturnCallback()])
 
 
 

@@ -294,10 +294,14 @@ class DQNLightning(LightningModule):
 
     def training_step(self, batch: Tuple[Tensor, Tensor], nb_batch) -> OrderedDict:
 
+        #TODO: FIIXXXX EPSILON YOU MONGREL
+
         epsilon = max(
             self.hparams.eps_end,
             self.hparams.eps_start - self.global_step + 1 / self.hparams.eps_last_frame,
         )
+
+        print(epsilon)
 
         # step through environment with agent
         reward, self.done = self.agent.play_step(self.net, epsilon)

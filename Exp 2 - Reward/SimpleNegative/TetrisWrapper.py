@@ -1,12 +1,15 @@
 import gym
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
-
+import csv
 
 class TetrisWrapper(Tetris):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.n = 1
+
+        f = open('log/score_count{}.txt'.format(pickFileName()), 'w+')
+        self.writer = csv.writer(f)
 
     def reset(self):
         state = Tetris.reset(self)
@@ -24,4 +27,9 @@ class TetrisWrapper(Tetris):
             print("row cleared",shaped_reward)
 
         return obs, shaped_reward, done, info
+
+
+    def epoch_lines(self):
+         self.writer.writerow(self.score_types)
+         self.score_types.clear()
 
