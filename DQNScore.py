@@ -133,9 +133,9 @@ from pathlib import Path
 
 def pickFileName():
     
-    Path("log/trainingvals/").mkdir(parents=True, exist_ok=True)
+    Path("/log/trainingvals/").mkdir(parents=True, exist_ok=True)
     
-    files = os.listdir('log/trainingvals/')
+    files = os.listdir('/log/trainingvals/')
     
     return '{}.csv'.format(len(files)+1)
 
@@ -384,7 +384,7 @@ sample_size = 16352
 depth = 2
 lr = 5e-4
 
-f = open('log/trainingvals/{}'.format(pickFileName()), 'w+')
+f = open('/log/trainingvals/{}'.format(pickFileName()), 'w+')
 writer = csv.writer(f)
 
 model = DQNLightning(
@@ -402,7 +402,7 @@ model = DQNLightning(
         writer
         )
 
-tb_logger = TensorBoardLogger("log/")
+tb_logger = TensorBoardLogger("/log/")
 trainer = Trainer(
         #accelerator="gpu",
         #gpus=[0],
