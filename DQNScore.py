@@ -22,7 +22,7 @@ import csv
 
 from pytorch_lightning.callbacks import Callback
 
-from gym_simplifiedtetris.envs import Tetris
+from TetrisWrapperScore import TetrisWrapper
 import numpy as np
 
 from bayes_opt import BayesianOptimization
@@ -133,9 +133,9 @@ from pathlib import Path
 
 def pickFileName():
     
-    Path("/log/trainingvals/").mkdir(parents=True, exist_ok=True)
+    Path("log/trainingvals/").mkdir(parents=True, exist_ok=True)
     
-    files = os.listdir('/log/trainingvals/')
+    files = os.listdir('log/trainingvals/')
     
     return '{}.csv'.format(len(files)+1)
 
@@ -226,7 +226,7 @@ class DQNLightning(LightningModule):
 
         print("hparams:",self.hparams)
 
-        self.env = Tetris(grid_dims=(10, 10), piece_size=4)
+        self.env = TetrisWrapper(grid_dims=(10, 10), piece_size=4)
 
         obs_size = self.env.observation_space.shape[0]
         n_actions = self.env.action_space.n
@@ -384,7 +384,7 @@ sample_size = 16352
 depth = 2
 lr = 5e-4
 
-f = open('/log/trainingvals/{}'.format(pickFileName()), 'w+')
+f = open('log/trainingvals/{}'.format(pickFileName()), 'w+')
 writer = csv.writer(f)
 
 model = DQNLightning(
@@ -402,7 +402,7 @@ model = DQNLightning(
         writer
         )
 
-tb_logger = TensorBoardLogger("/log/")
+tb_logger = TensorBoardLogger("log/")
 trainer = Trainer(
         #accelerator="gpu",
         #gpus=[0],
