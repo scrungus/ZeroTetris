@@ -5,7 +5,7 @@ import csv
 
 def pickFileName():
 
-    files = os.listdir('/log/')
+    files = os.listdir('log/')
 
     return len(files)+1
 
@@ -15,7 +15,7 @@ class TetrisWrapper(Tetris):
         super().__init__(**kwargs)
         self.n = 1
 
-        f = open('/log/score_count{}.txt'.format(pickFileName()), 'w+')
+        f = open('log/score_count{}.txt'.format(pickFileName()), 'w+')
         self.writer = csv.writer(f)
 
     def reset(self):
