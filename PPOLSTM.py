@@ -22,8 +22,6 @@ import gym
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 import numpy as np
 
-from stable_baselines.common.policies import MlpLstmPolicy
-
 from pytorch_lightning.callbacks import Callback
 import multiprocessing
 
@@ -55,18 +53,13 @@ class ActorNet(nn.Module):
         super().__init__()
 
         print(obs_size)
-        self.actor = nn.Sequential(
-            nn.Linear(obs_size, hidden_size),
-            nn.ReLU(),
-            nn.Linear(hidden_size, hidden_size),
-            nn.ReLU(),
-            nn.Linear(hidden_size, n_actions),
-        )
+        self.actor = nn.Sequential(nn.LSTM(input_size=obs_size, hidden_size=4, batch_first=True))
 
     def forward(self, x):
-        #if x.sum().data.item() == 0:
-            #print("ALL ZEROS INPUT : ",self.actor(x))
+        print("here")
+        x = torch.randn(1,4,101)
         logits = self.actor(x)
+        print("here")
         logits = torch.nan_to_num(logits)
         dist = Categorical(logits=logits)
         action = dist.sample()
@@ -81,6 +74,7 @@ class ActorCritic():
     
     @torch.no_grad()
     def __call__(self, state: torch.Tensor):
+
         dist, action = self.actor(state)
         probs = dist.log_prob(action)
         val = self.critic(state)
@@ -154,7 +148,6 @@ class PPOLightning(LightningModule):
         self.agent = ActorCritic(self.critic, self.actor)
     
     def forward(self, x):
-        
         dist, action = self.actor(x)
         val = self.critic(x)
         
@@ -206,7 +199,7 @@ class PPOLightning(LightningModule):
     def make_batch(self):
         for i in range(self.hparams.epoch_steps):
 
-            _, action, probs, val = self.agent(torch.flatten(torch.stack(list(self.state))))
+            _, action, probs, val = self.agent(torch.stack(list(self.state))[None,...])
             next_state, reward, done, _ = self.env.step(action.item())
             self.ep_step += 1
             
@@ -226,7 +219,7 @@ class PPOLightning(LightningModule):
                     #if epoch ends before terminal state, bootstrap value
                     with torch.no_grad():
                         #print("epoch ended early")
-                        _,_,_,val = self.agent(torch.flatten(torch.stack(list(self.state))))
+                        _,_,_,val = self.agent(torch.stack(list(self.state))[None,...])
                         next_val = val.item()
                 else:
                     next_val = 0
@@ -332,16 +325,16 @@ import os
 
 def pickFileName():
 
-    Path("/log/trainingvalsPPO/").mkdir(parents=True, exist_ok=True)
+    Path("log/trainingvalsPPO/").mkdir(parents=True, exist_ok=True)
 
-    files = os.listdir('/log/trainingvalsPPO/')
+    files = os.listdir('log/trainingvalsPPO/')
 
     return '{}.csv'.format(len(files)+1)
 
 num_epochs=25000
 
 
-f = open('/log/trainingvalsPPO/{}'.format(pickFileName()), 'w+')
+f = open('log/trainingvalsPPO/{}'.format(pickFileName()), 'w+')
 writer = csv.writer(f)
 
 model = PPOLightning(
@@ -356,7 +349,7 @@ model = PPOLightning(
         writer
     )
 
-tb_logger = TensorBoardLogger("/log/")
+tb_logger = TensorBoardLogger("log/")
 
 trainer = Trainer(
         gpus=0,

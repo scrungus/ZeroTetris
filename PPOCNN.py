@@ -22,6 +22,8 @@ import gym
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 import numpy as np
 
+from TetrisWrapperNorm import TetrisWrapper
+
 from pytorch_lightning.callbacks import Callback
 import multiprocessing
 
@@ -31,81 +33,47 @@ from bayes_opt.event import Events
 
 # In[35]:
 
-
-class CriticNet(nn.Module):
-    def __init__(self, obs_size, hidden_size = 100):
+class ActorCritic(nn.Module):
+    def __init__(self, obs_size, n_actions, hidden_size = 256):
         super().__init__()
 
-        self.critic_conv = nn.Sequential(nn.Conv1d(in_channels=1, out_channels=32,kernel_size=8,stride=4,padding=7),
-        nn.ReLU(),
-        nn.Conv1d(in_channels=32, out_channels=64,kernel_size=4,stride=2,padding=3),
-        nn.ReLU()
+        self.net = nn.Sequential(nn.Conv1d(in_channels=1, out_channels=16,kernel_size=8,stride=4,padding=7),
+        nn.ReLU(inplace=False),
+        nn.BatchNorm1d(16),
+        nn.Conv1d(in_channels=16, out_channels=32,kernel_size=4,stride=1,padding=2),
+        nn.ReLU(inplace=False),
+        nn.BatchNorm1d(32),
         )
 
-        self.critic_conv_1 = nn.Conv1d(in_channels=1, out_channels=32,kernel_size=8,stride=4,padding=7)
-
-        self.critic_conv_2 = nn.Conv1d(in_channels=32, out_channels=64,kernel_size=4,stride=2,padding=3)
-
-        self.critic_conv_3 = nn.Conv1d(in_channels=64, out_channels=64,kernel_size=3,stride=1,padding=2)
+        self.policy_head = nn.Sequential(
+            nn.Linear(896, hidden_size),
+            nn.ReLU(),
+            nn.Linear(hidden_size, n_actions),
+            )
 
         self.critic = nn.Sequential(
-            nn.Linear(obs_size, hidden_size),
+            nn.Linear(896, hidden_size),
             nn.ReLU(),
             nn.Linear(hidden_size, 1)
         )
-        
+
     def forward(self, x):
         if x.dim() == 1:
-            convs = self.critic_conv(x[None,...][None,...])
+            convs = self.net(x[None,...][None,...])
         else:
-            convs = self.critic_conv_1(x)
-        print(convs.shape)
-        exit()
-        value = self.critic(x)
-        return value
-
-class ActorNet(nn.Module):
-    def __init__(self, obs_size, n_actions, depth, hidden_size = 64):
-        super().__init__()
-
-        if depth == 2:
-            self.actor = nn.Sequential(
-                nn.Linear(obs_size, hidden_size),
-                nn.ReLU(),
-                nn.Linear(hidden_size, hidden_size),
-                nn.ReLU(),
-                nn.Linear(hidden_size, n_actions),
-            )
-        else:
-            self.actor = nn.Sequential(
-                nn.Linear(obs_size, hidden_size),
-                nn.ReLU(),
-                nn.Linear(hidden_size, n_actions),
-            )
-
-    def forward(self, x):
-        #if x.sum().data.item() == 0:
-            #print("ALL ZEROS INPUT : ",self.actor(x))
-        logits = self.actor(x)
+            convs = self.net(x)
+        convs = convs.view(convs.shape[0],-1)
+        logits = self.policy_head(convs)
         logits = torch.nan_to_num(logits)
         dist = Categorical(logits=logits)
         action = dist.sample()
 
-        return dist, action
+        value = self.critic(convs)
 
+        with torch.no_grad():
+            prob = dist.log_prob(action)
 
-class ActorCritic():
-    def __init__(self, critic, actor):
-        self.critic = critic
-        self.actor = actor 
-    
-    @torch.no_grad()
-    def __call__(self, state: torch.Tensor):
-        dist, action = self.actor(state)
-        probs = dist.log_prob(action)
-        val = self.critic(state)
-        
-        return dist, action, probs, val
+        return dist, action, prob, value
 
 
 # In[36]:
@@ -140,8 +108,8 @@ class PPOLightning(LightningModule):
         self.save_hyperparameters()
 
         print("hparams:",self.hparams)
-        
-        self.env = Tetris(grid_dims=(10, 10), piece_size=2)
+
+        self.env = TetrisWrapper(grid_dims=(10, 10), piece_size=4)
         self.state = torch.Tensor(self.env.reset())
         self.ep_step = 0
         obs_size = self.env.observation_space.shape[0]
@@ -161,10 +129,7 @@ class PPOLightning(LightningModule):
         self.avg_ep_reward = 0
         self.last_ep_logged = 0
         
-        self.critic = CriticNet(obs_size)
-        self.actor = ActorNet(obs_size,n_actions,self.hparams.depth)
-        
-        self.agent = ActorCritic(self.critic, self.actor)
+        self.agent = ActorCritic(obs_size,n_actions)
     
     def forward(self, x):
         
@@ -173,21 +138,24 @@ class PPOLightning(LightningModule):
         
         return dist, action, val
         
-    def act_loss(self,state,action,prob_old,adv):
-        dist, _ = self.actor(state)
+    def loss(self,state,action,val,prob_old,adv):
+
+        x = state[:,None,:]
+        dist, _, _, val_new = self.agent(x)
+
         prob = dist.log_prob(action)
+
         ratio = torch.exp(prob - prob_old)
         #PPO update
         clip = torch.clamp(ratio, 1 - self.hparams.clip_eps, 1 + self.hparams.clip_eps) * adv
         #negative gradient descent - gradient ascent
-        loss = -(torch.min(ratio * adv, clip)).mean()
+
+        act_loss = -(torch.min(ratio * adv, clip)).mean()
+        crit_loss = (val - val_new).pow(2).mean()
+
+        loss = act_loss + 0.5*crit_loss
         return loss
     
-    def crit_loss(self,state,val):
-        val_new = self.critic(state)
-        #MSE
-        loss = (val - val_new).pow(2).mean()
-        return loss
         
     def compute_gae(self, rewards, values, next_val):
         
@@ -219,7 +187,8 @@ class PPOLightning(LightningModule):
     def make_batch(self):
         for i in range(self.hparams.epoch_steps):
 
-            _, action, probs, val = self.agent(self.state)
+            dist, action, probs, val = self.agent(self.state)
+
             next_state, reward, done, _ = self.env.step(action.item())
             self.ep_step += 1
 
@@ -279,7 +248,7 @@ class PPOLightning(LightningModule):
                 self.batch_vals.clear()
                 self.batch_advs.clear()
     
-    def training_step(self, batch, batch_idx, optimizer_idx):
+    def training_step(self, batch, batch_idx):
         
         state,action,prob_old,val,adv = batch
 
@@ -293,28 +262,17 @@ class PPOLightning(LightningModule):
         self.log("avg_ep_reward", self.avg_ep_reward, prog_bar=True, on_step=False, on_epoch=True, logger=True)
         self.log("epoch_rewards", sum(self.epoch_rewards), prog_bar=True, on_step=False, on_epoch=True, logger=True)
 
-        
-        if optimizer_idx == 0:
-            loss = self.act_loss(state, action, prob_old, adv)
-            self.log('act_loss', loss, on_step=False, on_epoch=True, prog_bar=True,logger=True)
+        loss = self.loss(state, action, val, prob_old, adv)
+        self.log('loss', loss, on_step=False, on_epoch=True, prog_bar=True,logger=True)
 
-            self.writer.writerow([self.global_step, self.avg_ep_reward, loss.unsqueeze(0).item()])
+        self.writer.writerow([self.global_step, self.avg_ep_reward, loss.unsqueeze(0).item()])
 
-            return loss
-
-        elif optimizer_idx == 1:
-            loss = self.crit_loss(state,val)
-            self.log('crit_loss', loss, on_step=False, on_epoch=True, prog_bar=True,logger=True)
-
-            self.writer.writerow([self.global_step, self.avg_ep_reward, loss.unsqueeze(0).item()])
-
-            return loss
+        return loss
 
     
-    def configure_optimizers(self) -> List[Optimizer]:
-        a_opt = optim.Adam(self.actor.parameters(), lr=self.hparams.alr)
-        c_opt = optim.Adam(self.critic.parameters(), lr=self.hparams.clr)
-        return a_opt,c_opt
+    def configure_optimizers(self) -> Optimizer:
+        opt = optim.Adam(self.agent.parameters(), lr=self.hparams.alr)
+        return opt
     
     def __dataloader(self):
         dataset = RLDataSet(self.make_batch)
@@ -331,9 +289,9 @@ class ReturnCallback(Callback):
     def __init__(self ):
         self.total = []
 
-    def on_train_end(self, trainer, pl_module):
-        pl_module.env.finish()
-    
+    def on_train_epoch_end(self, trainer, pl_module):
+        pl_module.env.epoch_lines()
+
     def get_total(self):
         return self.total
 
@@ -349,7 +307,7 @@ def pickFileName():
 
     return '{}.csv'.format(len(files)+1)
 
-num_epochs=10
+num_epochs=25000
 
 
 f = open('log/trainingvalsPPO/{}'.format(pickFileName()), 'w+')
@@ -370,9 +328,10 @@ model = PPOLightning(
 tb_logger = TensorBoardLogger("log/")
 
 trainer = Trainer(
-        gpus=0,
+        accelerator="cpu",
         max_epochs=num_epochs,
-        logger=tb_logger)
+        logger=tb_logger,
+        callbacks=[ReturnCallback()])
 
 
 
@@ -384,7 +343,7 @@ f.close()
 
 totals = []
 
-env = Tetris(grid_dims=(10, 10), piece_size=4)
+env = TetrisWrapper(grid_dims=(10, 10), piece_size=4)
 
 with torch.no_grad():
     for i in range(10):
