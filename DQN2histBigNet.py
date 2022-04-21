@@ -52,7 +52,7 @@ class DQN(nn.Module):
 
         if depth == 2:
             self.net = nn.Sequential(
-                nn.Linear(obs_size*4, hidden_size),
+                nn.Linear(obs_size*2, hidden_size),
                 nn.ReLU(),
                 nn.Linear(hidden_size, hidden_size),
                 nn.ReLU(),
