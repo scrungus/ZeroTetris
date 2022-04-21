@@ -12,4 +12,4 @@ RUN apt-get install ffmpeg libsm6 libxext6  -y
 
 COPY . . 
 
-CMD ["python3","DQNScore.py"]
+CMD ["python3","DQN2histBigNet.py"]

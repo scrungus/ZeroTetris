@@ -38,14 +38,19 @@ class CriticNet(nn.Module):
     def __init__(self, obs_size, hidden_size = 100):
         super().__init__()
         print(obs_size)
+        self.lstm = nn.Sequential(nn.LSTM(input_size=obs_size, hidden_size=4, batch_first=True))
+
         self.critic = nn.Sequential(
-            nn.Linear(obs_size, hidden_size),
+            nn.Linear(16, hidden_size),
             nn.ReLU(),
             nn.Linear(hidden_size, 1)
         )
         
     def forward(self, x):
-        value = self.critic(x)
+        timesteps = self.lstm(x)
+        timesteps = timesteps[0].contiguous()
+        timesteps = timesteps.view(timesteps.shape[0],-1)
+        value = self.critic(timesteps)
         return value
 
 class ActorNet(nn.Module):
@@ -53,13 +58,19 @@ class ActorNet(nn.Module):
         super().__init__()
 
         print(obs_size)
-        self.actor = nn.Sequential(nn.LSTM(input_size=obs_size, hidden_size=4, batch_first=True))
+        self.lstm = nn.Sequential(nn.LSTM(input_size=obs_size, hidden_size=4, batch_first=True))
+
+        self.actor = nn.Sequential(
+            nn.Linear(16, hidden_size),
+            nn.ReLU(),
+            nn.Linear(hidden_size, n_actions)
+            )
 
     def forward(self, x):
-        print("here")
-        x = torch.randn(1,4,101)
-        logits = self.actor(x)
-        print("here")
+        timesteps = self.lstm(x)
+        timesteps = timesteps[0].contiguous()
+        timesteps = timesteps.view(timesteps.shape[0],-1)
+        logits = self.actor(timesteps)
         logits = torch.nan_to_num(logits)
         dist = Categorical(logits=logits)
         action = dist.sample()
@@ -74,11 +85,10 @@ class ActorCritic():
     
     @torch.no_grad()
     def __call__(self, state: torch.Tensor):
-
         dist, action = self.actor(state)
         probs = dist.log_prob(action)
         val = self.critic(state)
-        
+
         return dist, action, probs, val
 
 
@@ -115,7 +125,7 @@ class PPOLightning(LightningModule):
 
         print("hparams:",self.hparams)
         
-        self.env = Tetris(grid_dims=(10, 10), piece_size=4)
+        self.env = Tetris(grid_dims=(10, 10), piece_size=2)
         self.ep_step = 0
         obs_size = self.env.observation_space.shape[0]
         n_actions = self.env.action_space.n
@@ -142,8 +152,8 @@ class PPOLightning(LightningModule):
         self.avg_ep_reward = 0
         self.last_ep_logged = 0
         
-        self.critic = CriticNet(obs_size*4)
-        self.actor = ActorNet(obs_size*4,n_actions,self.hparams.depth)
+        self.critic = CriticNet(obs_size)
+        self.actor = ActorNet(obs_size,n_actions,self.hparams.depth)
         
         self.agent = ActorCritic(self.critic, self.actor)
     
@@ -198,12 +208,11 @@ class PPOLightning(LightningModule):
     
     def make_batch(self):
         for i in range(self.hparams.epoch_steps):
-
             _, action, probs, val = self.agent(torch.stack(list(self.state))[None,...])
             next_state, reward, done, _ = self.env.step(action.item())
             self.ep_step += 1
             
-            self.batch_states.append(torch.flatten(torch.stack(list(self.state))))
+            self.batch_states.append(torch.stack(list(self.state)))
             self.batch_actions.append(action)
             self.batch_probs.append(probs)
             self.ep_rewards.append(reward)
@@ -243,6 +252,8 @@ class PPOLightning(LightningModule):
                 self.state.append(torch.Tensor(env))
                 
             if end:
+                self.avg_ep_reward = sum(self.epoch_rewards)/len(self.epoch_rewards)
+
                 data = zip(self.batch_states,
                             self.batch_actions,
                             self.batch_probs,
@@ -253,7 +264,6 @@ class PPOLightning(LightningModule):
                     yield s, a, p, v, ad
                     
                 #logs
-                self.avg_ep_reward = sum(self.epoch_rewards)/len(self.epoch_rewards)
                 self.epoch_rewards.clear()
                 
                 self.batch_states.clear()
@@ -273,6 +283,7 @@ class PPOLightning(LightningModule):
              self.last_ep_logged += 1
 
         self.log("avg_ep_reward", self.avg_ep_reward, prog_bar=True, on_step=False, on_epoch=True, logger=True)
+        self.log("epoch_reward", sum(self.epoch_rewards), prog_bar=True, on_step=True, on_epoch=True, logger=True)
 
         
         if optimizer_idx == 0:

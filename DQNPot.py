@@ -22,7 +22,7 @@ import csv
 
 from pytorch_lightning.callbacks import Callback
 
-from TetrisWrapperNorm import TetrisWrapper
+from TetrisWrapperPot import TetrisWrapper
 import numpy as np
 
 from bayes_opt import BayesianOptimization
@@ -133,9 +133,9 @@ from pathlib import Path
 
 def pickFileName():
     
-    Path("/log/trainingvals/").mkdir(parents=True, exist_ok=True)
+    Path("log/trainingvals/").mkdir(parents=True, exist_ok=True)
     
-    files = os.listdir('/log/trainingvals/')
+    files = os.listdir('log/trainingvals/')
     
     return '{}.csv'.format(len(files)+1)
 
@@ -183,7 +183,7 @@ class Agent:
         action = self.get_action(net, epsilon)
 
         # do step in the environment
-        new_state, reward, done, _ = self.env.step(action)
+        new_state, reward, done, lines, _ = self.env.step(action)
         #print("done , ",done)
 
         exp = Experience(self.state, action, reward, done, new_state)
@@ -194,7 +194,7 @@ class Agent:
         if done:
             #print("resetting")
             self.reset()
-        return reward, done
+        return reward, done, lines
 
 
 # In[6]:
@@ -227,6 +227,7 @@ class DQNLightning(LightningModule):
         print("hparams:",self.hparams)
 
         self.env = TetrisWrapper(grid_dims=(10, 10), piece_size=4)
+        self.env.reset()
 
         obs_size = self.env.observation_space.shape[0]
         n_actions = self.env.action_space.n
@@ -252,9 +253,7 @@ class DQNLightning(LightningModule):
         """
         print("populating...",steps)
         for i in range(steps):
-            _, done = self.agent.play_step(self.net, epsilon=1.0)
-            if done:
-                self.env.reset()
+            _, _, lines = self.agent.play_step(self.net, epsilon=1.0)
         #print("Finished populating")
         self.env.reset()
 
@@ -301,12 +300,10 @@ class DQNLightning(LightningModule):
             self.hparams.eps_start - self.global_step + 1 / self.hparams.eps_last_frame,
         )
 
-        print(epsilon)
-
         # step through environment with agent
-        reward, self.done = self.agent.play_step(self.net, epsilon)
+        reward, self.done, lines = self.agent.play_step(self.net, epsilon)
         
-        self.ep_reward += reward
+        self.ep_reward += lines
 
         # calculates training loss
         loss = self.dqn_mse_loss(batch)
@@ -319,25 +316,12 @@ class DQNLightning(LightningModule):
         if self.global_step % self.hparams.sync_rate == 0:
             self.target_net.load_state_dict(self.net.state_dict())
 
-
-        log = {
-            "epoch_rewards": sum(self.epoch_rewards),
-            "avg_reward" : self.avg_reward,
-            "train_loss": loss,
-        }
-
         self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
-        self.log("epoch_reward", sum(self.epoch_rewards), on_step=True, on_epoch=True, prog_bar=True, logger=True)
-
-        status = {
-            "steps": self.global_step,
-            "epoch_rewards": sum(self.epoch_rewards),
-            "avg_reward" : self.avg_reward,
-        }
+        self.log("epoch_reward", sum(self.epoch_rewards), on_step=True, on_epoch=False, prog_bar=True, logger=True)
 
         self.writer.writerow([self.global_step, self.ep_reward, self.avg_reward])
 
-        return OrderedDict({"loss": loss, "log": log, "progress_bar": status})
+        return loss
 
     def configure_optimizers(self) -> List[Optimizer]:
         """Initialize Adam optimizer."""
@@ -363,7 +347,14 @@ class ReturnCallback(Callback):
         self.total = []
 
     def on_train_epoch_end(self, trainer, pl_module):
+        if not pl_module.done:
+            pl_module.epoch_rewards.append(pl_module.ep_reward)
+            pl_module.ep_reward = 0
+            pl_module.env.reset()
+        pl_module.log("epoch_reward", sum(pl_module.epoch_rewards), on_step=False, on_epoch=True, prog_bar=True, logger=True)
+        pl_module.log("avg_ep_reward", sum(pl_module.epoch_rewards)/len(pl_module.epoch_rewards), on_step=False, on_epoch=True, prog_bar=True, logger=True)
         pl_module.env.epoch_lines()
+        pl_module.epoch_rewards.clear()
 
     def get_total(self):
         return self.total
@@ -380,7 +371,7 @@ sample_size = 16352
 depth = 2
 lr = 5e-4
 
-f = open('/log/trainingvals/{}'.format(pickFileName()), 'w+')
+f = open('log/trainingvals/{}'.format(pickFileName()), 'w+')
 writer = csv.writer(f)
 
 model = DQNLightning(
@@ -398,7 +389,7 @@ model = DQNLightning(
         writer
         )
 
-tb_logger = TensorBoardLogger("/log/")
+tb_logger = TensorBoardLogger("log/")
 trainer = Trainer(
         #accelerator="gpu",
         #gpus=[0],
@@ -426,8 +417,8 @@ with torch.no_grad():
         while not done:
             q_values = model(torch.Tensor(state))
             _, action = torch.max(q_values, dim=0)
-            state, reward, done, _ = env.step(action.item())
-            total += reward
+            state, reward, done, lines, _ = env.step(action.item())
+            total += lines
         totals.append(total)
 
 print("average over games ",np.average(totals))
