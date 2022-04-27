@@ -48,6 +48,6 @@ class TetrisWrapper(Tetris):
 
     def epoch_lines(self):
          self.writer.writerow(self.score_types)
-         self.score_types.clear()
+         self.score_types = [0]*4
 
 

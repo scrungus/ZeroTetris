@@ -22,7 +22,7 @@ import csv
 
 from pytorch_lightning.callbacks import Callback
 
-from TetrisWrapperScore import TetrisWrapper
+from TetrisWrapperNorm import TetrisWrapper
 import numpy as np
 
 from bayes_opt import BayesianOptimization
@@ -250,7 +250,7 @@ class DQNLightning(LightningModule):
         obs_size = self.env.observation_space.shape[0]
         n_actions = self.env.action_space.n
 
-        self.n_heads = 3
+        self.n_heads = 10
 
         self.net = DQN(obs_size, n_actions, self.n_heads)
         self.target_net = DQN(obs_size, n_actions, self.n_heads)
@@ -330,6 +330,26 @@ class DQNLightning(LightningModule):
 
         return loss
 
+    def evaluate(self):
+        env = TetrisWrapper(grid_dims=(10, 10), piece_size=2)
+        totals = []
+        for _ in range(10):
+            state = env.reset()
+            done = False
+            total = 0
+            while not done:
+                q_values = self.net(torch.tensor(np.array([state])),None)
+                vals = []
+                for i,q in enumerate(q_values):
+                    vals.append(q.max(1)[1])
+                vals = torch.stack(vals).squeeze(-1)
+
+                action = torch.mode(vals)[0].item()
+                state, reward, done, _ = env.step(action)
+                total += reward
+            totals.append(total)
+        self.log("eval_reward", sum(totals)/len(totals), on_step=False, on_epoch=True, prog_bar=True, logger=True)
+
     def training_step(self, batch: Tuple[Tensor, Tensor], nb_batch) -> OrderedDict:
 
         #TODO: FIIXXXX EPSILON YOU MONGREL
@@ -364,7 +384,7 @@ class DQNLightning(LightningModule):
         }
 
         self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
-        self.log("epoch_reward", sum(self.epoch_rewards), on_step=True, on_epoch=True, prog_bar=True, logger=True)
+        self.log("epoch_reward", sum(self.epoch_rewards), on_step=True, on_epoch=False, prog_bar=True, logger=True)
 
         status = {
             "steps": self.global_step,
@@ -402,6 +422,16 @@ class ReturnCallback(Callback):
     def on_train_epoch_end(self, trainer, pl_module):
         pl_module.env.epoch_lines()
         print("Epsilon: ",pl_module.eps)
+        if pl_module.current_epoch % 1 == 0:
+            pl_module.evaluate()
+
+        pl_module.avg_reward = sum(pl_module.epoch_rewards)/len(pl_module.epoch_rewards)
+        pl_module.log("avg_reward",pl_module.avg_reward, on_step=False, on_epoch=True, prog_bar=True, logger=True)
+        self.log("epoch_reward", sum(pl_module.epoch_rewards), on_step=False, on_epoch=True, prog_bar=True, logger=True)
+
+        pl_module.agent.reset()
+        pl_module.epoch_rewards.clear()
+        pl_module.ep_reward = 0
 
     def get_total(self):
         return self.total
@@ -413,7 +443,7 @@ batch_size = 8
 sync_rate = 16352
 replay_size = 433020
 warm_start_steps = 16352
-eps_last_frame = replay_size
+eps_last_frame = 50000
 sample_size = 16352
 depth = 2
 lr = 5e-4
