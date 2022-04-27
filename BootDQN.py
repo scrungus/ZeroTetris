@@ -22,7 +22,7 @@ import csv
 
 from pytorch_lightning.callbacks import Callback
 
-from TetrisWrapperPot import TetrisWrapper
+from TetrisWrapperScore import TetrisWrapper
 import numpy as np
 
 from bayes_opt import BayesianOptimization
@@ -36,12 +36,9 @@ PATH_DATASETS = os.environ.get("PATH_DATASETS", ".")
 # In[2]:
 
 
+class Head(nn.Module):
 
-
-class DQN(nn.Module):
-    """Simple MLP network."""
-
-    def __init__(self, obs_size: int, n_actions: int, depth, hidden_size: int = 64):
+    def __init__(self, obs_size: int, n_actions: int, hidden_size: int = 64):
         """
         Args:
             obs_size: observation/state size of the environment
@@ -50,17 +47,36 @@ class DQN(nn.Module):
         """
         super().__init__()
 
-        if depth == 2:
-            self.net = nn.Sequential(
-                nn.Linear(obs_size, hidden_size),
-                nn.ReLU(),
-                nn.Linear(hidden_size, hidden_size),
-                nn.ReLU(),
-                nn.Linear(hidden_size, n_actions)
-            )
+        self.net = nn.Sequential(
+            nn.Linear(obs_size, hidden_size),
+            nn.ReLU(),
+            nn.Linear(hidden_size, hidden_size),
+            nn.ReLU(),
+            nn.Linear(hidden_size, n_actions)
+        )
 
     def forward(self, x):
         return self.net(x.float())
+
+class DQN(nn.Module):
+    """Simple MLP network."""
+
+    def __init__(self, obs_size: int, n_actions: int, n_heads, hidden_size: int = 64):
+        """
+        Args:
+            obs_size: observation/state size of the environment
+            n_actions: number of discrete actions available in the environment
+            hidden_size: size of hidden layers
+        """
+        super().__init__()
+
+        self.heads = nn.ModuleList([Head(obs_size,n_actions) for i in range(n_heads)])
+
+    def forward(self, x, i):
+        if i is not None:
+            return self.heads[i](x.float())
+        else:
+            return [head(x) for head in self.heads]
 
 
 # In[3]:
@@ -144,7 +160,7 @@ import random
 class Agent:
     """Base Agent class handeling the interaction with the environment."""
 
-    def __init__(self, env: gym.Env, replay_buffer: ReplayBuffer) -> None:
+    def __init__(self, env: gym.Env, replay_buffer: ReplayBuffer, n_heads) -> None:
         """
         Args:
             env: training environment
@@ -154,20 +170,22 @@ class Agent:
         self.replay_buffer = replay_buffer
         self.reset()
         self.state = self.env.reset()
+        self.head = -1
+        self.n_heads = n_heads
 
     def reset(self) -> None:
         """Resents the environment and updates the state."""
         self.state = self.env.reset()
 
     def get_action(self, net: nn.Module, epsilon: float) -> int:
-
         if np.random.random() < epsilon:
             action = random.randint(0,self.env.action_space.n-1)
             #maybe with high epsilon at the start, replay buffer disproportionately fills up with pass, as pass is always a choice?
         else:
             state = torch.tensor(np.array([self.state]))
-
-            q_values = net(state)
+            if self.head == -1:
+                self.head = np.random.randint(0,self.n_heads)
+            q_values = net(state,self.head)
             _, action = torch.max(q_values, dim=1)
             #print("picked : ",action)
             action = int(action.item())
@@ -183,7 +201,7 @@ class Agent:
         action = self.get_action(net, epsilon)
 
         # do step in the environment
-        new_state, reward, done, lines, _ = self.env.step(action)
+        new_state, reward, done, _ = self.env.step(action)
         #print("done , ",done)
 
         exp = Experience(self.state, action, reward, done, new_state)
@@ -194,7 +212,8 @@ class Agent:
         if done:
             #print("resetting")
             self.reset()
-        return reward, done, lines
+            self.head = -1
+        return reward, done
 
 
 # In[6]:
@@ -227,17 +246,18 @@ class DQNLightning(LightningModule):
         print("hparams:",self.hparams)
 
         self.env = TetrisWrapper(grid_dims=(10, 10), piece_size=4)
-        self.env.reset()
 
         obs_size = self.env.observation_space.shape[0]
         n_actions = self.env.action_space.n
 
-        self.net = DQN(obs_size, n_actions, depth)
-        self.target_net = DQN(obs_size, n_actions, depth)
+        self.n_heads = 3
+
+        self.net = DQN(obs_size, n_actions, self.n_heads)
+        self.target_net = DQN(obs_size, n_actions, self.n_heads)
 
 
         self.buffer = ReplayBuffer(self.hparams.replay_size)
-        self.agent = Agent(self.env, self.buffer)
+        self.agent = Agent(self.env, self.buffer, self.n_heads)
         self.epoch_rewards = []
         self.avg_reward = 0
         self.ep_reward = 0
@@ -253,7 +273,9 @@ class DQNLightning(LightningModule):
         """
         print("populating...",steps)
         for i in range(steps):
-            _, _, lines = self.agent.play_step(self.net, epsilon=1.0)
+            _, done = self.agent.play_step(self.net, epsilon=1.0)
+            if done:
+                self.env.reset()
         #print("Finished populating")
         self.env.reset()
 
@@ -280,16 +302,33 @@ class DQNLightning(LightningModule):
         """
         states, actions, rewards, dones, next_states = batch
 
-        state_action_values = self.net(states).gather(1, actions.unsqueeze(-1)).squeeze(-1)
+        #state_action_values = self.net(states).gather(1, actions.unsqueeze(-1)).squeeze(-1)
+
+        state_action_values_list = self.net(states,None)
+
+        for i,_ in enumerate(state_action_values_list):
+            state_action_values_list[i] = state_action_values_list[i].gather(1, actions.unsqueeze(-1)).squeeze(-1)
 
         with torch.no_grad():
-            next_state_values = self.target_net(next_states).max(1)[0]
-            next_state_values[dones] = 0.0
-            next_state_values = next_state_values.detach()
+            next_state_values_list = self.target_net(next_states,None)
+            for i,_ in enumerate(next_state_values_list):
+                next_state_values_list[i] = next_state_values_list[i].max(1)[0]
+                next_state_values_list[i][dones] = 0.0
+                next_state_values_list[i] = next_state_values_list[i].detach()
 
-        expected_state_action_values = next_state_values * self.hparams.gamma + rewards
+        expected_vals = []
 
-        return nn.MSELoss()(state_action_values, expected_state_action_values)
+        for i,_ in enumerate(next_state_values_list):
+            expected_vals.append(next_state_values_list[i]* self.hparams.gamma + rewards)
+
+        losses = []
+
+        for pred, exp in zip(state_action_values_list,expected_vals):
+            losses.append(nn.MSELoss()(pred, exp))
+
+        loss = sum(losses)/self.n_heads
+
+        return loss
 
     def training_step(self, batch: Tuple[Tensor, Tensor], nb_batch) -> OrderedDict:
 
@@ -297,13 +336,14 @@ class DQNLightning(LightningModule):
 
         epsilon = max(
             self.hparams.eps_end,
-            self.hparams.eps_start - self.global_step + 1 / self.hparams.eps_last_frame,
-        )
+            self.hparams.eps_start - ((self.global_step/self.hparams.eps_last_frame)*self.hparams.eps_start))
+
+        self.eps = epsilon
 
         # step through environment with agent
-        reward, self.done, lines = self.agent.play_step(self.net, epsilon)
+        reward, self.done = self.agent.play_step(self.net, epsilon)
         
-        self.ep_reward += lines
+        self.ep_reward += reward
 
         # calculates training loss
         loss = self.dqn_mse_loss(batch)
@@ -316,12 +356,25 @@ class DQNLightning(LightningModule):
         if self.global_step % self.hparams.sync_rate == 0:
             self.target_net.load_state_dict(self.net.state_dict())
 
+
+        log = {
+            "epoch_rewards": sum(self.epoch_rewards),
+            "avg_reward" : self.avg_reward,
+            "train_loss": loss,
+        }
+
         self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
-        self.log("epoch_reward", sum(self.epoch_rewards), on_step=True, on_epoch=False, prog_bar=True, logger=True)
+        self.log("epoch_reward", sum(self.epoch_rewards), on_step=True, on_epoch=True, prog_bar=True, logger=True)
+
+        status = {
+            "steps": self.global_step,
+            "epoch_rewards": sum(self.epoch_rewards),
+            "avg_reward" : self.avg_reward,
+        }
 
         self.writer.writerow([self.global_step, self.ep_reward, self.avg_reward])
 
-        return loss
+        return OrderedDict({"loss": loss, "log": log, "progress_bar": status})
 
     def configure_optimizers(self) -> List[Optimizer]:
         """Initialize Adam optimizer."""
@@ -347,14 +400,8 @@ class ReturnCallback(Callback):
         self.total = []
 
     def on_train_epoch_end(self, trainer, pl_module):
-        if not pl_module.done:
-            pl_module.epoch_rewards.append(pl_module.ep_reward)
-            pl_module.ep_reward = 0
-            pl_module.env.reset()
-        pl_module.log("epoch_reward", sum(pl_module.epoch_rewards), on_step=False, on_epoch=True, prog_bar=True, logger=True)
-        pl_module.log("avg_ep_reward", sum(pl_module.epoch_rewards)/len(pl_module.epoch_rewards), on_step=False, on_epoch=True, prog_bar=True, logger=True)
         pl_module.env.epoch_lines()
-        pl_module.epoch_rewards.clear()
+        print("Epsilon: ",pl_module.eps)
 
     def get_total(self):
         return self.total
@@ -417,8 +464,8 @@ with torch.no_grad():
         while not done:
             q_values = model(torch.Tensor(state))
             _, action = torch.max(q_values, dim=0)
-            state, reward, done, lines, _ = env.step(action.item())
-            total += lines
+            state, reward, done, _ = env.step(action.item())
+            total += reward
         totals.append(total)
 
 print("average over games ",np.average(totals))
