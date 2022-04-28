@@ -22,7 +22,7 @@ import csv
 
 from pytorch_lightning.callbacks import Callback
 
-from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
+from TetrisWrapperNorm import TetrisWrapper
 import numpy as np
 
 from bayes_opt import BayesianOptimization
@@ -52,7 +52,7 @@ class DQN(nn.Module):
 
         if depth == 2:
             self.net = nn.Sequential(
-                nn.Linear(obs_size*2, hidden_size),
+                nn.Linear(obs_size, hidden_size),
                 nn.ReLU(),
                 nn.Linear(hidden_size, hidden_size),
                 nn.ReLU(),
@@ -98,11 +98,11 @@ class ReplayBuffer:
         states, actions, rewards, dones, next_states = zip(*(self.buffer[idx] for idx in indices))
 
         return (
-            states,
+            np.array(states),
             np.array(actions),
             np.array(rewards, dtype=np.float32),
             np.array(dones, dtype=np.bool),
-            next_states,
+            np.array(next_states),
         )
 
 
@@ -133,9 +133,9 @@ from pathlib import Path
 
 def pickFileName():
     
-    Path("log/trainingvals/").mkdir(parents=True, exist_ok=True)
+    Path("/log/trainingvals/").mkdir(parents=True, exist_ok=True)
     
-    files = os.listdir('log/trainingvals/')
+    files = os.listdir('/log/trainingvals/')
     
     return '{}.csv'.format(len(files)+1)
 
@@ -152,15 +152,12 @@ class Agent:
         """
         self.env = env
         self.replay_buffer = replay_buffer
-        self.state = deque(maxlen=2)
-
         self.reset()
+        self.state = self.env.reset()
 
     def reset(self) -> None:
         """Resents the environment and updates the state."""
-        env = self.env.reset()
-        self.state.append(torch.Tensor(np.zeros(len(env))))
-        self.state.append(torch.Tensor(env))
+        self.state = self.env.reset()
 
     def get_action(self, net: nn.Module, epsilon: float) -> int:
 
@@ -168,10 +165,11 @@ class Agent:
             action = random.randint(0,self.env.action_space.n-1)
             #maybe with high epsilon at the start, replay buffer disproportionately fills up with pass, as pass is always a choice?
         else:
-            state = torch.flatten(torch.stack(list(self.state)))
-            q_values = net(state)
-            _, action = torch.max(q_values, dim=0)
+            state = torch.tensor(np.array([self.state]))
 
+            q_values = net(state)
+            _, action = torch.max(q_values, dim=1)
+            #print("picked : ",action)
             action = int(action.item())
         return action
 
@@ -188,16 +186,11 @@ class Agent:
         new_state, reward, done, _ = self.env.step(action)
         #print("done , ",done)
 
-        curr_state = self.state.copy()
-
-        self.state.append(torch.Tensor(new_state))
-
-        next_state = self.state
-
-        exp = Experience(torch.flatten(torch.stack(list(curr_state))), action, reward, done, torch.flatten(torch.stack(list(next_state))))
+        exp = Experience(self.state, action, reward, done, new_state)
 
         self.replay_buffer.append(exp)
 
+        self.state = new_state
         if done:
             #print("resetting")
             self.reset()
@@ -233,7 +226,8 @@ class DQNLightning(LightningModule):
 
         print("hparams:",self.hparams)
 
-        self.env = Tetris(grid_dims=(10, 10), piece_size=4)
+        self.env = TetrisWrapper(grid_dims=(10, 10), piece_size=4)
+
         obs_size = self.env.observation_space.shape[0]
         n_actions = self.env.action_space.n
 
@@ -300,12 +294,11 @@ class DQNLightning(LightningModule):
 
     def training_step(self, batch: Tuple[Tensor, Tensor], nb_batch) -> OrderedDict:
 
+        #TODO: FIIXXXX EPSILON YOU MONGREL
+
         epsilon = max(
             self.hparams.eps_end,
-            self.hparams.eps_start - ((self.global_step/self.hparams.eps_last_frame)*self.hparams.eps_start)
-        )
-
-        print("epsilon: ",epsilon)
+            self.hparams.eps_start - ((self.global_step/self.hparams.eps_last_frame)*self.hparams.eps_start))
 
         # step through environment with agent
         reward, self.done = self.agent.play_step(self.net, epsilon)
@@ -362,19 +355,15 @@ class DQNLightning(LightningModule):
         return self.__dataloader()
 
 
-class Resetter(Callback):
+class ReturnCallback(Callback):
+    def __init__(self ):
+        self.total = []
 
     def on_train_epoch_end(self, trainer, pl_module):
-        if not pl_module.done:
-            pl_module.epoch_rewards.append(pl_module.ep_reward)
-        pl_module.avg_reward = sum(pl_module.epoch_rewards)/len(pl_module.epoch_rewards)
+        pl_module.env.epoch_lines()
 
-        pl_module.log("epoch_reward", sum(pl_module.epoch_rewards), on_step=False, on_epoch=True, prog_bar=True, logger=True)
-        pl_module.log("avg_reward",pl_module.avg_reward, on_step=False, on_epoch=True, prog_bar=True, logger=True)
-
-        pl_module.agent.reset()
-        pl_module.epoch_rewards.clear()
-        pl_module.ep_reward = 0
+    def get_total(self):
+        return self.total
 
 
 num_epochs = 25000
@@ -388,7 +377,7 @@ sample_size = 16352
 depth = 2
 lr = 5e-4
 
-f = open('log/trainingvals/{}'.format(pickFileName()), 'w+')
+f = open('/log/trainingvals/{}'.format(pickFileName()), 'w+')
 writer = csv.writer(f)
 
 model = DQNLightning(
@@ -406,7 +395,7 @@ model = DQNLightning(
         writer
         )
 
-tb_logger = TensorBoardLogger("log/")
+tb_logger = TensorBoardLogger("/log/")
 trainer = Trainer(
         #accelerator="gpu",
         #gpus=[0],
@@ -414,16 +403,14 @@ trainer = Trainer(
         max_epochs=num_epochs,
         val_check_interval=100,
         logger=tb_logger,
-        callbacks=[Resetter()]
+        callbacks=[ReturnCallback()]
     )
 
 trainer.fit(model)
 
 f.close()
 
-env = Tetris(grid_dims=(10, 10), piece_size=4)
-
-state = deque(maxlen=2)
+env = TetrisWrapper(grid_dims=(10, 10), piece_size=2)
 
 totals = []
 
@@ -432,14 +419,11 @@ with torch.no_grad():
         step = 0
         done = 0
         total = 0
-        reset = env.reset()
-        state.append(torch.Tensor(np.zeros(len(reset))))
-        state.append(torch.Tensor(reset))
+        state = env.reset()
         while not done:
             q_values = model(torch.Tensor(state))
             _, action = torch.max(q_values, dim=0)
-            next_state, reward, done, _ = env.step(action.item())
-            state.append(torch.Tensor(next_state))
+            state, reward, done, _ = env.step(action.item())
             total += reward
         totals.append(total)
 
